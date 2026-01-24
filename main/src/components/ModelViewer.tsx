@@ -85,6 +85,18 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   const [objDeviceName, setObjDeviceName] = useState<string>("—");
   const [camDeviceName, setCamDeviceName] = useState<string>("—");
   
+  // Game HUD state - Real oceanographic data
+  const KELVIN_SEAMOUNTS_DEPTH = 2850; // meters (real depth)
+  const KELVIN_SEAMOUNTS_LAT = 37.5; // North Atlantic
+  const KELVIN_SEAMOUNTS_LON = -14.5; // West
+  const [depth] = useState(KELVIN_SEAMOUNTS_DEPTH); // Real depth
+  const [pressure] = useState(285); // bars (depth/10)
+  const [oxygen, setOxygen] = useState(100); // percentage
+  const [temperature] = useState(4); // °C (deep ocean temp)
+  const [compass, setCompass] = useState(342); // degrees
+  const [photosCollected, setPhotosCollected] = useState(0);
+  const maxPhotos = 10;
+  
   // Background landscape state - fixed to Kelvin Seamounts only
   const backgroundLandscapeRef = useRef<THREE.Group | null>(null);
 
@@ -1387,6 +1399,22 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   useEffect(() => {
     updateViewMode();
   }, [viewMode]);
+  
+  // Auto-load Cargo Ship on startup
+  useEffect(() => {
+    if (!currentDemoModelId && !showOnboarding) {
+      // Auto-load cargo ship after a brief delay
+      const timer = setTimeout(() => {
+        const cargoShipModel = DEMO_MODELS.find(m => m.id === "cargo-ship");
+        if (cargoShipModel) {
+          console.log("Auto-loading Cargo Ship on startup");
+          setCurrentDemoModelId("cargo-ship");
+          loadModelFromUrl(cargoShipModel.path, false);
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [showOnboarding, currentDemoModelId]);
 
   const handleObjectClick = (object: THREE.Object3D) => {
     if (!sceneRef.current) return;
@@ -2136,6 +2164,89 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             onSelectDemo={handleOnboardingDemoSelect}
             onDismiss={() => setShowOnboarding(false)}
           />
+        )}
+        
+        {/* Diver HUD - Game Card Style */}
+        {!showOnboarding && (
+          <div className="absolute top-4 left-4 z-30 pointer-events-none">
+            {/* Compact card with neon border effect */}
+            <div className="relative">
+              {/* Neon glow border effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#00ffff]/20 via-[#a855f7]/20 to-[#00ffff]/20 blur-sm rounded-lg"></div>
+              
+              {/* Main card */}
+              <div className="relative bg-gradient-to-br from-[#0a1929]/95 to-[#1e3a5f]/95 border border-[#00ffff]/50 backdrop-blur-xl rounded-lg p-3 font-mono shadow-2xl w-[200px]">
+                {/* Corner decorations */}
+                <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#00ffff] rounded-tl-lg"></div>
+                <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#00ffff] rounded-tr-lg"></div>
+                <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#00ffff] rounded-bl-lg"></div>
+                <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#00ffff] rounded-br-lg"></div>
+                
+                {/* Status indicator */}
+                <div className="flex items-center justify-between mb-2 pb-2 border-b border-[#00ffff]/30">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 bg-[#00ff00] rounded-full animate-pulse shadow-lg shadow-[#00ff00]/50"></div>
+                    <span className="text-[9px] font-bold tracking-widest text-[#00ffff] uppercase">Live</span>
+                  </div>
+                  <span className="text-[8px] text-[#00ffff]/60">ID: DVR-001</span>
+                </div>
+                
+                {/* Compact stats grid */}
+                <div className="space-y-1.5 text-[10px]">
+                  {/* Depth & Pressure */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#00ffff]/70">DEPTH</span>
+                    <span className="font-bold text-[#00ffff]">{depth}m</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#00ffff]/70">PRESSURE</span>
+                    <span className="font-bold text-[#a855f7]">{pressure} bar</span>
+                  </div>
+                  
+                  {/* Oxygen bar - compact */}
+                  <div className="py-1">
+                    <div className="flex justify-between items-center mb-0.5">
+                      <span className="text-[#00ffff]/70">O₂</span>
+                      <span className="font-bold text-white">{oxygen}%</span>
+                    </div>
+                    <div className="h-1.5 bg-black/40 rounded-full overflow-hidden border border-[#00ffff]/20">
+                      <div 
+                        className={`h-full transition-all duration-300 ${
+                          oxygen > 50 ? 'bg-gradient-to-r from-[#00ff00] to-[#00ffff]' : 
+                          oxygen > 25 ? 'bg-gradient-to-r from-[#ffff00] to-[#ff6600]' : 
+                          'bg-gradient-to-r from-[#ff0000] to-[#ff6600]'
+                        }`}
+                        style={{ width: `${oxygen}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  
+                  {/* Temperature */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#00ffff]/70">TEMP</span>
+                    <span className="font-bold text-[#60a5fa]">{temperature}°C</span>
+                  </div>
+                  
+                  {/* Heading */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#00ffff]/70">HDG</span>
+                    <span className="font-bold text-white">{compass}°</span>
+                  </div>
+                  
+                  {/* Photos */}
+                  <div className="flex justify-between items-center pt-1 border-t border-[#00ffff]/20">
+                    <span className="text-[#00ffff]/70">PHOTOS</span>
+                    <span className="font-bold text-[#fbbf24]">{photosCollected}/{maxPhotos}</span>
+                  </div>
+                </div>
+                
+                {/* Location footer */}
+                <div className="mt-2 pt-2 border-t border-[#00ffff]/20 text-[8px] text-[#00ffff]/50 text-center">
+                  Kelvin Seamounts • {KELVIN_SEAMOUNTS_LAT}°N {Math.abs(KELVIN_SEAMOUNTS_LON)}°W
+                </div>
+              </div>
+            </div>
+          </div>
         )}
         
         {/* Top Controls */}
