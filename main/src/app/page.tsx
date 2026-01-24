@@ -3,13 +3,34 @@
 import React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 const CubeViewer = dynamic(() => import('@/components/CubeViewer'), { ssr: false });
 
 export default function Home() {
   const [showMobileModal, setShowMobileModal] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (heroRef.current) {
+        const rect = heroRef.current.getBoundingClientRect();
+        const x = Math.max(-6, Math.min(6, ((e.clientX - rect.left) / rect.width - 0.5) * 12));
+        const y = Math.max(-6, Math.min(6, ((e.clientY - rect.top) / rect.height - 0.5) * 12));
+        setMousePosition({ x, y });
+      }
+    };
+
+    const heroElement = heroRef.current;
+    if (heroElement) {
+      heroElement.addEventListener('mousemove', handleMouseMove);
+      return () => {
+        heroElement.removeEventListener('mousemove', handleMouseMove);
+      };
+    }
+  }, []);
 
   const handleLaunchDemoClick = (
     e?: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>
@@ -70,7 +91,13 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#0a1929] text-[#e0f2ff] font-mono flex flex-col overflow-hidden">
+    <div 
+      className="relative min-h-screen text-[#e0f2ff] font-mono flex flex-col overflow-hidden"
+      style={{
+        background: 'linear-gradient(to bottom, #1a4a6a 0%, #0d2d47 25%, #0a1f35 50%, #081a2e 75%, #050f1a 100%)',
+        minHeight: '100vh'
+      }}
+    >
 
       {/* Animated Waves Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -79,12 +106,40 @@ export default function Home() {
         <div className="wave"></div>
       </div>
 
+      {/* Ambient Particle Noise */}
+      <div className="fixed inset-0 pointer-events-none z-[1]">
+        {Array.from({ length: 50 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-white"
+            style={{
+              width: `${1 + (i % 2)}px`,
+              height: `${1 + (i % 2)}px`,
+              left: `${(i * 37.7) % 100}%`,
+              top: `${(i * 23.3) % 100}%`,
+              opacity: 0.15 + (i % 3) * 0.05
+            }}
+            animate={{
+              x: [0, 15, -10, 8, 0],
+              y: [0, 25, 15, -12, 0],
+              opacity: [0.15, 0.25, 0.2, 0.3, 0.15]
+            }}
+            transition={{
+              duration: 12 + (i % 5) * 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.15
+            }}
+          />
+        ))}
+      </div>
+
       {/* Navigation Header */}
-      <nav className="relative border-b border-[#1e3a5f] px-0 h-16 flex justify-between items-center bg-[#0a1929] z-50">
+      <nav className="relative px-0 h-16 flex justify-between items-center z-50" style={{ backgroundColor: 'transparent' }}>
         <div className="flex items-center h-full flex-1">
           {/* Logo Box - Aligned with Left Sidebar */}
           {/* Scaled down from 179px */}
-          <div className="w-[134px] h-full flex items-center justify-center bg-[#0a1929] shrink-0">
+          <div className="w-[134px] h-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'transparent' }}>
             <div className="w-10 h-10 flex items-center justify-center">
               <img src="/logo.png" alt="Mesh Logo" className="w-6 h-6 object-contain invert" />
             </div>
@@ -131,10 +186,10 @@ export default function Home() {
       </nav>
 
       {/* Main Content Grid */}
-      <main className="relative flex-1 grid grid-cols-12 divide-x divide-[#1e3a5f] z-10">
+      <main className="relative flex-1 grid grid-cols-12 z-10">
         
         {/* Left Sidebar (Empty/Decor) */}
-        <div className="hidden lg:block col-span-1 relative bg-[#0a1929] overflow-hidden">
+        <div className="hidden lg:block col-span-1 relative overflow-hidden" style={{ backgroundColor: 'transparent' }}>
           {/* Diagonal Lines SVG Background */}
           <div className="absolute inset-0 opacity-[0.1]" style={{ 
             backgroundImage: 'repeating-linear-gradient(45deg, #1e3a5f 0, #1e3a5f 1px, transparent 0, transparent 50%)', 
@@ -147,24 +202,79 @@ export default function Home() {
         </div>
 
          {/* Main Hero Content */}
-        <div className="col-span-12 lg:col-span-7 flex flex-col divide-y divide-[#1e3a5f]">
+        <div className="col-span-12 lg:col-span-7 flex flex-col">
           
            {/* Hero Section */}
            <motion.div 
-             className="pl-4 lg:pl-10 flex flex-col justify-center gap-4 lg:gap-6 flex-1"
+             ref={heroRef}
+             className="pl-4 lg:pl-10 flex flex-col justify-center items-center gap-4 lg:gap-6 relative"
+             style={{ minHeight: '100vh' }}
              initial="hidden"
              animate="visible"
              variants={staggerContainer}
            >
+             {/* Particle Layer - Background */}
+             <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+               {Array.from({ length: 30 }).map((_, i) => (
+                 <motion.div
+                   key={i}
+                   className="absolute w-1 h-1 bg-[#e0f2ff] rounded-full"
+                   style={{
+                     left: `${(i * 37) % 100}%`,
+                     top: `${(i * 23) % 100}%`,
+                     opacity: 0.15 + (i % 3) * 0.05
+                   }}
+                   animate={{
+                     x: [0, 20, -15, 10, 0],
+                     y: [0, 30, 20, -10, 0],
+                     opacity: [0.15, 0.25, 0.2, 0.3, 0.15]
+                   }}
+                   transition={{
+                     duration: 8 + (i % 4) * 2,
+                     repeat: Infinity,
+                     ease: "easeInOut",
+                     delay: i * 0.2
+                   }}
+                 />
+               ))}
+             </div>
+
+             {/* Mission HUD Panel */}
+             <motion.div 
+               className="absolute left-1/2 top-1/2 pointer-events-none z-[1]"
+               style={{
+                 width: '80%',
+                 height: '220px',
+                 transform: `translate(calc(-50% + ${mousePosition.x}px), calc(-50% + ${mousePosition.y}px))`,
+                 transition: 'transform 0.1s ease-out'
+               }}
+               animate={{
+                 opacity: [0.9, 1, 0.9]
+               }}
+               transition={{
+                 duration: 5,
+                 repeat: Infinity,
+                 ease: "easeInOut"
+               }}
+             >
+               <div 
+                 className="w-full h-full bg-[#DF6C42]"
+                 style={{
+                   border: '2px solid rgba(255,255,255,0.6)',
+                   borderRadius: '6px'
+                 }}
+               />
+             </motion.div>
+
            <motion.img 
              src="/logo.png" 
              alt="Mesh Logo" 
-             className="w-8 h-8 lg:w-12 lg:h-12 object-contain invert"
+             className="w-8 h-8 lg:w-12 lg:h-12 object-contain invert relative z-[2]"
              variants={staggerItem}
            />
 
              <motion.div 
-               className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[8px] lg:text-[10px] uppercase tracking-wider w-fit"
+               className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[8px] lg:text-[10px] uppercase tracking-wider w-fit relative z-[2]"
                variants={staggerItem}
              >
               
@@ -173,14 +283,14 @@ export default function Home() {
              </motion.div>
              
              <motion.h2 
-               className="text-3xl lg:text-5xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff]"
+               className="text-3xl lg:text-5xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] relative z-[3] text-center"
                variants={staggerItem}
              >
                Deep Sea Container Search
              </motion.h2>
              
              <motion.p 
-               className="text-xs lg:text-sm opacity-70 max-w-lg lg:max-w-xl leading-relaxed"
+               className="text-xs lg:text-sm opacity-70 max-w-lg lg:max-w-xl leading-relaxed relative z-[2] text-center"
                variants={staggerItem}
              >
                A 3D decision-support system that reduces underwater search time for lost shipping containers by prioritizing high-probability recovery zones.
@@ -188,7 +298,8 @@ export default function Home() {
              
              {/* Mobile 3D Visualization Box */}
              <motion.div 
-               className="lg:hidden h-64 border border-[#1e3a5f] relative overflow-hidden bg-[#0a1929] shrink-0 my-4"
+               className="lg:hidden h-64 border border-[#1e3a5f] relative overflow-hidden shrink-0 my-4 z-[2]"
+               style={{ backgroundColor: 'transparent' }}
                variants={staggerItem}
              >
                <div className="absolute inset-0 flex items-center justify-center">
@@ -197,7 +308,7 @@ export default function Home() {
              </motion.div>
              
              <motion.div 
-               className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-2"
+               className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-2 relative z-[2]"
                variants={staggerItem}
              >
               <button 
@@ -228,7 +339,7 @@ export default function Home() {
            </motion.div>
 
            {/* Ecosystem Partners */}
-           <div className="h-18 grid grid-cols-4 divide-x divide-[#1e3a5f] mt-auto border-b border-[#1e3a5f]">
+           <div className="h-18 grid grid-cols-4 mt-auto">
              {[
                { name: 'GEMINI PRO', image: '/gemini-pro.png' },
                { name: 'SKETCHFAB', image: '/sketch.png' },
@@ -247,17 +358,17 @@ export default function Home() {
          </div>
 
         {/* Right Visualization Column */}
-        <div id="map-viewer" className="col-span-12 lg:col-span-4 flex flex-col divide-y divide-[#1e3a5f] bg-[#0a1929]">
+        <div id="map-viewer" className="col-span-12 lg:col-span-4 flex flex-col" style={{ backgroundColor: 'transparent' }}>
           
           {/* 3D Visualization Box */}
-          <div className="hidden lg:block h-[50vh] border-b border-[#1e3a5f] relative overflow-hidden bg-[#0a1929] shrink-0">
+          <div className="hidden lg:block h-[50vh] relative overflow-hidden shrink-0" style={{ backgroundColor: 'transparent' }}>
             <div className="absolute inset-0 flex items-center justify-center">
                 <CubeViewer />
             </div>
           </div>
 
           {/* Metrics Grid */}
-          <div className="flex-1 grid grid-rows-3 divide-y divide-[#1e3a5f] min-h-0">
+          <div className="flex-1 grid grid-rows-3 min-h-0">
             <div className="px-6 py-4 flex flex-col justify-center group hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors">
                 <div className="text-[10px] uppercase opacity-50 mb-2">Preloaded Models</div>
                 <div className="text-2xl font-bold mb-3">6</div>
@@ -284,16 +395,24 @@ export default function Home() {
 
       </main>
 
+      {/* Ocean Transition Wave */}
+      <div className="relative w-full h-24 -mt-24 pointer-events-none z-[5]" style={{ marginTop: '-6rem' }}>
+        <svg className="absolute bottom-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 120">
+          <path d="M0,60 Q300,40 600,60 T1200,60 L1200,120 L0,120 Z" fill="#0d2d47" opacity="0.95"/>
+          <path d="M0,70 Q300,50 600,70 T1200,70 L1200,120 L0,120 Z" fill="#0a1f35" opacity="0.98"/>
+        </svg>
+      </div>
+
       {/* How It Works Section */}
-      <section id="process" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
-        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
+      <section id="process" className="relative z-10" style={{ backgroundColor: 'transparent' }}>
+        <div className="grid grid-cols-12">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-11">
             <motion.div 
-              className="px-10 py-16 border-b border-[#1e3a5f]"
+              className="px-10 py-16"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
@@ -362,16 +481,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Ocean Transition Wave */}
+      <div className="relative w-full h-24 -mt-24 pointer-events-none z-[5]" style={{ marginTop: '-6rem' }}>
+        <svg className="absolute bottom-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 120">
+          <path d="M0,50 Q300,70 600,50 T1200,50 L1200,120 L0,120 Z" fill="#0a1f35" opacity="0.95"/>
+          <path d="M0,60 Q300,80 600,60 T1200,60 L1200,120 L0,120 Z" fill="#081a2e" opacity="0.98"/>
+        </svg>
+      </div>
+
       {/* Search Impact Section */}
-      <section id="metrics" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
-        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
+      <section id="metrics" className="relative z-10" style={{ backgroundColor: 'transparent' }}>
+        <div className="grid grid-cols-12">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-11">
             <motion.div 
-              className="px-10 py-16 border-b border-[#1e3a5f]"
+              className="px-10 py-16"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
@@ -477,7 +604,7 @@ export default function Home() {
                       })}
                     </div>
                   </div>
-                  <div className="pt-4 border-t border-[#1e3a5f]">
+                  <div className="pt-4">
                     <div className="flex items-center justify-center gap-8 mb-4">
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 bg-[#0d2847]"></div>
@@ -550,16 +677,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Ocean Transition Wave */}
+      <div className="relative w-full h-24 -mt-24 pointer-events-none z-[5]" style={{ marginTop: '-6rem' }}>
+        <svg className="absolute bottom-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 120">
+          <path d="M0,60 Q300,40 600,60 T1200,60 L1200,120 L0,120 Z" fill="#0d2d47" opacity="0.95"/>
+          <path d="M0,70 Q300,50 600,70 T1200,70 L1200,120 L0,120 Z" fill="#0a1f35" opacity="0.98"/>
+        </svg>
+      </div>
+
       {/* Interactive Search Optimization Demo Section */}
-      <section id="interactive-demo" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
-        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
+      <section id="interactive-demo" className="relative z-10" style={{ backgroundColor: 'transparent' }}>
+        <div className="grid grid-cols-12">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-11">
             <motion.div 
-              className="px-10 py-16 border-b border-[#1e3a5f]"
+              className="px-10 py-16"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
@@ -612,7 +747,8 @@ export default function Home() {
 
               {/* 3D Visualization Container */}
               <motion.div 
-                className="border border-[#1e3a5f] mb-6 relative overflow-hidden bg-[#0a1929]"
+                className="border border-[#1e3a5f] mb-6 relative overflow-hidden"
+                style={{ backgroundColor: 'transparent' }}
                 style={{ height: '60vh', minHeight: '400px' }}
                 variants={fadeInUp}
               >
@@ -621,7 +757,7 @@ export default function Home() {
                 </div>
                 
                 {/* Visualization Legend */}
-                <div className="absolute top-4 right-4 bg-[#0a1929]/90 border border-[#1e3a5f] p-4">
+                <div className="absolute top-4 right-4 border border-[#1e3a5f] p-4" style={{ backgroundColor: 'rgba(5, 15, 26, 0.9)' }}>
                   <div className="text-[10px] uppercase opacity-50 mb-3">Priority Zones</div>
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
@@ -662,16 +798,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Ocean Transition Wave */}
+      <div className="relative w-full h-24 -mt-24 pointer-events-none z-[5]" style={{ marginTop: '-6rem' }}>
+        <svg className="absolute bottom-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 120">
+          <path d="M0,50 Q300,70 600,50 T1200,50 L1200,120 L0,120 Z" fill="#0a1f35" opacity="0.95"/>
+          <path d="M0,60 Q300,80 600,60 T1200,60 L1200,120 L0,120 Z" fill="#081a2e" opacity="0.98"/>
+        </svg>
+      </div>
+
       {/* Future Extensions Section */}
-      <section id="future-extensions" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
-        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
+      <section id="future-extensions" className="relative z-10" style={{ backgroundColor: 'transparent' }}>
+        <div className="grid grid-cols-12">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-11">
             <motion.div 
-              className="px-10 py-16 border-b border-[#1e3a5f]"
+              className="px-10 py-16"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
@@ -697,7 +841,7 @@ export default function Home() {
                 variants={staggerContainer}
               >
                 <motion.div 
-                  className="p-8 border-r border-b border-[#1e3a5f] lg:border-b-0 last:border-r-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
+                  className="p-8 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
                   variants={staggerItem}
                 >
                   <h4 className="text-xl font-medium mb-3">Insurance Loss Assessment</h4>
@@ -707,7 +851,7 @@ export default function Home() {
                 </motion.div>
                 
                 <motion.div 
-                  className="p-8 border-r border-b border-[#1e3a5f] lg:border-b-0 last:border-r-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
+                  className="p-8 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
                   variants={staggerItem}
                 >
                   <h4 className="text-xl font-medium mb-3">Automated Recovery Planning</h4>
@@ -717,7 +861,7 @@ export default function Home() {
                 </motion.div>
                 
                 <motion.div 
-                  className="p-8 border-r border-b border-[#1e3a5f] lg:border-b-0 last:border-r-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
+                  className="p-8 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
                   variants={staggerItem}
                 >
                   <h4 className="text-xl font-medium mb-3">Fleet-Level Analytics</h4>
@@ -731,9 +875,17 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Ocean Transition Wave */}
+      <div className="relative w-full h-24 -mt-24 pointer-events-none z-[5]" style={{ marginTop: '-6rem' }}>
+        <svg className="absolute bottom-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 120">
+          <path d="M0,60 Q300,40 600,60 T1200,60 L1200,120 L0,120 Z" fill="#0d2d47" opacity="0.95"/>
+          <path d="M0,70 Q300,50 600,70 T1200,70 L1200,120 L0,120 Z" fill="#0a1f35" opacity="0.98"/>
+        </svg>
+      </div>
+
       {/* Footer */}
-      <footer id="visualize" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
-        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
+      <footer id="visualize" className="relative z-10" style={{ backgroundColor: 'transparent' }}>
+        <div className="grid grid-cols-12">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
@@ -746,7 +898,7 @@ export default function Home() {
               viewport={{ once: true, amount: 0.2 }}
               variants={fadeIn}
             >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-[#1e3a5f] pb-8 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 mb-6">
                 <div>
                   <div className="flex items-center gap-2 mb-4">
                     <img src="/logo.png" alt="Mesh Logo" className="w-6 h-6 object-contain invert" />
@@ -823,7 +975,7 @@ export default function Home() {
           />
           
           {/* Modal Content */}
-          <div className="relative bg-[#0a1929] border-2 border-[#1e3a5f] p-8 max-w-sm w-full">
+          <div className="relative border-2 border-[#1e3a5f] p-8 max-w-sm w-full" style={{ backgroundColor: 'rgba(5, 15, 26, 0.95)' }}>
             {/* Close Button */}
             <button
               onClick={() => setShowMobileModal(false)}
