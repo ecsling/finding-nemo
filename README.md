@@ -133,3 +133,8 @@ No backend infrastructure required for MVP deployment.
 /public/assets
   - seafloor.glb                # Bathymetric terrain mesh asset
 ```
+
+---
+
+## License
+Proof-of-concept prototype implementation. Consider MIT License for open-source distribution if project transitions to public repository.
