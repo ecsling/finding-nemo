@@ -744,10 +744,10 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       containerRef.current.removeChild(containerRef.current.firstChild);
     }
 
-    // Initialize Three.js scene with underwater atmosphere
+    // Initialize Three.js scene with cyberpunk atmosphere
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1a4d6d); // Lighter underwater blue for better visibility
-    scene.fog = new THREE.FogExp2(0x1a4d6d, 0.015); // Lighter fog for better visibility
+    scene.background = new THREE.Color(0x000000); // Pure black background
+    scene.fog = new THREE.FogExp2(0x000000, 0.008); // Minimal fog for depth
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(
@@ -785,7 +785,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.shadowMap.enabled = false; // Disable shadows
-    renderer.setClearColor(0x1a4d6d, 1); // Lighter underwater blue
+    renderer.setClearColor(0x000000, 1); // Pure black background
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
@@ -796,33 +796,33 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     controls.target.set(0, -1, 0); // Focus on ship position (just above seabed)
     controlsRef.current = controls;
 
-    // Lighting - Brighter underwater atmosphere for better visibility
-    const ambientLight = new THREE.AmbientLight(0x7eb3d4, 1.2); // Brighter blue-tinted ambient light
+    // Lighting - Cyberpunk dramatic lighting with neon blue accents
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.3); // Low ambient for dramatic contrast
     scene.add(ambientLight);
 
-    // Main directional light from above (simulating sunlight filtering through water)
-    const dirLight = new THREE.DirectionalLight(0xadd8e6, 2.5); // Brighter directional light
+    // Main directional light - stark white from above
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
     dirLight.position.set(0, 30, 10);
     dirLight.castShadow = false;
     scene.add(dirLight);
 
-    // Accent spotlight (like underwater searchlight)
-    const accentLight = new THREE.SpotLight(0xadd8e6, 2.0); // Brighter cyan-blue accent
+    // Neon blue accent spotlight
+    const accentLight = new THREE.SpotLight(0x00d9ff, 3.0); // Bright neon blue
     accentLight.position.set(-10, 10, 5);
     accentLight.lookAt(0, 0, 0);
     accentLight.angle = Math.PI / 6;
-    accentLight.penumbra = 0.3;
+    accentLight.penumbra = 0.5;
     scene.add(accentLight);
     
-    // Backlight for depth
-    const backLight = new THREE.DirectionalLight(0x5a9fc7, 1.5); // Brighter backlight
+    // Backlight with neon blue tint
+    const backLight = new THREE.DirectionalLight(0x0099ff, 2.0); // Neon blue backlight
     backLight.position.set(0, 5, -20);
     scene.add(backLight);
     
-    // Additional fill light from the side for better model visibility
-    const fillLight = new THREE.DirectionalLight(0xffffff, 1.0);
-    fillLight.position.set(10, 5, 10);
-    scene.add(fillLight);
+    // Additional neon blue rim light for edge glow
+    const rimLight = new THREE.DirectionalLight(0x00d9ff, 1.5);
+    rimLight.position.set(10, 5, 10);
+    scene.add(rimLight);
 
     // Shadow plane
     /*
@@ -1354,9 +1354,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     bloomPassRef.current.enabled = true;
     bloomPassRef.current.strength = 0.6;
 
-    sceneRef.current.background = new THREE.Color(0x1a4d6d); // Lighter underwater blue
-    (sceneRef.current.fog as THREE.FogExp2).color.setHex(0x1a4d6d);
-    rendererRef.current.setClearColor(0x1a4d6d, 1);
+    sceneRef.current.background = new THREE.Color(0x000000); // Pure black
+    (sceneRef.current.fog as THREE.FogExp2).color.setHex(0x000000);
+    rendererRef.current.setClearColor(0x000000, 1);
 
     // Shadows only in solid mode
     if (shadowPlaneRef.current) {
@@ -2166,102 +2166,130 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           />
         )}
         
-        {/* Diver HUD - Game Card Style */}
+        {/* Diver HUD - Cyberpunk Game Card */}
         {!showOnboarding && (
           <div className="absolute top-4 left-4 z-30 pointer-events-none">
-            {/* Compact card with neon border effect */}
+            {/* Geometric card with glowing borders */}
             <div className="relative">
-              {/* Neon glow border effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#00ffff]/20 via-[#a855f7]/20 to-[#00ffff]/20 blur-sm rounded-lg"></div>
+              {/* Outer glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-br from-[#00d9ff]/30 via-[#0099ff]/20 to-[#00d9ff]/30 blur-md animate-pulse"></div>
               
-              {/* Main card */}
-              <div className="relative bg-gradient-to-br from-[#0a1929]/95 to-[#1e3a5f]/95 border border-[#00ffff]/50 backdrop-blur-xl rounded-lg p-3 font-mono shadow-2xl w-[200px]">
-                {/* Corner decorations */}
-                <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#00ffff] rounded-tl-lg"></div>
-                <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#00ffff] rounded-tr-lg"></div>
-                <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#00ffff] rounded-bl-lg"></div>
-                <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#00ffff] rounded-br-lg"></div>
-                
-                {/* Status indicator */}
-                <div className="flex items-center justify-between mb-2 pb-2 border-b border-[#00ffff]/30">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 bg-[#00ff00] rounded-full animate-pulse shadow-lg shadow-[#00ff00]/50"></div>
-                    <span className="text-[9px] font-bold tracking-widest text-[#00ffff] uppercase">Live</span>
-                  </div>
-                  <span className="text-[8px] text-[#00ffff]/60">ID: DVR-001</span>
-                </div>
-                
-                {/* Compact stats grid */}
-                <div className="space-y-1.5 text-[10px]">
-                  {/* Depth & Pressure */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-[#00ffff]/70">DEPTH</span>
-                    <span className="font-bold text-[#00ffff]">{depth}m</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-[#00ffff]/70">PRESSURE</span>
-                    <span className="font-bold text-[#a855f7]">{pressure} bar</span>
+              {/* Geometric border frame */}
+              <div className="relative bg-black/90 backdrop-blur-xl w-[220px]">
+                {/* Clipped corner effect */}
+                <div 
+                  className="relative border-2 border-[#00d9ff] p-3 font-mono shadow-2xl"
+                  style={{
+                    clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))',
+                    boxShadow: '0 0 20px rgba(0, 217, 255, 0.4), inset 0 0 20px rgba(0, 217, 255, 0.1)'
+                  }}
+                >
+                  {/* Corner accent lines */}
+                  <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#00d9ff]" style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }}></div>
+                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#00d9ff]" style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }}></div>
+                  
+                  {/* Scan line effect */}
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+                    <div 
+                      className="w-full h-px bg-gradient-to-r from-transparent via-[#00d9ff] to-transparent"
+                      style={{
+                        animation: 'scanline 3s linear infinite'
+                      }}
+                    ></div>
                   </div>
                   
-                  {/* Oxygen bar - compact */}
-                  <div className="py-1">
-                    <div className="flex justify-between items-center mb-0.5">
-                      <span className="text-[#00ffff]/70">O₂</span>
-                      <span className="font-bold text-white">{oxygen}%</span>
+                  {/* Status indicator */}
+                  <div className="flex items-center justify-between mb-2 pb-2 border-b border-[#00d9ff]/30">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 bg-[#00ff00] animate-pulse shadow-lg shadow-[#00ff00]/50" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
+                      <span className="text-[10px] font-bold tracking-[0.2em] text-white uppercase" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>ACTIVE</span>
                     </div>
-                    <div className="h-1.5 bg-black/40 rounded-full overflow-hidden border border-[#00ffff]/20">
-                      <div 
-                        className={`h-full transition-all duration-300 ${
-                          oxygen > 50 ? 'bg-gradient-to-r from-[#00ff00] to-[#00ffff]' : 
-                          oxygen > 25 ? 'bg-gradient-to-r from-[#ffff00] to-[#ff6600]' : 
-                          'bg-gradient-to-r from-[#ff0000] to-[#ff6600]'
-                        }`}
-                        style={{ width: `${oxygen}%` }}
-                      ></div>
+                    <span className="text-[8px] text-[#00d9ff]/60 tracking-wider">DVR-001</span>
+                  </div>
+                  
+                  {/* Compact stats grid */}
+                  <div className="space-y-1.5 text-[10px]">
+                    {/* Depth & Pressure */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/50 tracking-wider">DEPTH</span>
+                      <span className="font-bold text-[#00d9ff] tracking-wider" style={{ textShadow: '0 0 8px rgba(0, 217, 255, 0.6)' }}>{depth}m</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/50 tracking-wider">PRESSURE</span>
+                      <span className="font-bold text-white tracking-wider">{pressure} bar</span>
+                    </div>
+                    
+                    {/* Oxygen bar - compact */}
+                    <div className="py-1">
+                      <div className="flex justify-between items-center mb-0.5">
+                        <span className="text-white/50 tracking-wider">O₂</span>
+                        <span className="font-bold text-white tracking-wider">{oxygen}%</span>
+                      </div>
+                      <div className="h-2 bg-black/60 border border-[#00d9ff]/30 overflow-hidden relative">
+                        <div 
+                          className={`h-full transition-all duration-300 ${
+                            oxygen > 50 ? 'bg-[#00ff00]' : 
+                            oxygen > 25 ? 'bg-[#ffff00]' : 
+                            'bg-[#ff0000]'
+                          }`}
+                          style={{ 
+                            width: `${oxygen}%`,
+                            boxShadow: oxygen > 50 ? '0 0 10px rgba(0, 255, 0, 0.6)' : oxygen > 25 ? '0 0 10px rgba(255, 255, 0, 0.6)' : '0 0 10px rgba(255, 0, 0, 0.6)'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    {/* Temperature */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/50 tracking-wider">TEMP</span>
+                      <span className="font-bold text-white tracking-wider">{temperature}°C</span>
+                    </div>
+                    
+                    {/* Heading */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/50 tracking-wider">HDG</span>
+                      <span className="font-bold text-white tracking-wider">{compass}°</span>
+                    </div>
+                    
+                    {/* Photos */}
+                    <div className="flex justify-between items-center pt-1 border-t border-[#00d9ff]/30">
+                      <span className="text-white/50 tracking-wider">PHOTOS</span>
+                      <span className="font-bold text-[#00d9ff] tracking-wider" style={{ textShadow: '0 0 8px rgba(0, 217, 255, 0.6)' }}>{photosCollected}/{maxPhotos}</span>
                     </div>
                   </div>
                   
-                  {/* Temperature */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-[#00ffff]/70">TEMP</span>
-                    <span className="font-bold text-[#60a5fa]">{temperature}°C</span>
+                  {/* Location footer */}
+                  <div className="mt-2 pt-2 border-t border-[#00d9ff]/30 text-[8px] text-white/40 text-center tracking-wider">
+                    KELVIN SEAMOUNTS • {KELVIN_SEAMOUNTS_LAT}°N {Math.abs(KELVIN_SEAMOUNTS_LON)}°W
                   </div>
-                  
-                  {/* Heading */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-[#00ffff]/70">HDG</span>
-                    <span className="font-bold text-white">{compass}°</span>
-                  </div>
-                  
-                  {/* Photos */}
-                  <div className="flex justify-between items-center pt-1 border-t border-[#00ffff]/20">
-                    <span className="text-[#00ffff]/70">PHOTOS</span>
-                    <span className="font-bold text-[#fbbf24]">{photosCollected}/{maxPhotos}</span>
-                  </div>
-                </div>
-                
-                {/* Location footer */}
-                <div className="mt-2 pt-2 border-t border-[#00ffff]/20 text-[8px] text-[#00ffff]/50 text-center">
-                  Kelvin Seamounts • {KELVIN_SEAMOUNTS_LAT}°N {Math.abs(KELVIN_SEAMOUNTS_LON)}°W
                 </div>
               </div>
             </div>
           </div>
         )}
         
+        {/* Add scanline animation keyframes */}
+        <style jsx>{`
+          @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(300%); }
+          }
+        `}</style>
+        
         {/* Top Controls */}
         <div className="absolute top-0 left-0 w-full z-10 p-4 flex justify-between items-center pointer-events-none">
           {/* Top Left - BLE Stick Controls */}
           <div className="flex items-center gap-2 pointer-events-auto">
             {/* OBJ Stick Controls */}
-            <div className="bg-[#0a2540]/90 border border-[#4080bf] rounded-lg px-2 py-1.5 flex items-center gap-1.5 backdrop-blur-md">
-              <span className="text-[10px] font-bold text-[#8fcdff] uppercase">OBJ</span>
+            <div className="bg-black/90 border-2 border-[#00d9ff] px-2 py-1.5 flex items-center gap-1.5 backdrop-blur-md" style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.3)' }}>
+              <span className="text-[10px] font-bold text-white uppercase tracking-wider">OBJ</span>
               {!objConnected ? (
                 <button
                   onClick={handleObjConnect}
-                  className="px-2 py-1 bg-[#4080bf] text-white text-[10px] rounded font-bold hover:bg-[#1D1E15] transition-colors uppercase cursor-pointer"
+                  className="px-2 py-1 bg-[#00d9ff] text-black text-[10px] font-bold hover:bg-white transition-colors uppercase cursor-pointer"
                 >
-                  Connect
+                  CONNECT
                 </button>
               ) : (
                 <>
@@ -2271,53 +2299,53 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                   >
                     Disconnect
                   </button>
-                  <span className="text-[10px] text-[#8fcdff] font-mono">{objDeviceName}</span>
+                  <span className="text-[10px] text-[#00d9ff] font-mono tracking-wider">{objDeviceName}</span>
                   <button
                     onClick={handleObjZero}
-                    className="px-2 py-1 bg-[#1D1E15] text-white text-[10px] rounded font-bold hover:bg-[#4080bf] transition-colors uppercase cursor-pointer"
+                    className="px-2 py-1 bg-black border border-[#00d9ff] text-white text-[10px] font-bold hover:bg-[#00d9ff] hover:text-black transition-colors uppercase cursor-pointer"
                   >
-                    Zero
+                    ZERO
                   </button>
                   <button
                     onClick={handleResetTranslate}
-                    className="px-2 py-1 bg-[#1D1E15] text-white text-[10px] rounded font-bold hover:bg-[#4080bf] transition-colors uppercase cursor-pointer"
+                    className="px-2 py-1 bg-black border border-[#00d9ff] text-white text-[10px] font-bold hover:bg-[#00d9ff] hover:text-black transition-colors uppercase cursor-pointer"
                   >
-                    Reset
+                    RESET
                   </button>
                 </>
               )}
             </div>
 
             {/* CAM Stick Controls */}
-            <div className="bg-[#0a2540]/90 border border-[#4080bf] rounded-lg px-2 py-1.5 flex items-center gap-1.5 backdrop-blur-md">
-              <span className="text-[10px] font-bold text-[#8fcdff] uppercase">CAM</span>
+            <div className="bg-black/90 border-2 border-[#00d9ff] px-2 py-1.5 flex items-center gap-1.5 backdrop-blur-md" style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.3)' }}>
+              <span className="text-[10px] font-bold text-white uppercase tracking-wider">CAM</span>
               {!camConnected ? (
                 <button
                   onClick={handleCamConnect}
-                  className="px-2 py-1 bg-[#4080bf] text-white text-[10px] rounded font-bold hover:bg-[#1D1E15] transition-colors uppercase cursor-pointer"
+                  className="px-2 py-1 bg-[#00d9ff] text-black text-[10px] font-bold hover:bg-white transition-colors uppercase cursor-pointer"
                 >
-                  Connect
+                  CONNECT
                 </button>
               ) : (
                 <>
                   <button
                     onClick={handleCamDisconnect}
-                    className="px-2 py-1 bg-[#dc3545] text-white text-[10px] rounded font-bold hover:bg-[#c82333] transition-colors uppercase cursor-pointer"
+                    className="px-2 py-1 bg-[#ff0055] text-white text-[10px] font-bold hover:bg-[#ff3377] transition-colors uppercase cursor-pointer"
                   >
-                    Disconnect
+                    DISCONNECT
                   </button>
-                  <span className="text-[10px] text-[#8fcdff] font-mono">{camDeviceName}</span>
+                  <span className="text-[10px] text-[#00d9ff] font-mono tracking-wider">{camDeviceName}</span>
                   <button
                     onClick={handleCamZero}
-                    className="px-2 py-1 bg-[#1D1E15] text-white text-[10px] rounded font-bold hover:bg-[#4080bf] transition-colors uppercase cursor-pointer"
+                    className="px-2 py-1 bg-black border border-[#00d9ff] text-white text-[10px] font-bold hover:bg-[#00d9ff] hover:text-black transition-colors uppercase cursor-pointer"
                   >
-                    Zero
+                    ZERO
                   </button>
                   <button
                     onClick={handleResetView}
-                    className="px-2 py-1 bg-[#1D1E15] text-white text-[10px] rounded font-bold hover:bg-[#4080bf] transition-colors uppercase cursor-pointer"
+                    className="px-2 py-1 bg-black border border-[#00d9ff] text-white text-[10px] font-bold hover:bg-[#00d9ff] hover:text-black transition-colors uppercase cursor-pointer"
                   >
-                    Reset
+                    RESET
                   </button>
                 </>
               )}
@@ -2371,9 +2399,13 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             {onClose && (
               <button
                 onClick={onClose}
-                className="h-[42px] px-3 bg-[#1D1E15] text-[#E5E6DA] text-[10px] font-bold hover:bg-[#DF6C42] transition-colors uppercase tracking-wide cursor-pointer rounded-lg"
+                className="h-[42px] px-3 bg-black border-2 border-[#00d9ff] text-white text-[10px] font-bold hover:bg-[#00d9ff] hover:text-black transition-colors uppercase tracking-widest cursor-pointer"
+                style={{ 
+                  clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)',
+                  textShadow: '0 0 8px rgba(0, 217, 255, 0.6)'
+                }}
               >
-                Close
+                CLOSE
               </button>
             )}
           </div>
@@ -2540,12 +2572,12 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           <div className="absolute right-8 top-1/2 -translate-y-1/2 z-40 animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="relative">
               {/* Pointer Arrow - pointing left now */}
-              <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-r-[12px] border-r-[#DF6C42]" />
+              <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-r-[12px] border-r-[#00d9ff]" />
               
               {/* Hint Box */}
-              <div className="bg-[#DF6C42] border-2 border-[#1D1E15] px-4 py-3 shadow-2xl max-w-[240px]">
+              <div className="bg-black border-2 border-[#00d9ff] px-4 py-3 shadow-2xl max-w-[240px]" style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)' }}>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-[#1D1E15] rounded flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 bg-[#00d9ff] flex items-center justify-center shrink-0 mt-0.5">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                       <path d="M12 2L2 7l10 5 10-5-10-5z"/>
                       <path d="M2 17l10 5 10-5"/>
@@ -2565,7 +2597,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                 {/* Dismiss Button */}
                 <button
                   onClick={() => setShowInteractionHint(false)}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-[#1D1E15] text-white rounded-full flex items-center justify-center hover:bg-[#1D1E15]/80 transition-colors cursor-pointer border-2 border-[#DF6C42]"
+                  className="absolute -top-2 -right-2 w-6 h-6 bg-black text-[#00d9ff] flex items-center justify-center hover:bg-[#00d9ff] hover:text-black transition-colors cursor-pointer border-2 border-[#00d9ff]"
+                  style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.4)' }}
                 >
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <line x1="18" y1="6" x2="6" y2="18"/>
@@ -2590,7 +2623,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
               {/* Close button */}
               <button
                 onClick={() => setShowAnnotatedModal(false)}
-                className="absolute top-2 right-2 z-10 w-8 h-8 bg-[#1D1E15] text-[#E5E6DA] rounded-full flex items-center justify-center hover:bg-[#DF6C42] transition-colors cursor-pointer"
+                className="absolute top-2 right-2 z-10 w-8 h-8 bg-black border-2 border-[#00d9ff] text-white flex items-center justify-center hover:bg-[#00d9ff] hover:text-black transition-colors cursor-pointer"
+                style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.4)' }}
               >
                 <svg
                   width="16"
