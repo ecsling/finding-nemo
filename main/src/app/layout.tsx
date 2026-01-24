@@ -19,7 +19,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Mesh — Container Search",
+  title: "Deep Sea Container Search",
   description: "Deep sea container recovery and search operations",
   openGraph: {
     images: ["/hero.png"],

@@ -141,7 +141,7 @@ export default function Home() {
           {/* Scaled down from 179px */}
           <div className="w-[134px] h-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'transparent' }}>
             <div className="w-10 h-10 flex items-center justify-center">
-              <img src="/logo.png" alt="Mesh Logo" className="w-6 h-6 object-contain invert" />
+              <div className="w-6 h-6 border border-[#1e3a5f] rounded-sm"></div>
             </div>
           </div>
           
@@ -174,7 +174,6 @@ export default function Home() {
         </div>
         
         <div className="flex items-center gap-4 px-6">
-          <div className="text-[10px] uppercase tracking-widest opacity-50">Mesh</div>
           <Link
             href="/dashboard"
             className="px-8 py-3 bg-[#DF6C42] text-[#0a1929] text-lg uppercase font-bold hover:bg-[#0d2847] transition-colors"
@@ -241,56 +240,56 @@ export default function Home() {
 
              {/* Mission HUD Panel */}
              <motion.div 
-               className="absolute left-1/2 top-1/2 pointer-events-none z-[1]"
+               className="absolute left-1/2 top-1/2 pointer-events-none z-[4]"
                style={{
-                 width: '80%',
-                 height: '220px',
+                 width: '85%',
+                 height: '320px',
                  transform: `translate(calc(-50% + ${mousePosition.x}px), calc(-50% + ${mousePosition.y}px))`,
                  transition: 'transform 0.1s ease-out'
                }}
-               animate={{
-                 opacity: [0.9, 1, 0.9]
-               }}
-               transition={{
-                 duration: 5,
-                 repeat: Infinity,
-                 ease: "easeInOut"
-               }}
              >
                <div 
-                 className="w-full h-full bg-[#DF6C42]"
+                 className="w-full h-full"
                  style={{
+                   backgroundColor: 'rgba(223, 108, 66, 0.95)',
                    border: '2px solid rgba(255,255,255,0.6)',
                    borderRadius: '6px'
                  }}
                />
              </motion.div>
 
-           <motion.img 
-             src="/logo.png" 
-             alt="Mesh Logo" 
-             className="w-8 h-8 lg:w-12 lg:h-12 object-contain invert relative z-[2]"
-             variants={staggerItem}
-           />
-
              <motion.div 
-               className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[8px] lg:text-[10px] uppercase tracking-wider w-fit relative z-[2]"
+               className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[8px] lg:text-[10px] uppercase tracking-wider w-fit relative z-[5]"
+               style={{ 
+                 color: '#FFFFFF',
+                 textShadow: '0 1px 2px rgba(0,0,0,0.25)'
+               }}
                variants={staggerItem}
              >
               
-               <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
-               Mesh
+               <div className="w-1.5 h-1.5 bg-green-500"></div>
+               System Active
              </motion.div>
              
              <motion.h2 
-               className="text-3xl lg:text-5xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] relative z-[3] text-center"
+               className="text-3xl lg:text-5xl font-sans leading-none tracking-tight relative z-[5] text-center"
+               style={{ 
+                 color: '#FFFFFF',
+                 fontWeight: 700,
+                 textShadow: '0 1px 2px rgba(0,0,0,0.25)'
+               }}
                variants={staggerItem}
              >
                Deep Sea Container Search
              </motion.h2>
              
              <motion.p 
-               className="text-xs lg:text-sm opacity-70 max-w-lg lg:max-w-xl leading-relaxed relative z-[2] text-center"
+               className="text-xs lg:text-sm max-w-lg lg:max-w-xl leading-relaxed relative z-[5] text-center"
+               style={{ 
+                 color: '#FFFFFF',
+                 fontWeight: 500,
+                 textShadow: '0 1px 2px rgba(0,0,0,0.25)'
+               }}
                variants={staggerItem}
              >
                A 3D decision-support system that reduces underwater search time for lost shipping containers by prioritizing high-probability recovery zones.
@@ -308,11 +307,16 @@ export default function Home() {
              </motion.div>
              
              <motion.div 
-               className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-2 relative z-[2]"
+               className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-2 relative z-[5]"
                variants={staggerItem}
              >
               <button 
-                className="w-full sm:w-auto px-6 py-3 border border-[#1e3a5f] text-[10px] uppercase font-bold hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors cursor-pointer"
+                className="w-full sm:w-auto px-6 py-3 border border-white text-[10px] uppercase hover:bg-white/10 transition-colors cursor-pointer"
+                style={{ 
+                  color: '#FFFFFF',
+                  fontWeight: 600,
+                  textShadow: '0 1px 2px rgba(0,0,0,0.25)'
+                }}
                 onClick={(e) => {
                   e.preventDefault();
                   const element = document.querySelector('#process');
@@ -324,7 +328,12 @@ export default function Home() {
                  How It Works
                </button>
                <button
-                 className="w-full sm:w-auto px-6 py-3 bg-[#DF6C42] text-[#0a1929] text-[10px] uppercase font-bold hover:bg-[#0d2847] transition-colors text-center sm:text-left mb-2 sm:mb-0"
+                 className="w-full sm:w-auto px-6 py-3 border-2 border-white text-[10px] uppercase hover:bg-white/10 transition-colors text-center sm:text-left mb-2 sm:mb-0"
+                 style={{ 
+                   color: '#FFFFFF',
+                   fontWeight: 600,
+                   textShadow: '0 1px 2px rgba(0,0,0,0.25)'
+                 }}
                  onClick={(e) => {
                    e.preventDefault();
                    const element = document.querySelector('#map-viewer');
@@ -900,9 +909,8 @@ export default function Home() {
             >
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 mb-6">
                 <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <img src="/logo.png" alt="Mesh Logo" className="w-6 h-6 object-contain invert" />
-                    <span className="text-sm font-medium">Mesh</span>
+                  <div className="mb-4">
+                    <span className="text-sm font-medium">Deep Sea Container Search</span>
                   </div>
                   <p className="text-xs opacity-60 leading-relaxed">
                     A 3D decision-support tool for optimizing underwater cargo recovery.
@@ -945,7 +953,7 @@ export default function Home() {
                     <a href="#" className="text-xs opacity-70 hover:text-[#DF6C42] hover:opacity-100 transition-colors">
                       Documentation
                     </a>
-                    <a href="https://github.com/devp19/Mesh" target="_blank" rel="noopener noreferrer" className="text-xs opacity-70 hover:text-[#DF6C42] hover:opacity-100 transition-colors">
+                    <a href="#" className="text-xs opacity-70 hover:text-[#DF6C42] hover:opacity-100 transition-colors">
                       GitHub
                     </a>
                   </div>
@@ -953,7 +961,7 @@ export default function Home() {
               </div>
               
               <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase opacity-50">
-                <div>© 2025 Mesh. Built by <a href="https://www.linkedin.com/in/fenilshah05/" target="_blank" rel="noopener noreferrer" className="hover:text-[#DF6C42] transition-colors">Fenil Shah</a>, <a href="https://www.linkedin.com/in/devp19/" target="_blank" rel="noopener noreferrer" className="hover:text-[#DF6C42] transition-colors">Dev Patel</a>, <a href="https://www.linkedin.com/in/kushp4444/" target="_blank" rel="noopener noreferrer" className="hover:text-[#DF6C42] transition-colors">Kush Patel</a>.</div>
+                <div>© 2025 Deep Sea Container Search. Built by <a href="https://www.linkedin.com/in/fenilshah05/" target="_blank" rel="noopener noreferrer" className="hover:text-[#DF6C42] transition-colors">Fenil Shah</a>, <a href="https://www.linkedin.com/in/devp19/" target="_blank" rel="noopener noreferrer" className="hover:text-[#DF6C42] transition-colors">Dev Patel</a>, <a href="https://www.linkedin.com/in/kushp4444/" target="_blank" rel="noopener noreferrer" className="hover:text-[#DF6C42] transition-colors">Kush Patel</a>.</div>
                 <div className="flex items-center gap-4">
                   <span>v.2.0.4</span>
                   <span className="opacity-30">/</span>
