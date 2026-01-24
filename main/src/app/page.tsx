@@ -498,7 +498,7 @@ export default function Home() {
         </svg>
       </div>
 
-      {/* Search Impact Section */}
+      {/* Financial & Operational Impact Section */}
       <section id="metrics" className="relative z-10" style={{ backgroundColor: 'transparent' }}>
         <div className="grid grid-cols-12">
           {/* Left Sidebar Spacer */}
@@ -518,92 +518,82 @@ export default function Home() {
                 variants={fadeInDown}
               >
                 <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
-                METRICS
+                FINANCIAL IMPACT
               </motion.div>
               
               <motion.h3 
                 className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-12"
                 variants={fadeInUp}
               >
-                Search Impact
+                Financial & Operational Impact
               </motion.h3>
-              
-              <motion.p 
-                className="text-sm opacity-70 leading-relaxed mb-8 max-w-3xl"
-                variants={fadeInUp}
-              >
-                This system is designed to reduce underwater search time and operational cost by prioritizing high-probability recovery zones instead of uniform search patterns.
-              </motion.p>
               
               <motion.p 
                 className="text-xs opacity-60 italic mb-8"
                 variants={fadeInUp}
               >
-                The following metrics demonstrate the operational impact of search optimization.
+                All data shown is simulated and illustrative. These charts support decision-making but do not guarantee outcomes.
               </motion.p>
-              
-              {/* Combined Bar Graph - Traditional vs Optimized Search */}
+
+              {/* Chart 1: Estimated Financial Loss by Incident Type */}
               <motion.div 
                 className="border border-[#1e3a5f] mb-8 overflow-hidden"
                 variants={fadeInUp}
               >
                 <div className="p-8">
                   <div className="mb-4">
-                    <div className="text-[10px] uppercase opacity-50 mb-2">Search Efficiency Comparison</div>
-                    <p className="text-xs opacity-60 italic">
-                      This chart compares search area coverage between traditional uniform search patterns and optimized probability-based search across different incident scenarios.
+                    <div className="text-[10px] uppercase opacity-50 mb-2">Estimated Financial Loss by Incident Type (Simulated)</div>
+                    <p className="text-xs opacity-60 italic mb-4">
+                      This chart illustrates how financial exposure increases with incident severity and distance from shore.
                     </p>
                   </div>
                   <div className="flex flex-col md:flex-row gap-4 mb-6">
                     {/* Y-Axis */}
                     <div className="flex flex-row md:flex-col justify-between md:h-80 text-[8px] uppercase opacity-40 pt-1 pb-2 md:pb-8 md:pr-2 gap-2 md:gap-0">
-                      <span>5.0 km²</span>
-                      <span>4.0 km²</span>
-                      <span>3.0 km²</span>
-                      <span>2.0 km²</span>
-                      <span>1.0 km²</span>
-                      <span>0 km²</span>
+                      <span>$2.5M</span>
+                      <span>$2.0M</span>
+                      <span>$1.5M</span>
+                      <span>$1.0M</span>
+                      <span>$500K</span>
+                      <span>$0</span>
                     </div>
                     
-                    {/* Chart Bars */}
+                    {/* Stacked Bars */}
                     <div className="flex-1 h-80 flex flex-wrap md:flex-nowrap items-end gap-4 relative">
                       {[
-                        { label: 'Nearshore Incident', traditional: 4.2, optimized: 1.8 },
-                        { label: 'Coastal Route', traditional: 3.8, optimized: 1.6 },
-                        { label: 'Deep Water', traditional: 4.5, optimized: 2.1 },
-                        { label: 'Open Ocean', traditional: 4.8, optimized: 2.3 },
+                        { label: 'Nearshore Incident', cargo: 0.8, recovery: 0.3, penalties: 0.1 },
+                        { label: 'Coastal Route', cargo: 1.2, recovery: 0.5, penalties: 0.2 },
+                        { label: 'Deep Water', cargo: 1.5, recovery: 0.8, penalties: 0.3 },
+                        { label: 'Open Ocean', cargo: 1.8, recovery: 1.2, penalties: 0.5 },
                       ].map((item, idx) => {
-                        const maxArea = 5.0; // Maximum search area on y-axis
-                        const chartHeight = 320; // h-80 = 320px
-                        const traditionalHeight = (item.traditional / maxArea) * chartHeight;
-                        const optimizedHeight = (item.optimized / maxArea) * chartHeight;
+                        const maxLoss = 2.5;
+                        const chartHeight = 320;
+                        const totalHeight = ((item.cargo + item.recovery + item.penalties) / maxLoss) * chartHeight;
+                        const cargoHeight = (item.cargo / maxLoss) * chartHeight;
+                        const recoveryHeight = (item.recovery / maxLoss) * chartHeight;
+                        const penaltiesHeight = (item.penalties / maxLoss) * chartHeight;
                         
                         return (
                           <div
                             key={idx}
                             className="flex-1 flex flex-col items-center justify-end gap-2 h-full relative"
                           >
-                            <div className="flex items-end gap-2 w-full justify-center relative" style={{ height: '320px' }}>
-                              {/* Traditional Uniform Search Bar */}
-                              <div className="flex flex-col items-center justify-end relative" style={{ height: '320px' }}>
+                            <div className="flex flex-col items-end justify-end relative" style={{ height: '320px', width: '100%' }}>
+                              <div className="flex flex-col w-full" style={{ height: `${totalHeight}px` }}>
                                 <div
-                                  className="bg-[#0d2847] hover:bg-[#0d2847]/80 transition-colors relative"
-                                  style={{ 
-                                    height: `${traditionalHeight}px`, 
-                                    width: 'calc(45% - 4px)',
-                                    minWidth: '40px'
-                                  }}
+                                  className="bg-[#1e3a5f] hover:bg-[#1e3a5f]/80 transition-colors"
+                                  style={{ height: `${cargoHeight}px` }}
+                                  title="Estimated Cargo Value Loss"
                                 />
-                              </div>
-                              {/* Optimized Probability-Based Search Bar */}
-                              <div className="flex flex-col items-center justify-end relative" style={{ height: '320px' }}>
                                 <div
-                                  className="bg-[#DF6C42] hover:bg-[#DF6C42]/80 transition-colors relative"
-                                  style={{ 
-                                    height: `${optimizedHeight}px`, 
-                                    width: 'calc(45% - 4px)',
-                                    minWidth: '40px'
-                                  }}
+                                  className="bg-[#DF6C42] hover:bg-[#DF6C42]/80 transition-colors"
+                                  style={{ height: `${recoveryHeight}px` }}
+                                  title="Recovery Operation Cost"
+                                />
+                                <div
+                                  className="bg-[#8B2635] hover:bg-[#8B2635]/80 transition-colors"
+                                  style={{ height: `${penaltiesHeight}px` }}
+                                  title="Delay & Environmental Penalties"
                                 />
                               </div>
                             </div>
@@ -616,70 +606,241 @@ export default function Home() {
                   <div className="pt-4">
                     <div className="flex items-center justify-center gap-8 mb-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-[#0d2847]"></div>
-                        <div className="text-[10px] uppercase opacity-70">Traditional Uniform Search</div>
+                        <div className="w-4 h-4 bg-[#1e3a5f]"></div>
+                        <div className="text-[10px] uppercase opacity-70">Estimated Cargo Value Loss</div>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 bg-[#DF6C42]"></div>
-                        <div className="text-[10px] uppercase opacity-70">Optimized Probability-Based Search</div>
+                        <div className="text-[10px] uppercase opacity-70">Recovery Operation Cost</div>
                       </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 text-center">
-                      <div>
-                        <div className="text-2xl font-bold mb-1">4.3 km²</div>
-                        <div className="text-[10px] uppercase opacity-50">Avg Traditional</div>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold mb-1">1.9 km²</div>
-                        <div className="text-[10px] uppercase opacity-50">Avg Optimized</div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-[#8B2635]"></div>
+                        <div className="text-[10px] uppercase opacity-70">Delay & Environmental Penalties</div>
                       </div>
                     </div>
                   </div>
                 </div>
               </motion.div>
-              
-              {/* Key Metrics */}
+
+              {/* Chart 2: Recovery Cost Comparison */}
               <motion.div 
-                className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-[#1e3a5f] mb-8"
-                variants={staggerContainer}
+                className="border border-[#1e3a5f] mb-8 overflow-hidden"
+                variants={fadeInUp}
               >
-                {[
-                  { 
-                    label: 'Search Area Reduction', 
-                    value: '58%', 
-                    sublabel: 'Vs uniform search', 
-                    chart: 58,
-                    explanation: 'Average reduction in search area coverage when using probability-based prioritization compared to traditional uniform search patterns across multiple incident scenarios.'
-                  },
-                  { 
-                    label: 'Estimated Time Savings', 
-                    value: '35–50%', 
-                    sublabel: 'Operational efficiency', 
-                    chart: 42,
-                    explanation: 'Projected time reduction for search operations by focusing recovery efforts on high-probability zones first, reducing overall mission duration.'
-                  },
-                  { 
-                    label: 'Search Prioritization Accuracy', 
-                    value: 'High-confidence zones identified first', 
-                    sublabel: 'Recovery focus', 
-                    chart: 85,
-                    explanation: 'The system successfully identifies and prioritizes high-probability recovery zones, enabling teams to concentrate search efforts where containers are most likely to be found.'
-                  },
-                ].map((stat, idx) => (
-                  <motion.div
-                    key={idx}
-                    className={`p-6 border-r border-[#1e3a5f] last:border-r-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col`}
-                    variants={staggerItem}
-                  >
-                    <div className="text-[10px] uppercase opacity-50 mb-2">{stat.label}</div>
-                    <div className="text-2xl font-bold mb-1">{stat.value}</div>
-                    <div className="text-[8px] uppercase opacity-40 mb-3">{stat.sublabel}</div>
-                    <div className="w-full h-1 bg-[#DF6C42]/20 overflow-hidden mb-3">
-                      <div className="h-full bg-[#DF6C42]" style={{ width: `${stat.chart}%` }}></div>
+                <div className="p-8">
+                  <div className="mb-4">
+                    <div className="text-[10px] uppercase opacity-50 mb-2">Recovery Cost Comparison (Simulated)</div>
+                    <p className="text-xs opacity-60 italic mb-4">
+                      Simulation-first planning reduces unnecessary dives, operational cost, and mission failure rates.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+                    {[
+                      { 
+                        metric: 'Average Recovery Cost', 
+                        traditional: 1.8, 
+                        simulation: 1.1,
+                        unit: 'M USD',
+                        max: 2.0
+                      },
+                      { 
+                        metric: 'Average Mission Duration', 
+                        traditional: 18, 
+                        simulation: 11,
+                        unit: 'days',
+                        max: 20
+                      },
+                      { 
+                        metric: 'Successful Recovery Rate', 
+                        traditional: 68, 
+                        simulation: 87,
+                        unit: '%',
+                        max: 100
+                      },
+                    ].map((item, idx) => {
+                      const chartHeight = 200;
+                      const traditionalHeight = (item.traditional / item.max) * chartHeight;
+                      const simulationHeight = (item.simulation / item.max) * chartHeight;
+                      
+                      return (
+                        <div key={idx} className="flex flex-col">
+                          <div className="text-[10px] uppercase opacity-50 mb-4 text-center">{item.metric}</div>
+                          <div className="flex items-end justify-center gap-4 h-52">
+                            <div className="flex flex-col items-center gap-2">
+                              <div
+                                className="bg-[#0d2847] hover:bg-[#0d2847]/80 transition-colors w-16"
+                                style={{ height: `${traditionalHeight}px` }}
+                              />
+                              <div className="text-[8px] uppercase opacity-70 text-center">
+                                <div className="font-bold">{item.traditional}{item.unit === '%' ? '%' : item.unit === 'days' ? 'd' : 'M'}</div>
+                                <div className="opacity-50 mt-1">Traditional</div>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-center gap-2">
+                              <div
+                                className="bg-[#DF6C42] hover:bg-[#DF6C42]/80 transition-colors w-16"
+                                style={{ height: `${simulationHeight}px` }}
+                              />
+                              <div className="text-[8px] uppercase opacity-70 text-center">
+                                <div className="font-bold">{item.simulation}{item.unit === '%' ? '%' : item.unit === 'days' ? 'd' : 'M'}</div>
+                                <div className="opacity-50 mt-1">Simulation-First</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Chart 3: Salvage Value Decay Over Time */}
+              <motion.div 
+                className="border border-[#1e3a5f] mb-8 overflow-hidden"
+                variants={fadeInUp}
+              >
+                <div className="p-8">
+                  <div className="mb-4">
+                    <div className="text-[10px] uppercase opacity-50 mb-2">Salvage Value Decay Over Time Underwater (Simulated)</div>
+                    <p className="text-xs opacity-60 italic mb-4">
+                      Delays in assessment rapidly reduce recoverable value, especially for high-value or sensitive cargo.
+                    </p>
+                  </div>
+                  <div className="flex flex-col md:flex-row gap-4 mb-6">
+                    {/* Y-Axis */}
+                    <div className="flex flex-row md:flex-col justify-between md:h-80 text-[8px] uppercase opacity-40 pt-1 pb-2 md:pb-8 md:pr-2 gap-2 md:gap-0">
+                      <span>100%</span>
+                      <span>80%</span>
+                      <span>60%</span>
+                      <span>40%</span>
+                      <span>20%</span>
+                      <span>0%</span>
                     </div>
-                    <div className="text-[9px] opacity-60 leading-relaxed mt-auto">{stat.explanation}</div>
-                  </motion.div>
-                ))}
+                    
+                    {/* Line Chart */}
+                    <div className="flex-1 h-80 relative">
+                      <svg className="w-full h-full" viewBox="0 0 800 320" preserveAspectRatio="none">
+                        {/* Grid lines */}
+                        {[0, 0.2, 0.4, 0.6, 0.8, 1.0].map((val) => (
+                          <line
+                            key={val}
+                            x1="0"
+                            y1={320 - (val * 320)}
+                            x2="800"
+                            y2={320 - (val * 320)}
+                            stroke="rgba(224, 242, 255, 0.1)"
+                            strokeWidth="1"
+                          />
+                        ))}
+                        
+                        {/* No Early Assessment - dashed line */}
+                        <polyline
+                          points="0,320 100,280 200,240 300,200 400,160 500,120 600,80 700,50 800,30"
+                          fill="none"
+                          stroke="#8B2635"
+                          strokeWidth="2"
+                          strokeDasharray="5,5"
+                        />
+                        
+                        {/* Early Simulation-Based Assessment - solid line */}
+                        <polyline
+                          points="0,320 100,300 200,280 300,260 400,240 500,220 600,200 700,185 800,175"
+                          fill="none"
+                          stroke="#DF6C42"
+                          strokeWidth="2"
+                        />
+                      </svg>
+                      
+                      {/* X-Axis Labels */}
+                      <div className="absolute bottom-0 left-0 right-0 flex justify-between px-4 text-[8px] uppercase opacity-40">
+                        <span>0d</span>
+                        <span>10d</span>
+                        <span>20d</span>
+                        <span>30d</span>
+                        <span>40d</span>
+                        <span>50d</span>
+                        <span>60d</span>
+                        <span>70d</span>
+                        <span>80d</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pt-4 flex items-center justify-center gap-8">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-[#8B2635]" style={{ borderTop: '2px dashed #8B2635' }}></div>
+                      <div className="text-[10px] uppercase opacity-70">No Early Assessment</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-1 bg-[#DF6C42]"></div>
+                      <div className="text-[10px] uppercase opacity-70">Early Simulation-Based Assessment</div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Chart 4: Environmental Risk Multipliers */}
+              <motion.div 
+                className="border border-[#1e3a5f] mb-8 overflow-hidden"
+                variants={fadeInUp}
+              >
+                <div className="p-8">
+                  <div className="mb-4">
+                    <div className="text-[10px] uppercase opacity-50 mb-2">Environmental Risk Multipliers (Simulated)</div>
+                    <p className="text-xs opacity-60 italic mb-4">
+                      Environmental conditions significantly increase recovery complexity and cost, reinforcing the need for pre-mission simulation.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[
+                      { condition: 'Ocean Current Strength', values: [
+                        { label: 'Low', multiplier: 1.0, color: '#1e3a5f' },
+                        { label: 'Medium', multiplier: 1.4, color: '#DF6C42' },
+                        { label: 'High', multiplier: 2.2, color: '#8B2635' },
+                      ]},
+                      { condition: 'Depth', values: [
+                        { label: '<100m', multiplier: 1.0, color: '#1e3a5f' },
+                        { label: '100-500m', multiplier: 1.6, color: '#DF6C42' },
+                        { label: '>500m', multiplier: 2.5, color: '#8B2635' },
+                      ]},
+                      { condition: 'Seafloor Type', values: [
+                        { label: 'Sandy', multiplier: 1.0, color: '#1e3a5f' },
+                        { label: 'Rocky', multiplier: 1.8, color: '#DF6C42' },
+                        { label: 'Muddy', multiplier: 2.0, color: '#8B2635' },
+                      ]},
+                    ].map((category, catIdx) => (
+                      <div key={catIdx} className="border border-[#1e3a5f] p-6">
+                        <div className="text-[10px] uppercase opacity-50 mb-4">{category.condition}</div>
+                        <div className="space-y-3">
+                          {category.values.map((item, idx) => {
+                            const maxMultiplier = 2.5;
+                            const barWidth = (item.multiplier / maxMultiplier) * 100;
+                            
+                            return (
+                              <div key={idx} className="group relative">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-xs opacity-70">{item.label}</span>
+                                  <span className="text-xs font-bold">×{item.multiplier}</span>
+                                </div>
+                                <div className="w-full h-4 bg-[#1e3a5f]/20 overflow-hidden">
+                                  <div
+                                    className="h-full transition-all"
+                                    style={{ 
+                                      width: `${barWidth}%`,
+                                      backgroundColor: item.color
+                                    }}
+                                  />
+                                </div>
+                                <div className="absolute -top-8 left-0 bg-[#0a1929] border border-[#1e3a5f] px-2 py-1 text-[8px] opacity-0 group-hover:opacity-100 pointer-events-none z-10 whitespace-nowrap">
+                                  Recovery Cost Multiplier: ×{item.multiplier}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           </div>
