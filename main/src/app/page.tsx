@@ -146,7 +146,7 @@ export default function Home() {
           </div>
           
           {/* Nav Items starting right after the box */}
-          <div className="hidden md:flex h-full items-center px-6 gap-8 text-[10px] font-medium uppercase tracking-wide flex-1">
+          <div className="hidden md:flex h-full items-center px-6 gap-8 flex-1">
             {[
               { name: 'Process', href: '#process' },
               { name: 'Metrics', href: '#metrics' },
@@ -163,7 +163,7 @@ export default function Home() {
                       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                   }}
-                  className="hover:text-[#DF6C42] transition-colors cursor-pointer"
+                  className="hover:text-[#DF6C42] transition-colors cursor-pointer px-4 py-2 text-base font-semibold uppercase tracking-[0.08em]"
                 >
                   {item.name}
                 </a>
@@ -177,7 +177,7 @@ export default function Home() {
           <div className="text-[10px] uppercase tracking-widest opacity-50">Mesh</div>
           <Link
             href="/dashboard"
-            className="px-5 py-1.5 bg-[#DF6C42] text-[#0a1929] text-[10px] uppercase font-bold hover:bg-[#0d2847] transition-colors"
+            className="px-8 py-3 bg-[#DF6C42] text-[#0a1929] text-lg uppercase font-bold hover:bg-[#0d2847] transition-colors"
             onClick={handleLaunchDemoClick}
           >
             Launch Search Demo

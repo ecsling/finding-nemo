@@ -44,6 +44,7 @@
 }
 
 :root {
+  --font-ui: var(--font-space-grotesk);
   --radius: 0.625rem;
   --background: oklch(0.15 0.04 240);
   --foreground: oklch(0.95 0.01 210);
@@ -118,6 +119,9 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  header, nav, button {
+    font-family: var(--font-ui);
   }
 }
 
