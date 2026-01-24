@@ -85,8 +85,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   const [objDeviceName, setObjDeviceName] = useState<string>("—");
   const [camDeviceName, setCamDeviceName] = useState<string>("—");
   
-  // Background landscape state
-  const [backgroundLandscapeId, setBackgroundLandscapeId] = useState<string>("kelvin-seamounts");
+  // Background landscape state - fixed to Kelvin Seamounts only
   const backgroundLandscapeRef = useRef<THREE.Group | null>(null);
 
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -851,8 +850,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
     // Placeholder removed - no cube background
     
-    // Load default background landscape
-    loadBackgroundLandscape(backgroundLandscapeId);
+    // Load Kelvin Seamounts as fixed background
+    loadBackgroundLandscape("kelvin-seamounts");
 
     // Animation loop
     let lastT = performance.now();
@@ -927,11 +926,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       }
 
       // Placeholder removed - no rotation logic needed
-      
-      // Rotate background landscape for seabed movement effect
-      if (backgroundLandscapeRef.current) {
-        backgroundLandscapeRef.current.rotation.y += dt * 0.0003; // Faster rotation for noticeable seabed movement
-      }
+      // Background is now static - no rotation
 
       if (composerRef.current) composerRef.current.render();
     };
@@ -1392,13 +1387,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   useEffect(() => {
     updateViewMode();
   }, [viewMode]);
-  
-  // Reload background landscape when selection changes
-  useEffect(() => {
-    if (backgroundLandscapeId) {
-      loadBackgroundLandscape(backgroundLandscapeId);
-    }
-  }, [backgroundLandscapeId]);
 
   const handleObjectClick = (object: THREE.Object3D) => {
     if (!sceneRef.current) return;
@@ -2283,12 +2271,12 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         {/* Model Selection Bar - Hidden when onboarding is active to reduce clutter */}
         {!showOnboarding && (
         <div className="absolute bottom-0 left-0 w-full z-10 p-4 pointer-events-none">
-          <div className="max-w-3xl mx-auto pointer-events-auto">
+          <div className="max-w-xl mx-auto pointer-events-auto">
             <div className="bg-[#0a2540]/90 border border-[#4080bf] backdrop-blur-md p-1.5 flex gap-2 items-center shadow-lg rounded">
-              {/* Foreground Model Selector */}
+              {/* Foreground Model Selector - Now full width */}
               <div className="flex-1 relative" ref={bottomDropdownRef}>
                 <label className="text-[8px] text-[#8fcdff] uppercase tracking-wider mb-1 block px-1 font-bold">
-                  Foreground Object
+                  Select Model
                 </label>
                 <button
                   onClick={() => setIsBottomDropdownOpen(!isBottomDropdownOpen)}
@@ -2330,20 +2318,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                 )}
               </div>
               
-              {/* Background Landscape Selector */}
-              <div className="flex-1 relative">
-                <label className="text-[8px] text-[#8fcdff] uppercase tracking-wider mb-1 block px-1 font-bold">
-                  Background Seabed
-                </label>
-                <select
-                  value={backgroundLandscapeId}
-                  onChange={(e) => setBackgroundLandscapeId(e.target.value)}
-                  className="w-full bg-[#1D1E15] border border-[#4080bf] text-[#E5E6DA] text-[10px] font-mono px-3 py-2 rounded outline-none focus:border-[#8fcdff] transition-colors cursor-pointer"
-                >
-                  <option value="kelvin-seamounts">Kelvin Seamounts</option>
-                  <option value="san-pedro-preserve">San Pedro Preserve</option>
-                </select>
-              </div>
+              {/* Background selector removed - Kelvin Seamounts is fixed */}
             </div>
           </div>
         </div>
