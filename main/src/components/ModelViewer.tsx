@@ -2420,18 +2420,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         </div>
         )}
 
-        {/* Control Instructions */}
-        {!showOnboarding && (
-        <div className="absolute bottom-24 right-6 z-10 pointer-events-none">
-          <div className="text-sm font-mono text-[#00d9ff]/80 space-y-1 text-right bg-[#0a2540]/80 px-4 py-3 rounded-lg backdrop-blur-sm border-2 border-[#4080bf]/50" style={{ textShadow: '0 0 5px rgba(0, 217, 255, 0.5)', boxShadow: '0 0 15px rgba(0, 217, 255, 0.3)' }}>
-            <div className="font-semibold">Left Click + Drag: Rotate</div>
-            <div className="font-semibold">Right Click + Drag: Pan</div>
-            <div className="font-semibold">Scroll: Zoom In/Out</div>
-            <div className="font-semibold">⌘ + Click + Drag: Pan (Mac)</div>
-          </div>
-        </div>
-        )}
-
         {/* Inspector Panel */}
         {showInspector && (
           <div

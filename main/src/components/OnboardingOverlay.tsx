@@ -34,7 +34,7 @@ export default function OnboardingOverlay({
 
   return (
     <div className="absolute inset-0 z-50 bg-black/95 backdrop-blur-sm animate-in fade-in duration-500">
-      <div className="absolute left-6 top-32 w-80 z-50">
+      <div className="absolute left-1/2 top-32 -translate-x-1/2 w-80 z-50">
         {/* Actions Container */}
         <div className="border-2 border-[#00d9ff] p-2 rounded-lg shadow-2xl" style={{ backgroundColor: 'rgba(5, 15, 26, 0.9)', boxShadow: '0 0 25px rgba(0, 217, 255, 0.4)' }}>
 
