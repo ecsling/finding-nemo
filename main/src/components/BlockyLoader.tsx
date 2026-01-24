@@ -35,6 +35,7 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
              setTimeout(() => onFinished(), 0);
           }
           return 100;
+
         }
         return prev + Math.random() * 8;
       });

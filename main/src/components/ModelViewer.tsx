@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -79,7 +78,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   const [currentDemoModelId, setCurrentDemoModelId] = useState<string | null>(null);
   const [isBottomDropdownOpen, setIsBottomDropdownOpen] = useState(false);
   const bottomDropdownRef = useRef<HTMLDivElement>(null);
-  const [showInteractionHint, setShowInteractionHint] = useState(false);
   const [objConnected, setObjConnected] = useState(false);
   const [camConnected, setCamConnected] = useState(false);
   const [objDeviceName, setObjDeviceName] = useState<string>("—");
@@ -190,25 +188,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  // Show interaction hint when model loads
-  useEffect(() => {
-    if (modelReady && !showOnboarding) {
-      setShowInteractionHint(true);
-      // Auto-hide after 8 seconds
-      const timer = setTimeout(() => {
-        setShowInteractionHint(false);
-      }, 8000);
-      return () => clearTimeout(timer);
-    }
-  }, [modelReady, showOnboarding]);
-
-  // Hide hint when user selects an object
-  useEffect(() => {
-    if (selectedObject) {
-      setShowInteractionHint(false);
-    }
-  }, [selectedObject]);
 
   // BLE UUIDs
   const SERVICE_UUID = "12345678-1234-5678-1234-56789abcdef0";
@@ -1874,22 +1853,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     });
   };
 
-  const exportGLB = () => {
-    if (!sceneRef.current) return;
-    const exporter = new GLTFExporter();
-    exporter.parse(
-      sceneRef.current,
-      (result) => {
-        const output = JSON.stringify(result, null, 2);
-        const blob = new Blob([output], { type: "text/plain" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `model-${Date.now()}.glb`;
-        link.click();
-      },
-      (err) => console.error(err)
-    );
-  };
 
   const identifyPart = async () => {
     // Use ref as fallback if state hasn't updated yet (e.g., after auto-selection)
@@ -2110,23 +2073,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     }
   };
 
-  const handleExport = () => {
-    if (!sceneRef.current) return;
-
-    // Export the scene as GLB
-    new GLTFExporter().parse(
-      sceneRef.current,
-      (result) => {
-        const output = JSON.stringify(result, null, 2);
-        const blob = new Blob([output], { type: "text/plain" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `model-${Date.now()}.glb`;
-        link.click();
-      },
-      (err) => console.error(err)
-    );
-  };
 
   const handleDemoSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const modelId = e.target.value;
@@ -2371,28 +2317,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           <div className="flex items-center gap-3 pointer-events-auto">
             {/* Removed wireframe/solid toggle - only solid mode now */}
             <button
-              onClick={exportGLB}
-              className="h-12 px-5 bg-[#0a2540] border-2 border-[#4080bf] text-[#00d9ff] text-sm font-bold hover:bg-[#4080bf] hover:text-white transition-all flex items-center gap-2 uppercase tracking-[0.15em] cursor-pointer rounded-lg"
-              style={{ 
-                boxShadow: '0 0 15px rgba(64, 128, 191, 0.3)',
-                textShadow: '0 0 5px rgba(0, 217, 255, 0.5)'
-              }}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              Export
-            </button>
-            <button
               onClick={resetView}
               className="h-12 px-5 bg-[#0a2540] border-2 border-[#4080bf] text-[#00d9ff] text-sm font-bold hover:bg-[#4080bf] hover:text-white transition-all flex items-center gap-2 uppercase tracking-[0.15em] cursor-pointer rounded-lg"
               style={{ 
@@ -2606,48 +2530,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           onMouseMove={handleMouseMove}
         />
 
-        {/* Interaction Hint Popup */}
-        {showInteractionHint && (
-          <div className="absolute right-8 top-1/2 -translate-y-1/2 z-40 animate-in fade-in slide-in-from-right-4 duration-500">
-            <div className="relative">
-              {/* Pointer Arrow - pointing left now */}
-              <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-r-[14px] border-r-[#00d9ff]" />
-              
-              {/* Hint Box */}
-              <div className="bg-[#0a2540] border-2 border-[#00d9ff] px-6 py-4 shadow-2xl max-w-[280px] rounded-lg" style={{ boxShadow: '0 0 25px rgba(0, 217, 255, 0.5)' }}>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-[#00d9ff] flex items-center justify-center shrink-0 mt-0.5 rounded-lg" style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.6)' }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                      <path d="M2 17l10 5 10-5"/>
-                      <path d="M2 12l10 5 10-5"/>
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-white text-sm font-bold uppercase tracking-[0.15em] mb-2" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
-                      Quick Tip
-                    </p>
-                    <p className="text-white/90 text-sm font-mono leading-relaxed" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.2)' }}>
-                      Click on the model to open the inspector panel and explore its components
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Dismiss Button */}
-                <button
-                  onClick={() => setShowInteractionHint(false)}
-                  className="absolute -top-3 -right-3 w-8 h-8 bg-black text-[#00d9ff] flex items-center justify-center hover:bg-[#00d9ff] hover:text-black transition-all cursor-pointer border-2 border-[#00d9ff] rounded-lg"
-                  style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.5)' }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Annotated Image Modal */}
         {showAnnotatedModal && annotatedImage && (
