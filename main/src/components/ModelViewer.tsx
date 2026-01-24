@@ -350,13 +350,13 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
   const handleResetView = () => {
     if (cameraRef.current && controlsRef.current) {
-      controlsRef.current.target.set(0, -4, 0); // Reset to ship position
+      controlsRef.current.target.set(0, -1, 0); // Reset to ship position at seabed level
       controlsRef.current.reset();
-      cameraStateRef.current.camR = 12;
+      cameraStateRef.current.camR = 10;
       cameraStateRef.current.camAz = Math.PI / 4;
-      cameraStateRef.current.camEl = Math.PI / 6;
+      cameraStateRef.current.camEl = 0; // Horizontal view
       cameraStateRef.current.camAzT = Math.PI / 4;
-      cameraStateRef.current.camElT = Math.PI / 6;
+      cameraStateRef.current.camElT = 0;
     }
   };
 
@@ -745,23 +745,23 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       0.05,
       2000
     );
-    // Initialize camera position focused on ship location (lower)
+    // Initialize camera at ship level for horizontal view (like looking at a shipwreck)
     const DEFAULT_AZ = Math.PI / 4;
-    const DEFAULT_EL = Math.PI / 6;
-    const DEFAULT_R = 12; // Further back to see more of the scene
+    const DEFAULT_EL = 0; // Horizontal view (0 elevation = same plane as ship)
+    const DEFAULT_R = 10; // Distance from ship
     cameraStateRef.current.camR = DEFAULT_R;
     cameraStateRef.current.camAz = DEFAULT_AZ;
     cameraStateRef.current.camEl = DEFAULT_EL;
     cameraStateRef.current.camAzT = DEFAULT_AZ;
     cameraStateRef.current.camElT = DEFAULT_EL;
     
-    const shipHeight = -4; // Ship is positioned lower
+    const shipHeight = -1; // Ship just above seabed
     camera.position.set(
       DEFAULT_R * Math.cos(DEFAULT_EL) * Math.sin(DEFAULT_AZ),
-      DEFAULT_R * Math.sin(DEFAULT_EL) + shipHeight,
+      shipHeight, // Same height as ship for eye-level view
       DEFAULT_R * Math.cos(DEFAULT_EL) * Math.cos(DEFAULT_AZ)
     );
-    camera.lookAt(0, shipHeight, 0); // Look at ship position
+    camera.lookAt(0, shipHeight, 0); // Look at ship at same level
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({
@@ -781,7 +781,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.maxDistance = 100;
-    controls.target.set(0, -4, 0); // Focus on ship position (lower)
+    controls.target.set(0, -1, 0); // Focus on ship position (just above seabed)
     controlsRef.current = controls;
 
     // Lighting - Brighter underwater atmosphere for better visibility
@@ -901,12 +901,13 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             .addScaledVector(right, state.translateV.x)
             .addScaledVector(upVec, state.translateV.y);
 
-          // Set camera position (centered on ship at lower position)
-          const shipFocusPoint = new THREE.Vector3(0, -4, 0);
-          const camPos = new THREE.Vector3().addVectors(basePos, translate).add(shipFocusPoint);
+          // Set camera position (at same level as ship for horizontal view)
+          const shipFocusPoint = new THREE.Vector3(0, -1, 0);
+          const camPos = new THREE.Vector3().addVectors(basePos, translate);
+          camPos.y += shipFocusPoint.y; // Keep camera at ship level
           camera.position.copy(camPos);
 
-          // Look at ship position
+          // Look at ship position at same level
           const target = shipFocusPoint.clone().add(translate);
           camera.lookAt(target);
         }
@@ -1213,9 +1214,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         const scale = 4 / (maxDim || 1);
         flatGroup.scale.set(scale, scale, scale);
 
-        // Center the model at origin and position MUCH lower (deep in the seabed)
+        // Center the model at origin and position just above seabed (like it sunk and is resting)
         flatGroup.position.copy(center).multiplyScalar(-scale);
-        flatGroup.position.y -= 6; // Much lower so seabed hills are visible above
+        flatGroup.position.y -= 1; // Just 1 meter above seabed - ship is resting on ocean floor
         flatGroup.updateMatrixWorld(true);
 
         // Create a container group that won't rotate with background
@@ -1299,8 +1300,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         
         // Center it
         landscape.position.copy(center).multiplyScalar(-scale);
-        // Position it below the main model area (lowered more so ship sits on/in seabed)
-        landscape.position.y -= 8; // Moved higher so ships appear lower relative to it
+        // Position seabed so ship appears to be resting on it (just below ship level)
+        landscape.position.y -= 2; // Seabed slightly below ship so ship rests on top
         
         // Make all meshes semi-transparent with lighter ocean color for better visibility
         landscape.traverse((child) => {
