@@ -92,43 +92,65 @@ export default function Home() {
 
   return (
     <div 
-      className="relative min-h-screen text-[#e0f2ff] font-mono flex flex-col overflow-hidden"
+      className="relative min-h-screen text-white font-mono flex flex-col overflow-hidden"
       style={{
-        background: 'linear-gradient(to bottom, #1a4a6a 0%, #0d2d47 25%, #0a1f35 50%, #081a2e 75%, #050f1a 100%)',
+        background: '#000000',
         minHeight: '100vh'
       }}
     >
-
-      {/* Animated Waves Background */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="wave"></div>
-        <div className="wave"></div>
-        <div className="wave"></div>
+      {/* Animated grid background */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0, 217, 255, 0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 217, 255, 0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+            animation: 'gridPulse 4s ease-in-out infinite'
+          }}
+        />
+      </div>
+      
+      {/* Scanlines overlay */}
+      <div className="fixed inset-0 pointer-events-none z-[1] opacity-10">
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'repeating-linear-gradient(0deg, rgba(0, 217, 255, 0.1) 0px, transparent 1px, transparent 2px, rgba(0, 217, 255, 0.1) 3px)',
+            animation: 'scanlines 8s linear infinite'
+          }}
+        />
       </div>
 
-      {/* Ambient Particle Noise */}
-      <div className="fixed inset-0 pointer-events-none z-[1]">
-        {Array.from({ length: 50 }).map((_, i) => (
+      {/* Floating geometric particles */}
+      <div className="fixed inset-0 pointer-events-none z-[2]">
+        {Array.from({ length: 30 }).map((_, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full bg-white"
+            className="absolute"
             style={{
-              width: `${1 + (i % 2)}px`,
-              height: `${1 + (i % 2)}px`,
+              width: `${4 + (i % 3) * 2}px`,
+              height: `${4 + (i % 3) * 2}px`,
               left: `${(i * 37.7) % 100}%`,
               top: `${(i * 23.3) % 100}%`,
-              opacity: 0.15 + (i % 3) * 0.05
+              background: i % 3 === 0 ? '#00d9ff' : 'transparent',
+              border: i % 3 !== 0 ? '1px solid rgba(0, 217, 255, 0.4)' : 'none',
+              boxShadow: '0 0 10px rgba(0, 217, 255, 0.5)',
+              transform: `rotate(${i * 45}deg)`
             }}
             animate={{
-              x: [0, 15, -10, 8, 0],
-              y: [0, 25, 15, -12, 0],
-              opacity: [0.15, 0.25, 0.2, 0.3, 0.15]
+              x: [0, 20 + (i % 5) * 10, -15, 10, 0],
+              y: [0, 30 + (i % 4) * 10, 20, -10, 0],
+              opacity: [0.3, 0.6, 0.4, 0.7, 0.3],
+              rotate: [i * 45, i * 45 + 180, i * 45 + 360]
             }}
             transition={{
-              duration: 12 + (i % 5) * 3,
+              duration: 15 + (i % 5) * 3,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: i * 0.15
+              delay: i * 0.2
             }}
           />
         ))}
@@ -145,15 +167,15 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Nav Items starting right after the box */}
-          <div className="hidden md:flex h-full items-center px-6 gap-8 flex-1">
+          {/* Nav Items - Cyberpunk style */}
+          <div className="hidden md:flex h-full items-center px-6 gap-6 flex-1">
             {[
-              { name: 'Process', href: '#process' },
-              { name: 'Metrics', href: '#metrics' },
-              { name: 'Interactive Demo', href: '#interactive-demo' },
-              { name: 'Future Extensions', href: '#future-extensions' }
-            ].map((item) => (
-              <div key={item.name} className="flex items-center gap-8 group">
+              { name: 'PROCESS', href: '#process' },
+              { name: 'METRICS', href: '#metrics' },
+              { name: 'DEMO', href: '#interactive-demo' },
+              { name: 'FUTURE', href: '#future-extensions' }
+            ].map((item, idx) => (
+              <div key={item.name} className="flex items-center gap-6 group">
                 <a 
                   href={item.href}
                   onClick={(e) => {
@@ -163,11 +185,13 @@ export default function Home() {
                       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                   }}
-                  className="hover:text-[#DF6C42] transition-colors cursor-pointer px-4 py-2 text-base font-semibold uppercase tracking-[0.08em]"
+                  className="relative hover:text-[#00d9ff] transition-all cursor-pointer px-3 py-2 text-sm font-bold uppercase tracking-[0.15em] group-hover:shadow-[0_0_10px_rgba(0,217,255,0.5)]"
+                  style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}
                 >
                   {item.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#00d9ff] group-hover:w-full transition-all duration-300" style={{ boxShadow: '0 0 8px rgba(0, 217, 255, 0.8)' }}></span>
                 </a>
-                <span className="text-[#e0f2ff]/20 group-last:hidden">/</span>
+                <span className="text-[#00d9ff]/30 group-last:hidden text-xs">|</span>
               </div>
             ))}
           </div>
@@ -258,41 +282,46 @@ export default function Home() {
                />
              </motion.div>
 
-             <motion.div 
-               className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[8px] lg:text-[10px] uppercase tracking-wider w-fit relative z-[5]"
-               style={{ 
-                 color: '#FFFFFF',
-                 textShadow: '0 1px 2px rgba(0,0,0,0.25)'
-               }}
+             <motion.div
+               className="relative z-[5] mb-4"
                variants={staggerItem}
              >
-              
-               <div className="w-1.5 h-1.5 bg-green-500"></div>
-               System Active
+               <div className="w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center relative mx-auto">
+                 <div className="absolute inset-0 border-2 border-[#00d9ff] animate-pulse" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 30px rgba(0, 217, 255, 0.6)' }}></div>
+                 <div className="w-10 h-10 lg:w-12 lg:h-12 bg-black border-2 border-[#00d9ff] relative z-10" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 20px rgba(0, 217, 255, 0.8)' }}></div>
+               </div>
+             </motion.div>
+
+             <motion.div 
+               className="inline-flex items-center gap-2 px-4 py-1.5 border-2 border-[#00d9ff] text-[9px] lg:text-[11px] uppercase tracking-[0.2em] w-fit relative z-[5] mb-6 bg-black/50"
+               variants={staggerItem}
+               style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.4)' }}
+             >
+               <div className="w-2 h-2 bg-[#00ff00] animate-pulse" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 10px rgba(0, 255, 0, 0.8)' }}></div>
+               <span className="text-white font-bold" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>SYSTEM ACTIVE</span>
              </motion.div>
              
              <motion.h2 
-               className="text-3xl lg:text-5xl font-sans leading-none tracking-tight relative z-[5] text-center"
-               style={{ 
-                 color: '#FFFFFF',
-                 fontWeight: 700,
-                 textShadow: '0 1px 2px rgba(0,0,0,0.25)'
-               }}
+               className="text-4xl lg:text-6xl font-sans font-bold leading-none tracking-tight text-white relative z-[5] text-center mb-6"
                variants={staggerItem}
+               style={{ textShadow: '0 0 20px rgba(0, 217, 255, 0.6), 0 0 40px rgba(0, 217, 255, 0.3)' }}
              >
-               Deep Sea Container Search
+               OCEANCACHE
              </motion.h2>
              
              <motion.p 
-               className="text-xs lg:text-sm max-w-lg lg:max-w-xl leading-relaxed relative z-[5] text-center"
-               style={{ 
-                 color: '#FFFFFF',
-                 fontWeight: 500,
-                 textShadow: '0 1px 2px rgba(0,0,0,0.25)'
-               }}
+               className="text-sm lg:text-base text-white/80 max-w-lg lg:max-w-2xl leading-relaxed relative z-[5] text-center font-bold tracking-wide mb-3"
+               variants={staggerItem}
+               style={{ textShadow: '0 0 10px rgba(255, 255, 255, 0.3)' }}
+             >
+               DEEP SEA RECOVERY SYSTEM // 3D VISUALIZATION PLATFORM
+             </motion.p>
+             
+             <motion.p 
+               className="text-xs lg:text-sm text-[#00d9ff]/80 max-w-lg lg:max-w-xl leading-relaxed relative z-[5] text-center"
                variants={staggerItem}
              >
-               A 3D decision-support system that reduces underwater search time for lost shipping containers by prioritizing high-probability recovery zones.
+               Precision underwater navigation at 2,850 meters. Real-time container verification with AI-assisted analysis.
              </motion.p>
              
              {/* Mobile 3D Visualization Box */}
@@ -307,16 +336,11 @@ export default function Home() {
              </motion.div>
              
              <motion.div 
-               className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-2 relative z-[5]"
+               className="flex flex-col sm:flex-row items-center gap-4 pt-6 relative z-[5]"
                variants={staggerItem}
              >
               <button 
-                className="w-full sm:w-auto px-6 py-3 border border-white text-[10px] uppercase hover:bg-white/10 transition-colors cursor-pointer"
-                style={{ 
-                  color: '#FFFFFF',
-                  fontWeight: 600,
-                  textShadow: '0 1px 2px rgba(0,0,0,0.25)'
-                }}
+                className="w-full sm:w-auto px-8 py-3 border-2 border-[#00d9ff] text-[11px] uppercase font-bold hover:bg-[#00d9ff] hover:text-black transition-all cursor-pointer tracking-[0.15em] group relative overflow-hidden"
                 onClick={(e) => {
                   e.preventDefault();
                   const element = document.querySelector('#process');
@@ -324,16 +348,16 @@ export default function Home() {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
                 }}
+                style={{ 
+                  boxShadow: '0 0 15px rgba(0, 217, 255, 0.3)',
+                  textShadow: '0 0 10px rgba(0, 217, 255, 0.6)'
+                }}
               >
-                 How It Works
+                 <span className="relative z-10">HOW IT WORKS</span>
+                 <div className="absolute inset-0 bg-[#00d9ff] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
                </button>
                <button
-                 className="w-full sm:w-auto px-6 py-3 border-2 border-white text-[10px] uppercase hover:bg-white/10 transition-colors text-center sm:text-left mb-2 sm:mb-0"
-                 style={{ 
-                   color: '#FFFFFF',
-                   fontWeight: 600,
-                   textShadow: '0 1px 2px rgba(0,0,0,0.25)'
-                 }}
+                 className="w-full sm:w-auto px-8 py-3 bg-[#00d9ff] text-black text-[11px] uppercase font-bold hover:bg-white transition-all cursor-pointer tracking-[0.15em] relative group"
                  onClick={(e) => {
                    e.preventDefault();
                    const element = document.querySelector('#map-viewer');
@@ -341,8 +365,12 @@ export default function Home() {
                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                    }
                  }}
+                 style={{ 
+                   clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)',
+                   boxShadow: '0 0 25px rgba(0, 217, 255, 0.6)'
+                 }}
                >
-                 Launch Search Demo
+                 <span className="relative z-10 font-black">LAUNCH DIVE →</span>
                </button>
              </motion.div>
            </motion.div>
@@ -1181,6 +1209,19 @@ export default function Home() {
           </div>
         </div>
       )}
+      
+      {/* Cyberpunk animations */}
+      <style jsx global>{`
+        @keyframes gridPulse {
+          0%, 100% { opacity: 0.2; }
+          50% { opacity: 0.4; }
+        }
+        
+        @keyframes scanlines {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(50px); }
+        }
+      `}</style>
     </div>
   );
 }
