@@ -5,6 +5,7 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { CTASection } from '@/components/ui/hero-dithering-card';
 
 const CubeViewer = dynamic(() => import('@/components/CubeViewer'), { ssr: false });
 
@@ -72,57 +73,8 @@ export default function Home() {
   return (
     <div className="relative min-h-screen bg-[#E5E6DA] text-[#1D1E15] font-mono flex flex-col">
       
-      {/* Navigation Header */}
-      <nav className="border-b border-[#1D1E15] px-0 h-16 flex justify-between items-center bg-[#E5E6DA] z-50">
-        <div className="flex items-center h-full flex-1">
-          {/* Logo Box - Aligned with Left Sidebar */}
-          {/* Scaled down from 179px */}
-          <div className="w-[134px] h-full flex items-center justify-center bg-[#E5E6DA] shrink-0">
-            <div className="w-10 h-10 flex items-center justify-center">
-              <img src="/logo.png" alt="Mesh Logo" className="w-6 h-6 object-contain invert" />
-            </div>
-          </div>
-          
-          {/* Nav Items starting right after the box */}
-          <div className="hidden md:flex h-full items-center px-6 gap-8 text-[10px] font-medium uppercase tracking-wide flex-1">
-            {[
-              { name: 'Process', href: '#process' },
-              { name: 'Metrics', href: '#metrics' },
-              { name: 'Integrations', href: '#integrations' },
-              { name: 'Motion Control', href: '#mesh-viewer' },
-              { name: 'Visualize', href: '#visualize' }
-            ].map((item) => (
-              <div key={item.name} className="flex items-center gap-8 group">
-                <a 
-                  href={item.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const element = document.querySelector(item.href);
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                  }}
-                  className="hover:text-[#DF6C42] transition-colors cursor-pointer"
-                >
-                  {item.name}
-                </a>
-                <span className="text-[#1D1E15]/20 group-last:hidden">/</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-4 px-6">
-          <div className="text-[10px] uppercase tracking-widest opacity-50">Mesh</div>
-          <Link
-            href="/dashboard"
-            className="px-5 py-1.5 bg-[#DF6C42] text-[#E5E6DA] text-[10px] uppercase font-bold hover:bg-[#1D1E15] transition-colors"
-            onClick={handleLaunchDemoClick}
-          >
-            View Demo
-          </Link>
-        </div>
-      </nav>
+      {/* CTA Section */}
+      <CTASection />
 
       {/* Main Content Grid */}
       <main className="flex-1 grid grid-cols-12 divide-x divide-[#1D1E15]">
