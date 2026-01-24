@@ -137,4 +137,4 @@ No backend infrastructure required for MVP deployment.
 ---
 
 ## License
-Proof-of-concept prototype implementation. Consider MIT License for open-source distribution if project transitions to public repository.
+Proof-of-concept prototype implementation. Consider MIT License for open-source distribution if project transitions to public repository.but i wa
