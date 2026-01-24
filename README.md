@@ -21,3 +21,36 @@ The system provides:
 - **Comparative visualization toggle:** legacy circular search vs optimized probability-based search
 - **Container metadata lookup** via serial identifier (mock database integration)
 - **Quantitative performance metric:** computed search-area reduction percentage
+
+---
+
+## Key Features
+### 1) Incident Configuration Layer (Input Parameters)
+All parameters support synthetic data injection:
+- **Last known GPS telemetry** (WGS84 latitude/longitude coordinates)
+- **Container serial identifier** (ISO 6346 compliant)
+- **Vessel trajectory polyline** (ordered coordinate array)
+- **Historical incident dataset** (synthetic point cloud)
+
+### 2) Rule-Based Probabilistic Scoring Engine (Core Algorithm)
+Implements an interpretable, audit-friendly probability model generating scores per grid cell:
+
+- **Baseline distribution:** uniform probability within radial distance from last-known coordinates (baseline comparison view)
+- **Route proximity weighting:** exponential decay function increasing probability near vessel trajectory segments
+- **Historical cluster analysis:** Gaussian kernel density estimation near documented loss coordinates
+- **Normalization pipeline:** score standardization to [0,1] interval for consistent heatmap rendering
+
+Output: continuous probability density field for search zone delineation.
+
+### 3) 3D Geospatial Visualization Engine (Mesh + Overlay Rendering)
+- Load bathymetric mesh assets (`.glb`/`.gltf` format support)
+- Render semi-transparent probability heatmap with configurable opacity
+- Implement orbital camera controls (rotation/zoom/pan via mouse/touch)
+- Toggle visualization modes:
+  - **Legacy mode:** circular search radius overlay
+  - **Optimized mode:** probability-weighted heatmap with threshold-based high-confidence zone highlighting
+
+### 4) Impact Metrics Dashboard (Operational Effectiveness)
+- Display computed metric (e.g., "58% reduction in initial search area")
+- Quantify salvage time and cost implications
+- Document **future capability extensions** (insurance analytics integration) for roadmap visibility
