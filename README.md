@@ -109,3 +109,27 @@ No backend infrastructure required for MVP deployment.
 - **Real-time recovery telemetry:** mark verified "found" coordinates and dynamically update probability field with Bayesian inference
 - **Insurance integration module:** damage assessment algorithms, claim validation framework, automated reporting export
 - **Live data stream integration:** oceanic current/weather API connectors, AIS trajectory ingestion, side-scan sonar data fusion
+
+---
+
+## Repository Structure
+```
+/src/pages
+  - Home.tsx                    # Landing view component
+  - Map.tsx                     # Interactive geospatial dashboard
+  - Solution.tsx                # Impact metrics view
+
+/src/components
+  - MeshViewer.tsx              # 3D bathymetric mesh renderer
+  - HeatmapOverlay.tsx          # Probability density visualization layer
+  - IncidentForm.tsx            # Parameter input interface
+  - ToggleBeforeAfter.tsx       # Visualization mode switcher
+
+/src/data
+  - containers.json             # Mock container registry
+  - routes.json                 # Synthetic vessel trajectory data
+  - historical_losses.json      # Historical incident dataset
+
+/public/assets
+  - seafloor.glb                # Bathymetric terrain mesh asset
+```
