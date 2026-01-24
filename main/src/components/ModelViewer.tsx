@@ -826,18 +826,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     const raycaster = new THREE.Raycaster();
     raycasterRef.current = raycaster;
 
-    // Placeholder spinning wireframe rounded cube
-    const roundedCubeGeometry = new THREE.BoxGeometry(2, 2, 2, 4, 4, 4);
-    const wireframeMaterial = new THREE.MeshBasicMaterial({
-      color: 0x1D1E15,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.6,
-    });
-    const placeholder = new THREE.Mesh(roundedCubeGeometry, wireframeMaterial);
-    placeholder.position.set(0, 0, 0);
-    scene.add(placeholder);
-    placeholderRef.current = placeholder;
+    // Placeholder removed - no cube background
 
     // Animation loop
     let lastT = performance.now();
@@ -908,14 +897,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         }
       }
 
-      // Rotate placeholder if no model is loaded
-      if (placeholderRef.current && generatedObjectsRef.current.length === 0) {
-        placeholderRef.current.rotation.x += dt * 0.001;
-        placeholderRef.current.rotation.y += dt * 0.0015;
-        placeholderRef.current.visible = true;
-      } else if (placeholderRef.current) {
-        placeholderRef.current.visible = false;
-      }
+      // Placeholder removed - no rotation logic needed
 
       if (composerRef.current) composerRef.current.render();
     };
@@ -1131,10 +1113,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     setSelectedObject(null);
     selectedObjectRef.current = null;
 
-    // Show placeholder when no models
-    if (placeholderRef.current) {
-      placeholderRef.current.visible = true;
-    }
+    // Placeholder removed - no visibility logic needed
 
     loader.load(
       url,
@@ -1210,10 +1189,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         sceneRef.current!.add(flatGroup);
         generatedObjectsRef.current.push(flatGroup);
 
-        // Hide placeholder when model is loaded
-        if (placeholderRef.current) {
-          placeholderRef.current.visible = false;
-        }
+        // Placeholder removed - no hiding logic needed
 
         if (controlsRef.current) {
           controlsRef.current.reset();
