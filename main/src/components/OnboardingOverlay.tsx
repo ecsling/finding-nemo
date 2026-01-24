@@ -33,30 +33,8 @@ export default function OnboardingOverlay({
   };
 
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm animate-in fade-in duration-500">
-      <div className="w-full max-w-2xl p-10 text-center space-y-10">
-        
-        {/* Header */}
-        <div className="space-y-4 text-left">
-          <div className="w-20 h-20 flex items-center justify-center mb-8 overflow-hidden">
-            <div className="w-16 h-16 flex items-center justify-center relative">
-              <div className="absolute inset-0 border-2 border-[#00d9ff] animate-pulse" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 30px rgba(0, 217, 255, 0.6)' }}></div>
-              <div className="w-10 h-10 bg-black border-2 border-[#00d9ff] relative z-10" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 20px rgba(0, 217, 255, 0.8)' }}></div>
-            </div>
-          </div>
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 border-2 border-[#00d9ff] text-xs uppercase tracking-[0.2em] w-fit bg-black/50 mb-6" style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.4)' }}>
-            <div className="w-2 h-2 bg-[#00ff00] animate-pulse" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 10px rgba(0, 255, 0, 0.8)' }}></div>
-            <span className="text-white font-bold" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>MISSION CONSOLE</span>
-          </div>
-          <h2 className="text-3xl font-sans font-bold leading-none tracking-tight text-white mb-4" style={{ textShadow: '0 0 20px rgba(0, 217, 255, 0.6), 0 0 40px rgba(0, 217, 255, 0.3)' }}>
-            LOAD DIVE MODEL
-          </h2>
-          <p className="text-base text-white/80 font-mono uppercase tracking-wider max-w-xl leading-relaxed" style={{ textShadow: '0 0 10px rgba(255, 255, 255, 0.3)' }}>
-            Prepare for deep sea recovery mission. <br/>
-            Select a container model to begin dive preparation.
-          </p>
-        </div>
-
+    <div className="absolute inset-0 z-50 bg-black/95 backdrop-blur-sm animate-in fade-in duration-500">
+      <div className="absolute left-6 top-32 w-80 z-50">
         {/* Actions Container */}
         <div className="border-2 border-[#00d9ff] p-2 rounded-lg shadow-2xl" style={{ backgroundColor: 'rgba(5, 15, 26, 0.9)', boxShadow: '0 0 25px rgba(0, 217, 255, 0.4)' }}>
 
@@ -136,23 +114,6 @@ export default function OnboardingOverlay({
             </div>
           </div>
         </div>
-
-        {/* Footer Info */}
-        <div className="flex items-center justify-center gap-8 text-sm text-white/70 font-mono uppercase tracking-widest">
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-[#00d9ff] animate-pulse" style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}></div>
-            <span>Web Bluetooth</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-[#00d9ff] animate-pulse" style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}></div>
-            <span>AI Analysis</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-[#00d9ff] animate-pulse" style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}></div>
-            <span>Hardware Controls</span>
-          </div>
-        </div>
-
       </div>
     </div>
   );

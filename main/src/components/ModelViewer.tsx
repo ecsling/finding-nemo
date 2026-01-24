@@ -2114,7 +2114,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         
         {/* Diver HUD - Cyberpunk Game Card */}
         {!showOnboarding && (
-          <div className="absolute top-4 left-4 z-30 pointer-events-none">
+          <div className="absolute top-32 left-4 z-30 pointer-events-none">
             {/* Geometric card with glowing borders */}
             <div className="relative">
               {/* Outer glow effect */}
@@ -2354,8 +2354,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
         {/* Model Selection Bar - Hidden when onboarding is active to reduce clutter */}
         {!showOnboarding && (
-        <div className="absolute bottom-0 left-0 w-full z-10 p-6 pointer-events-none">
-          <div className="max-w-2xl mx-auto pointer-events-auto">
+        <div className="absolute left-6 bottom-6 w-80 z-10 pointer-events-none">
+          <div className="pointer-events-auto">
             <div className="bg-[#0a2540]/95 border-2 border-[#00d9ff] backdrop-blur-md p-3 flex gap-3 items-center shadow-2xl rounded-lg" style={{ boxShadow: '0 0 25px rgba(0, 217, 255, 0.4)' }}>
               {/* Foreground Model Selector - Now full width */}
               <div className="flex-1 relative" ref={bottomDropdownRef}>
