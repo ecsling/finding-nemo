@@ -349,13 +349,13 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
   const handleResetView = () => {
     if (cameraRef.current && controlsRef.current) {
-      controlsRef.current.target.set(0, -1, 0); // Reset to ship position at seabed level
+      controlsRef.current.target.set(0, -1, 0); // Reset to ship position
       controlsRef.current.reset();
-      cameraStateRef.current.camR = 10;
+      cameraStateRef.current.camR = 15;
       cameraStateRef.current.camAz = Math.PI / 4;
-      cameraStateRef.current.camEl = 0; // Horizontal view
+      cameraStateRef.current.camEl = -0.15; // Looking up from deep below
       cameraStateRef.current.camAzT = Math.PI / 4;
-      cameraStateRef.current.camElT = 0;
+      cameraStateRef.current.camElT = -0.15;
     }
   };
 
@@ -744,10 +744,10 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       0.05,
       2000
     );
-    // Initialize camera at diver/submarine level (lower, looking slightly up at ship)
+    // Initialize camera at deep diver level (much lower, looking up at ship wreck)
     const DEFAULT_AZ = Math.PI / 4;
-    const DEFAULT_EL = -0.1; // Slightly below horizontal for diver perspective
-    const DEFAULT_R = 12; // Distance from ship
+    const DEFAULT_EL = -0.15; // Looking up from below
+    const DEFAULT_R = 15; // Slightly further back for better view
     cameraStateRef.current.camR = DEFAULT_R;
     cameraStateRef.current.camAz = DEFAULT_AZ;
     cameraStateRef.current.camEl = DEFAULT_EL;
@@ -755,13 +755,13 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     cameraStateRef.current.camElT = DEFAULT_EL;
     
     const shipHeight = -1; // Ship just above seabed
-    const diverHeight = shipHeight - 2; // Diver/sub is 2 units below ship
+    const diverHeight = shipHeight - 4; // Diver is 4 units below ship (much lower)
     camera.position.set(
       DEFAULT_R * Math.cos(DEFAULT_EL) * Math.sin(DEFAULT_AZ),
-      diverHeight, // Below ship level for diver perspective
+      diverHeight, // Much lower - deep diver perspective
       DEFAULT_R * Math.cos(DEFAULT_EL) * Math.cos(DEFAULT_AZ)
     );
-    camera.lookAt(0, shipHeight, 0); // Look up at ship
+    camera.lookAt(0, shipHeight, 0); // Look up at ship from below
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({
@@ -901,14 +901,14 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             .addScaledVector(right, state.translateV.x)
             .addScaledVector(upVec, state.translateV.y);
 
-          // Set camera position (diver/submarine perspective - below ship)
+          // Set camera position (deep diver perspective - well below ship)
           const shipFocusPoint = new THREE.Vector3(0, -1, 0);
-          const diverHeight = -3; // Diver is below ship
+          const diverHeight = -5; // Diver is much lower below ship
           const camPos = new THREE.Vector3().addVectors(basePos, translate);
-          camPos.y = diverHeight; // Keep camera below ship level
+          camPos.y = diverHeight; // Keep camera well below ship level
           camera.position.copy(camPos);
 
-          // Look up at ship position from below
+          // Look up at ship position from deep below
           const target = shipFocusPoint.clone().add(translate);
           camera.lookAt(target);
         }
