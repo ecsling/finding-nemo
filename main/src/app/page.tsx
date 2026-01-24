@@ -3,14 +3,19 @@
 import React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 
 const CubeViewer = dynamic(() => import('@/components/CubeViewer'), { ssr: false });
+const Dithering = lazy(() => 
+  import("@paper-design/shaders-react").then((mod) => ({ default: mod.Dithering }))
+);
 
 export default function Home() {
   const [showMobileModal, setShowMobileModal] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHeroHovered, setIsHeroHovered] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
