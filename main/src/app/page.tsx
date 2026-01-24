@@ -225,12 +225,12 @@ export default function Home() {
         </div>
 
          {/* Main Hero Content */}
-        <div className="col-span-12 lg:col-span-7 flex flex-col">
+        <div className="col-span-12 lg:col-span-10 lg:col-start-2 flex flex-col">
           
            {/* Hero Section */}
            <motion.div 
              ref={heroRef}
-             className="pl-4 lg:pl-10 flex flex-col justify-center items-center gap-4 lg:gap-6 relative"
+             className="flex flex-col justify-center items-center gap-4 lg:gap-6 relative px-4"
              style={{ minHeight: '100vh' }}
              initial="hidden"
              animate="visible"
@@ -336,7 +336,7 @@ export default function Home() {
              </motion.div>
              
              <motion.div 
-               className="flex flex-col sm:flex-row items-center gap-4 pt-6 relative z-[5]"
+               className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 relative z-[5]"
                variants={staggerItem}
              >
               <button 
@@ -376,38 +376,13 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Right Visualization Column */}
-        <div id="map-viewer" className="col-span-12 lg:col-span-4 flex flex-col" style={{ backgroundColor: 'transparent' }}>
+        {/* Right Visualization Column - Moved to separate section */}
+        <div id="map-viewer" className="col-span-12 lg:col-span-10 lg:col-start-2 flex flex-col" style={{ backgroundColor: 'transparent' }}>
           
           {/* 3D Visualization Box */}
           <div className="hidden lg:block h-[50vh] relative overflow-hidden shrink-0" style={{ backgroundColor: 'transparent' }}>
             <div className="absolute inset-0 flex items-center justify-center">
                 <CubeViewer />
-            </div>
-          </div>
-
-          {/* Metrics Grid */}
-          <div className="flex-1 grid grid-rows-3 min-h-0">
-            <div className="px-6 py-4 flex flex-col justify-center group hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors">
-                <div className="text-[10px] uppercase opacity-50 mb-2">Preloaded Models</div>
-                <div className="text-2xl font-bold mb-3">6</div>
-                <div className="w-full h-1 bg-[#DF6C42]/20 overflow-hidden">
-                  <div className="h-full w-[95%] bg-[#DF6C42]"></div>
-                </div>
-            </div>
-            <div className="px-6 py-4 flex flex-col justify-center group hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors">
-                <div className="text-[10px] uppercase opacity-50 mb-2">Meshes Processed</div>
-                <div className="text-2xl font-bold mb-3">2.1M</div>
-                <div className="w-full h-1 bg-[#DF6C42]/20 overflow-hidden">
-                  <div className="h-full w-2/3 bg-[#DF6C42]"></div>
-                </div>
-            </div>
-            <div className="px-6 py-4 flex flex-col justify-center group hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors">
-                <div className="text-[10px] uppercase opacity-50 mb-2">Total Vertices</div>
-                <div className="text-2xl font-bold mb-3">1.72B</div>
-                <div className="w-full h-1 bg-[#DF6C42]/20 overflow-hidden">
-                  <div className="h-full w-full bg-[#DF6C42]"></div>
-                </div>
             </div>
           </div>
         </div>
