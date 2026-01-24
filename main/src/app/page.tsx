@@ -3,34 +3,13 @@
 import React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const CubeViewer = dynamic(() => import('@/components/CubeViewer'), { ssr: false });
 
 export default function Home() {
   const [showMobileModal, setShowMobileModal] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const heroRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (heroRef.current) {
-        const rect = heroRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
-        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
-        setMousePosition({ x, y });
-      }
-    };
-
-    const heroElement = heroRef.current;
-    if (heroElement) {
-      heroElement.addEventListener('mousemove', handleMouseMove);
-      return () => {
-        heroElement.removeEventListener('mousemove', handleMouseMove);
-      };
-    }
-  }, []);
 
   const handleLaunchDemoClick = (
     e?: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>
@@ -172,8 +151,7 @@ export default function Home() {
           
            {/* Hero Section */}
            <motion.div 
-             ref={heroRef}
-             className="pl-4 lg:pl-10 flex flex-col justify-center gap-4 lg:gap-6 flex-1 relative"
+             className="pl-4 lg:pl-10 flex flex-col justify-center gap-4 lg:gap-6 flex-1"
              initial="hidden"
              animate="visible"
              variants={staggerContainer}
@@ -181,12 +159,12 @@ export default function Home() {
            <motion.img 
              src="/logo.png" 
              alt="Mesh Logo" 
-             className="w-8 h-8 lg:w-12 lg:h-12 object-contain invert relative z-10"
+             className="w-8 h-8 lg:w-12 lg:h-12 object-contain invert"
              variants={staggerItem}
            />
 
              <motion.div 
-               className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[8px] lg:text-[10px] uppercase tracking-wider w-fit relative z-10"
+               className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[8px] lg:text-[10px] uppercase tracking-wider w-fit"
                variants={staggerItem}
              >
               
@@ -194,50 +172,15 @@ export default function Home() {
                Mesh
              </motion.div>
              
-             {/* Mission Control Panel - Background HUD */}
-             <div 
-               className="absolute left-0 right-0 top-1/2 -translate-y-1/2 w-full h-24 lg:h-32 pointer-events-none z-0"
-               style={{
-                 transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)`,
-                 transition: 'transform 0.1s ease-out'
-               }}
-             >
-               <div className="relative w-full h-full flex items-center justify-center">
-                 <div className="w-full max-w-4xl mx-auto px-4 lg:px-8">
-                   <div className="relative w-full h-full border border-[#1e3a5f]/30 bg-[#0a1929]/40 backdrop-blur-sm">
-                     <motion.div
-                       className="absolute left-1/4 top-1/2 -translate-y-1/2 w-32 lg:w-48 h-12 lg:h-16 bg-[#DF6C42] opacity-20 blur-sm"
-                       animate={{
-                         opacity: [0.2, 0.25, 0.2],
-                       }}
-                       transition={{
-                         duration: 4,
-                         repeat: Infinity,
-                         ease: "easeInOut"
-                       }}
-                     />
-                     <div className="absolute inset-0 flex items-center justify-between px-6 lg:px-12">
-                       <div className="text-[8px] lg:text-[10px] uppercase tracking-widest text-[#e0f2ff]/20 font-mono">
-                         MISSION CONTROL
-                       </div>
-                       <div className="text-[8px] lg:text-[10px] uppercase tracking-widest text-[#e0f2ff]/20 font-mono">
-                         SYSTEM ACTIVE
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </div>
-             
              <motion.h2 
-               className="text-3xl lg:text-5xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] relative z-10"
+               className="text-3xl lg:text-5xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff]"
                variants={staggerItem}
              >
                Deep Sea Container Search
              </motion.h2>
              
              <motion.p 
-               className="text-xs lg:text-sm opacity-70 max-w-lg lg:max-w-xl leading-relaxed relative z-10"
+               className="text-xs lg:text-sm opacity-70 max-w-lg lg:max-w-xl leading-relaxed"
                variants={staggerItem}
              >
                A 3D decision-support system that reduces underwater search time for lost shipping containers by prioritizing high-probability recovery zones.
@@ -245,7 +188,7 @@ export default function Home() {
              
              {/* Mobile 3D Visualization Box */}
              <motion.div 
-               className="lg:hidden h-64 border border-[#1e3a5f] relative overflow-hidden bg-[#0a1929] shrink-0 my-4 z-10"
+               className="lg:hidden h-64 border border-[#1e3a5f] relative overflow-hidden bg-[#0a1929] shrink-0 my-4"
                variants={staggerItem}
              >
                <div className="absolute inset-0 flex items-center justify-center">
@@ -254,7 +197,7 @@ export default function Home() {
              </motion.div>
              
              <motion.div 
-               className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-2 relative z-10"
+               className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-2"
                variants={staggerItem}
              >
               <button 
