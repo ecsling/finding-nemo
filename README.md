@@ -54,3 +54,22 @@ Output: continuous probability density field for search zone delineation.
 - Display computed metric (e.g., "58% reduction in initial search area")
 - Quantify salvage time and cost implications
 - Document **future capability extensions** (insurance analytics integration) for roadmap visibility
+
+---
+
+## Application Architecture (UI Scope)
+1. **Landing View**
+   - Problem domain introduction
+   - System methodology overview
+   - Primary navigation CTA to interactive visualization
+
+2. **Interactive Geospatial Dashboard**
+   - Incident parameter input panel (GPS, serial ID, route data, historical clusters)
+   - 3D mesh rendering viewport with WebGL acceleration
+   - Visualization mode toggle (legacy vs optimized)
+   - Legend component with real-time metric badge
+
+3. **Impact & Analytics View**
+   - Search-area reduction performance metric
+   - Operational value proposition (temporal/fiscal savings)
+   - Product roadmap: insurance claim validation pipeline
