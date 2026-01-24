@@ -322,23 +322,23 @@ export default function Home() {
                 {[
                   {
                     step: '01',
-                    title: 'Generate',
-                    description: 'Upload your 3D models or generate your own geospatial data files through our streamlined interface.',
+                    title: 'Incident Input',
+                    description: 'Operators input the last known GPS location of a lost container, its vessel route, and basic container metadata to define the initial search context.',
                   },
                   {
                     step: '02',
-                    title: 'Process',
-                    description: 'AI-powered processing generates meshes and extracts components automatically.',
+                    title: 'Search Modeling',
+                    description: 'A rule-based spatial model prioritizes likely recovery zones using distance from the incident point, proximity to the vessel route, and historical loss patterns.',
                   },
                   {
                     step: '03',
-                    title: 'Analyze',
-                    description: 'Real-time visualization and analysis tools help you understand your data.',
+                    title: '3D Visualization',
+                    description: 'Probability-weighted search zones are rendered directly onto a 3D ocean floor mesh, enabling intuitive spatial reasoning and faster decision-making.',
                   },
                   {
                     step: '04',
-                    title: 'Export',
-                    description: 'Export processed models, masks, and metadata in your preferred format.',
+                    title: 'Recovery Focus',
+                    description: 'Teams concentrate efforts on high-confidence areas first, reducing overall search time, operational cost, and environmental disturbance.',
                   },
                 ].map((item, idx) => (
                   <motion.div
