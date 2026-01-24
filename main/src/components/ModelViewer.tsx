@@ -2278,16 +2278,17 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         `}</style>
         
         {/* Top Controls */}
-        <div className="absolute top-0 left-0 w-full z-10 p-4 flex justify-between items-center pointer-events-none">
+        <div className="absolute top-0 left-0 w-full z-10 p-6 flex justify-between items-center pointer-events-none">
           {/* Top Left - BLE Stick Controls */}
-          <div className="flex items-center gap-2 pointer-events-auto">
+          <div className="flex items-center gap-3 pointer-events-auto">
             {/* OBJ Stick Controls */}
-            <div className="bg-black/90 border-2 border-[#00d9ff] px-2 py-1.5 flex items-center gap-1.5 backdrop-blur-md" style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.3)' }}>
-              <span className="text-[10px] font-bold text-white uppercase tracking-wider">OBJ</span>
+            <div className="bg-[#0a2540]/95 border-2 border-[#00d9ff] px-4 py-2.5 flex items-center gap-2 backdrop-blur-md rounded-lg" style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)' }}>
+              <span className="text-sm font-bold text-white uppercase tracking-[0.15em]" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>OBJ</span>
               {!objConnected ? (
                 <button
                   onClick={handleObjConnect}
-                  className="px-2 py-1 bg-[#00d9ff] text-black text-[10px] font-bold hover:bg-white transition-colors uppercase cursor-pointer"
+                  className="px-4 py-2 bg-[#00d9ff] text-black text-sm font-bold hover:bg-white transition-all uppercase cursor-pointer rounded-lg"
+                  style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.4)' }}
                 >
                   CONNECT
                 </button>
@@ -2295,20 +2296,23 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                 <>
                   <button
                     onClick={handleObjDisconnect}
-                    className="px-2 py-1 bg-[#dc3545] text-white text-[10px] rounded font-bold hover:bg-[#c82333] transition-colors uppercase cursor-pointer"
+                    className="px-4 py-2 bg-[#DF6C42] text-white text-sm rounded-lg font-bold hover:bg-[#c82333] transition-all uppercase cursor-pointer"
+                    style={{ boxShadow: '0 0 15px rgba(223, 108, 66, 0.4)' }}
                   >
                     Disconnect
                   </button>
-                  <span className="text-[10px] text-[#00d9ff] font-mono tracking-wider">{objDeviceName}</span>
+                  <span className="text-sm text-[#00d9ff] font-mono tracking-wider font-semibold" style={{ textShadow: '0 0 5px rgba(0, 217, 255, 0.5)' }}>{objDeviceName}</span>
                   <button
                     onClick={handleObjZero}
-                    className="px-2 py-1 bg-black border border-[#00d9ff] text-white text-[10px] font-bold hover:bg-[#00d9ff] hover:text-black transition-colors uppercase cursor-pointer"
+                    className="px-4 py-2 bg-black border-2 border-[#00d9ff] text-white text-sm font-bold hover:bg-[#00d9ff] hover:text-black transition-all uppercase cursor-pointer rounded-lg"
+                    style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.3)' }}
                   >
                     ZERO
                   </button>
                   <button
                     onClick={handleResetTranslate}
-                    className="px-2 py-1 bg-black border border-[#00d9ff] text-white text-[10px] font-bold hover:bg-[#00d9ff] hover:text-black transition-colors uppercase cursor-pointer"
+                    className="px-4 py-2 bg-black border-2 border-[#00d9ff] text-white text-sm font-bold hover:bg-[#00d9ff] hover:text-black transition-all uppercase cursor-pointer rounded-lg"
+                    style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.3)' }}
                   >
                     RESET
                   </button>
@@ -2317,12 +2321,13 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             </div>
 
             {/* CAM Stick Controls */}
-            <div className="bg-black/90 border-2 border-[#00d9ff] px-2 py-1.5 flex items-center gap-1.5 backdrop-blur-md" style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.3)' }}>
-              <span className="text-[10px] font-bold text-white uppercase tracking-wider">CAM</span>
+            <div className="bg-[#0a2540]/95 border-2 border-[#00d9ff] px-4 py-2.5 flex items-center gap-2 backdrop-blur-md rounded-lg" style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)' }}>
+              <span className="text-sm font-bold text-white uppercase tracking-[0.15em]" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>CAM</span>
               {!camConnected ? (
                 <button
                   onClick={handleCamConnect}
-                  className="px-2 py-1 bg-[#00d9ff] text-black text-[10px] font-bold hover:bg-white transition-colors uppercase cursor-pointer"
+                  className="px-4 py-2 bg-[#00d9ff] text-black text-sm font-bold hover:bg-white transition-all uppercase cursor-pointer rounded-lg"
+                  style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.4)' }}
                 >
                   CONNECT
                 </button>
@@ -2330,20 +2335,23 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                 <>
                   <button
                     onClick={handleCamDisconnect}
-                    className="px-2 py-1 bg-[#ff0055] text-white text-[10px] font-bold hover:bg-[#ff3377] transition-colors uppercase cursor-pointer"
+                    className="px-4 py-2 bg-[#DF6C42] text-white text-sm rounded-lg font-bold hover:bg-[#c82333] transition-all uppercase cursor-pointer"
+                    style={{ boxShadow: '0 0 15px rgba(223, 108, 66, 0.4)' }}
                   >
                     DISCONNECT
                   </button>
-                  <span className="text-[10px] text-[#00d9ff] font-mono tracking-wider">{camDeviceName}</span>
+                  <span className="text-sm text-[#00d9ff] font-mono tracking-wider font-semibold" style={{ textShadow: '0 0 5px rgba(0, 217, 255, 0.5)' }}>{camDeviceName}</span>
                   <button
                     onClick={handleCamZero}
-                    className="px-2 py-1 bg-black border border-[#00d9ff] text-white text-[10px] font-bold hover:bg-[#00d9ff] hover:text-black transition-colors uppercase cursor-pointer"
+                    className="px-4 py-2 bg-black border-2 border-[#00d9ff] text-white text-sm font-bold hover:bg-[#00d9ff] hover:text-black transition-all uppercase cursor-pointer rounded-lg"
+                    style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.3)' }}
                   >
                     ZERO
                   </button>
                   <button
                     onClick={handleResetView}
-                    className="px-2 py-1 bg-black border border-[#00d9ff] text-white text-[10px] font-bold hover:bg-[#00d9ff] hover:text-black transition-colors uppercase cursor-pointer"
+                    className="px-4 py-2 bg-black border-2 border-[#00d9ff] text-white text-sm font-bold hover:bg-[#00d9ff] hover:text-black transition-all uppercase cursor-pointer rounded-lg"
+                    style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.3)' }}
                   >
                     RESET
                   </button>
@@ -2353,22 +2361,26 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
             {/* M5Stick Instruction */}
             <div className="flex items-center gap-2">
-              <span className="text-[9px] font-mono text-[#8fcdff]/60">←</span>
-              <span className="text-[9px] font-mono text-[#8fcdff]/60">
-                If provisioning your own m5Stick, use these to connect!
+              <span className="text-xs font-mono text-[#00d9ff]/70">←</span>
+              <span className="text-xs font-mono text-[#00d9ff]/70" style={{ textShadow: '0 0 5px rgba(0, 217, 255, 0.3)' }}>
+                Hardware controls for m5Stick provisioning
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 pointer-events-auto">
+          <div className="flex items-center gap-3 pointer-events-auto">
             {/* Removed wireframe/solid toggle - only solid mode now */}
             <button
               onClick={exportGLB}
-              className="h-[32px] px-3 bg-[#0a2540] border border-[#4080bf] text-[#8fcdff] text-[10px] font-bold hover:bg-[#4080bf] hover:text-white transition-colors flex items-center gap-1.5 uppercase tracking-wide cursor-pointer rounded"
+              className="h-12 px-5 bg-[#0a2540] border-2 border-[#4080bf] text-[#00d9ff] text-sm font-bold hover:bg-[#4080bf] hover:text-white transition-all flex items-center gap-2 uppercase tracking-[0.15em] cursor-pointer rounded-lg"
+              style={{ 
+                boxShadow: '0 0 15px rgba(64, 128, 191, 0.3)',
+                textShadow: '0 0 5px rgba(0, 217, 255, 0.5)'
+              }}
             >
               <svg
-                width="12"
-                height="12"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -2382,11 +2394,15 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             </button>
             <button
               onClick={resetView}
-              className="h-[32px] px-3 bg-[#0a2540] border border-[#4080bf] text-[#8fcdff] text-[10px] font-bold hover:bg-[#4080bf] hover:text-white transition-colors flex items-center gap-1.5 uppercase tracking-wide cursor-pointer rounded"
+              className="h-12 px-5 bg-[#0a2540] border-2 border-[#4080bf] text-[#00d9ff] text-sm font-bold hover:bg-[#4080bf] hover:text-white transition-all flex items-center gap-2 uppercase tracking-[0.15em] cursor-pointer rounded-lg"
+              style={{ 
+                boxShadow: '0 0 15px rgba(64, 128, 191, 0.3)',
+                textShadow: '0 0 5px rgba(0, 217, 255, 0.5)'
+              }}
             >
               <svg
-                width="12"
-                height="12"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -2399,10 +2415,11 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             {onClose && (
               <button
                 onClick={onClose}
-                className="h-[42px] px-3 bg-black border-2 border-[#00d9ff] text-white text-[10px] font-bold hover:bg-[#00d9ff] hover:text-black transition-colors uppercase tracking-widest cursor-pointer"
+                className="h-12 px-6 bg-black border-2 border-[#00d9ff] text-white text-sm font-bold hover:bg-[#00d9ff] hover:text-black transition-all uppercase tracking-[0.15em] cursor-pointer rounded-lg"
                 style={{ 
-                  clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)',
-                  textShadow: '0 0 8px rgba(0, 217, 255, 0.6)'
+                  clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)',
+                  textShadow: '0 0 10px rgba(0, 217, 255, 0.6)',
+                  boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)'
                 }}
               >
                 CLOSE
@@ -2413,38 +2430,42 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
         {/* Model Selection Bar - Hidden when onboarding is active to reduce clutter */}
         {!showOnboarding && (
-        <div className="absolute bottom-0 left-0 w-full z-10 p-4 pointer-events-none">
-          <div className="max-w-xl mx-auto pointer-events-auto">
-            <div className="bg-[#0a2540]/90 border border-[#4080bf] backdrop-blur-md p-1.5 flex gap-2 items-center shadow-lg rounded">
+        <div className="absolute bottom-0 left-0 w-full z-10 p-6 pointer-events-none">
+          <div className="max-w-2xl mx-auto pointer-events-auto">
+            <div className="bg-[#0a2540]/95 border-2 border-[#00d9ff] backdrop-blur-md p-3 flex gap-3 items-center shadow-2xl rounded-lg" style={{ boxShadow: '0 0 25px rgba(0, 217, 255, 0.4)' }}>
               {/* Foreground Model Selector - Now full width */}
               <div className="flex-1 relative" ref={bottomDropdownRef}>
-                <label className="text-[8px] text-[#8fcdff] uppercase tracking-wider mb-1 block px-1 font-bold">
-                  Select Model
+                <label className="text-sm text-[#00d9ff] uppercase tracking-[0.15em] mb-2 block px-2 font-bold" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>
+                  Load Dive Model
                 </label>
                 <button
                   onClick={() => setIsBottomDropdownOpen(!isBottomDropdownOpen)}
-                  className="w-full bg-[#1D1E15] border border-[#4080bf] text-[#E5E6DA] text-[10px] font-mono px-3 py-2 rounded outline-none focus:border-[#8fcdff] transition-colors flex items-center justify-between hover:bg-[#1D1E15]/90"
+                  className="w-full bg-[#0a2540] border-2 border-[#4080bf] text-white text-base font-mono px-5 py-3 rounded-lg outline-none focus:border-[#00d9ff] transition-all flex items-center justify-between hover:bg-[#0d2847] hover:border-[#00d9ff] group"
+                  style={{ 
+                    boxShadow: '0 0 15px rgba(64, 128, 191, 0.3)',
+                    textShadow: '0 0 5px rgba(255, 255, 255, 0.3)'
+                  }}
                 >
-                  <span className={currentDemoModelId ? "text-[#E5E6DA]" : "text-[#E5E6DA]/60"}>
+                  <span className={currentDemoModelId ? "text-white" : "text-white/60"}>
                     {currentDemoModelId
                       ? DEMO_MODELS.find(m => m.id === currentDemoModelId)?.name
-                      : "Select a Model"}
+                      : "Select Mission Model"}
                   </span>
                   <svg
-                    width="12"
-                    height="12"
+                    width="16"
+                    height="16"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className={`transition-transform duration-200 ${isBottomDropdownOpen ? "rotate-180" : ""}`}
+                    className={`transition-transform duration-200 ${isBottomDropdownOpen ? "rotate-180" : ""} text-[#00d9ff]`}
                   >
                     <path d="M6 9l6 6 6-6"/>
                   </svg>
                 </button>
 
                 {isBottomDropdownOpen && (
-                  <div className="absolute bottom-full left-0 right-0 mb-1 bg-[#1D1E15] border border-[#4080bf] rounded shadow-lg overflow-hidden z-50 max-h-48 overflow-y-auto">
+                  <div className="absolute bottom-full left-0 right-0 mb-2 bg-[#0a2540] border-2 border-[#4080bf] rounded-lg shadow-xl overflow-hidden z-50 max-h-64 overflow-y-auto" style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)' }}>
                     {DEMO_MODELS.filter(m => m.id !== "kelvin-seamounts" && m.id !== "san-pedro-preserve").map((model) => (
                       <button
                         key={model.id}
@@ -2452,7 +2473,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                           handleDemoSelect({ target: { value: model.id } } as any);
                           setIsBottomDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2.5 text-[10px] font-mono text-[#E5E6DA] hover:bg-[#4080bf] hover:text-white transition-colors border-b border-[#E5E6DA]/10 last:border-0"
+                        className="w-full text-left px-5 py-3.5 text-base font-mono text-white hover:bg-[#00d9ff] hover:text-black transition-all border-b border-[#4080bf]/20 last:border-0 font-semibold"
+                        style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}
                       >
                         {model.name}
                       </button>
@@ -2469,12 +2491,12 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
         {/* Control Instructions */}
         {!showOnboarding && (
-        <div className="absolute bottom-20 right-4 z-10 pointer-events-none">
-          <div className="text-[9px] font-mono text-[#8fcdff]/60 space-y-0.5 text-right bg-[#0a2540]/60 px-3 py-2 rounded backdrop-blur-sm border border-[#4080bf]/30">
-            <div>Left Click + Drag: Rotate</div>
-            <div>Right Click + Drag: Pan</div>
-            <div>Scroll: Zoom In/Out</div>
-            <div>⌘ + Click + Drag: Pan (Mac)</div>
+        <div className="absolute bottom-24 right-6 z-10 pointer-events-none">
+          <div className="text-sm font-mono text-[#00d9ff]/80 space-y-1 text-right bg-[#0a2540]/80 px-4 py-3 rounded-lg backdrop-blur-sm border-2 border-[#4080bf]/50" style={{ textShadow: '0 0 5px rgba(0, 217, 255, 0.5)', boxShadow: '0 0 15px rgba(0, 217, 255, 0.3)' }}>
+            <div className="font-semibold">Left Click + Drag: Rotate</div>
+            <div className="font-semibold">Right Click + Drag: Pan</div>
+            <div className="font-semibold">Scroll: Zoom In/Out</div>
+            <div className="font-semibold">⌘ + Click + Drag: Pan (Mac)</div>
           </div>
         </div>
         )}
@@ -2482,41 +2504,46 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         {/* Inspector Panel */}
         {showInspector && (
           <div
-            className={`absolute top-20 left-4 bottom-20 w-64 bg-[#0a2540]/95 border border-[#4080bf] backdrop-blur-md flex flex-col overflow-hidden transition-transform duration-300 shadow-xl z-20 rounded-lg ${
+            className={`absolute top-24 left-6 bottom-24 w-80 bg-[#0a2540]/95 border-2 border-[#00d9ff] backdrop-blur-md flex flex-col overflow-hidden transition-transform duration-300 shadow-2xl z-20 rounded-lg ${
               showInspector ? "translate-x-0" : "-translate-x-full"
             }`}
+            style={{ boxShadow: '0 0 25px rgba(0, 217, 255, 0.4)' }}
           >
-            <div className="flex-shrink-0 border-b border-[#4080bf]/20 pb-3 px-4 pt-4">
-              <h2 className="text-base font-bold text-[#8fcdff] mb-1.5 truncate font-sans">
+            <div className="flex-shrink-0 border-b border-[#4080bf]/30 pb-4 px-6 pt-6">
+              <h2 className="text-xl font-bold text-[#00d9ff] mb-2 truncate font-sans" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>
                 {inspectorData.name}
               </h2>
-              <span className="px-1.5 py-0.5 bg-[#4080bf]/20 border border-[#4080bf] rounded text-[10px] text-[#8fcdff] font-mono uppercase">
+              <span className="px-3 py-1 bg-[#4080bf]/30 border-2 border-[#4080bf] rounded text-xs text-[#00d9ff] font-mono uppercase font-semibold" style={{ textShadow: '0 0 5px rgba(0, 217, 255, 0.5)' }}>
                 {inspectorData.type}
               </span>
             </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 font-mono">
+            <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5 font-mono">
               <div>
-                <h3 className="text-[10px] text-[#8fcdff]/70 uppercase tracking-wider mb-1.5">
+                <h3 className="text-sm text-[#00d9ff]/80 uppercase tracking-[0.15em] mb-2 font-bold" style={{ textShadow: '0 0 5px rgba(0, 217, 255, 0.5)' }}>
                   Description
                 </h3>
-                <p className="text-[10px] text-[#E5E6DA] leading-relaxed break-words">
+                <p className="text-sm text-white leading-relaxed break-words" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
                   {inspectorData.description}
                 </p>
                 <button
                   onClick={identifyPart}
                   disabled={isIdentifying}
-                  className="mt-3 w-full px-3 py-2 bg-[#4080bf] border border-[#4080bf] text-white text-[10px] font-bold hover:bg-[#1D1E15] hover:border-[#8fcdff] transition-colors uppercase tracking-wide flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed rounded"
+                  className="mt-4 w-full px-4 py-3 bg-[#00d9ff] border-2 border-[#00d9ff] text-black text-sm font-bold hover:bg-[#0d2847] hover:text-[#00d9ff] hover:border-[#00d9ff] transition-all uppercase tracking-[0.15em] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+                  style={{ 
+                    boxShadow: '0 0 15px rgba(0, 217, 255, 0.4)',
+                    textShadow: 'none'
+                  }}
                 >
                   {isIdentifying ? (
                     <>
-                      <div className="w-2 h-2 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                      Identifying...
+                      <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      Analyzing...
                     </>
                   ) : (
                     <>
                       <svg
-                        width="12"
-                        height="12"
+                        width="16"
+                        height="16"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -2530,20 +2557,20 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                 </button>
               </div>
               {/* Split mesh feature removed */}
-              <div className="grid grid-cols-2 gap-2">
-                <div className="bg-[#1D1E15]/5 p-2 border border-[#1D1E15]/10">
-                  <div className="text-[10px] text-[#1D1E15]/50 mb-1 uppercase">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-[#0d2847]/50 p-3 border-2 border-[#4080bf]/30 rounded-lg">
+                  <div className="text-xs text-[#00d9ff]/70 mb-1.5 uppercase tracking-wider font-semibold">
                     Geometry
                   </div>
-                  <div className="text-[#1D1E15] font-bold text-[10px]">
+                  <div className="text-white font-bold text-sm" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
                     High Poly
                   </div>
                 </div>
-                <div className="bg-[#1D1E15]/5 p-2 border border-[#1D1E15]/10">
-                  <div className="text-[10px] text-[#1D1E15]/50 mb-1 uppercase">
+                <div className="bg-[#0d2847]/50 p-3 border-2 border-[#4080bf]/30 rounded-lg">
+                  <div className="text-xs text-[#00d9ff]/70 mb-1.5 uppercase tracking-wider font-semibold">
                     Status
                   </div>
-                  <div className="text-[#1D1E15] font-bold text-[10px]">
+                  <div className="text-white font-bold text-sm" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
                     Active
                   </div>
                 </div>
@@ -2555,8 +2582,13 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         {/* Tooltip */}
         <div
           ref={tooltipRef}
-          className="fixed z-50 px-3 py-2 bg-[#1D1E15] text-[#E5E6DA] border border-[#1D1E15] text-xs font-mono uppercase tracking-wide pointer-events-none opacity-0 transition-opacity duration-150 shadow-lg"
-          style={{ top: 0, left: 0 }}
+          className="fixed z-50 px-4 py-3 bg-[#0a2540] text-white border-2 border-[#00d9ff] text-sm font-mono uppercase tracking-[0.15em] pointer-events-none opacity-0 transition-opacity duration-150 shadow-xl rounded-lg"
+          style={{ 
+            top: 0, 
+            left: 0,
+            boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)',
+            textShadow: '0 0 5px rgba(255, 255, 255, 0.3)'
+          }}
         />
 
         {/* Canvas Container */}
@@ -2572,23 +2604,23 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           <div className="absolute right-8 top-1/2 -translate-y-1/2 z-40 animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="relative">
               {/* Pointer Arrow - pointing left now */}
-              <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-r-[12px] border-r-[#00d9ff]" />
+              <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-r-[14px] border-r-[#00d9ff]" />
               
               {/* Hint Box */}
-              <div className="bg-black border-2 border-[#00d9ff] px-4 py-3 shadow-2xl max-w-[240px]" style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)' }}>
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-[#00d9ff] flex items-center justify-center shrink-0 mt-0.5">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+              <div className="bg-[#0a2540] border-2 border-[#00d9ff] px-6 py-4 shadow-2xl max-w-[280px] rounded-lg" style={{ boxShadow: '0 0 25px rgba(0, 217, 255, 0.5)' }}>
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-[#00d9ff] flex items-center justify-center shrink-0 mt-0.5 rounded-lg" style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.6)' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                       <path d="M12 2L2 7l10 5 10-5-10-5z"/>
                       <path d="M2 17l10 5 10-5"/>
                       <path d="M2 12l10 5 10-5"/>
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="text-white text-xs font-bold uppercase tracking-wide mb-1">
+                    <p className="text-white text-sm font-bold uppercase tracking-[0.15em] mb-2" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
                       Quick Tip
                     </p>
-                    <p className="text-white/90 text-[10px] font-mono leading-relaxed">
+                    <p className="text-white/90 text-sm font-mono leading-relaxed" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.2)' }}>
                       Click on the model to open the inspector panel and explore its components
                     </p>
                   </div>
@@ -2597,10 +2629,10 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                 {/* Dismiss Button */}
                 <button
                   onClick={() => setShowInteractionHint(false)}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-black text-[#00d9ff] flex items-center justify-center hover:bg-[#00d9ff] hover:text-black transition-colors cursor-pointer border-2 border-[#00d9ff]"
-                  style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.4)' }}
+                  className="absolute -top-3 -right-3 w-8 h-8 bg-black text-[#00d9ff] flex items-center justify-center hover:bg-[#00d9ff] hover:text-black transition-all cursor-pointer border-2 border-[#00d9ff] rounded-lg"
+                  style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.5)' }}
                 >
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <line x1="18" y1="6" x2="6" y2="18"/>
                     <line x1="6" y1="6" x2="18" y2="18"/>
                   </svg>
@@ -2613,22 +2645,23 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         {/* Annotated Image Modal */}
         {showAnnotatedModal && annotatedImage && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#1D1E15]/80 backdrop-blur-sm animate-in fade-in duration-300"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-in fade-in duration-300"
             onClick={() => setShowAnnotatedModal(false)}
           >
             <div
-              className="relative max-w-4xl max-h-[90vh] bg-[#E5E6DA] border-2 border-[#1D1E15] rounded-lg shadow-2xl overflow-hidden"
+              className="relative max-w-5xl max-h-[90vh] bg-[#0a2540] border-2 border-[#00d9ff] rounded-lg shadow-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
+              style={{ boxShadow: '0 0 30px rgba(0, 217, 255, 0.5)' }}
             >
               {/* Close button */}
               <button
                 onClick={() => setShowAnnotatedModal(false)}
-                className="absolute top-2 right-2 z-10 w-8 h-8 bg-black border-2 border-[#00d9ff] text-white flex items-center justify-center hover:bg-[#00d9ff] hover:text-black transition-colors cursor-pointer"
-                style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.4)' }}
+                className="absolute top-4 right-4 z-10 w-10 h-10 bg-black border-2 border-[#00d9ff] text-white flex items-center justify-center hover:bg-[#00d9ff] hover:text-black transition-all cursor-pointer rounded-lg"
+                style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.5)' }}
               >
                 <svg
-                  width="16"
-                  height="16"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -2640,20 +2673,20 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
               </button>
 
               {/* Image */}
-              <div className="relative w-full">
+              <div className="relative w-full bg-black/20">
                 <img
                   src={annotatedImage}
-                  alt="Annotated brain part"
+                  alt="Annotated container part"
                   className="w-full h-auto object-contain"
                 />
               </div>
 
               {/* Caption */}
-              <div className="px-6 py-4 border-t border-[#1D1E15]/20">
-                <h3 className="text-sm font-bold text-[#1D1E15] mb-2 font-sans">
+              <div className="px-8 py-6 border-t-2 border-[#4080bf]/30 bg-[#0a2540]">
+                <h3 className="text-xl font-bold text-[#00d9ff] mb-3 font-sans" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>
                   {inspectorData.name}
                 </h3>
-                <p className="text-xs text-[#1D1E15]/80 leading-relaxed font-mono">
+                <p className="text-base text-white/90 leading-relaxed font-mono" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
                   {inspectorData.description}
                 </p>
               </div>
