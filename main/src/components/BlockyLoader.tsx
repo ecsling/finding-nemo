@@ -4,14 +4,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
 const MESSAGES = [
-  'Rendering model...',
-  'Fetching geospatial scene...',
-  'Analyzing topology...',
-  'Optimizing meshes...',
-  'Computing lightmaps...',
-  'Calibrating sensors...',
-  'Initializing viewer...',
+  'Preparing dive environment...',
+  'Loading ocean floor topology...',
+  'Initializing recovery systems...',
+  'Calibrating depth sensors...',
+  'Syncing mission parameters...',
+  'Activating 3D visualization...',
+  'Dive system ready...',
 ];
+
+const KELVIN_SEAMOUNTS_DEPTH = 2850; // meters
 
 interface BlockyLoaderProps {
   onFinished?: () => void;
@@ -24,21 +26,19 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
   useEffect(() => {
     const messageInterval = setInterval(() => {
       setCurrentMessage((prev) => (prev + 1) % MESSAGES.length);
-    }, 400);
+    }, 500);
 
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          // Wrap callback in setTimeout to avoid "Cannot update a component while rendering a different component"
-          // This ensures the state update happens in the next tick, not during this render cycle
           if (onFinished) {
              setTimeout(() => onFinished(), 0);
           }
           return 100;
         }
-        return prev + Math.random() * 8; // Faster progress
+        return prev + Math.random() * 8;
       });
-    }, 80); // Faster interval
+    }, 80);
 
     return () => {
       clearInterval(messageInterval);
@@ -46,122 +46,200 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
     };
   }, [onFinished]);
 
-  // Calculate number of filled blocks (20 total blocks for 100%)
-  const totalBlocks = 20;
-  const filledBlocks = Math.floor((progress / 100) * totalBlocks);
+  // Calculate current depth based on progress (0m to 2850m)
+  const currentDepth = Math.floor((progress / 100) * KELVIN_SEAMOUNTS_DEPTH);
 
   return (
-    <div className="fixed inset-0 bg-[#E5E6DA]/90 backdrop-blur-md z-[60] flex flex-col items-center justify-center font-mono">
-      <div className="w-96 space-y-6">
-        {/* Hexagon/Cube Animation */}
-        <div className="flex justify-center mb-8">
-          <div className="relative w-24 h-24 grid grid-cols-2 gap-2">
+    <div 
+      className="fixed inset-0 z-[60] flex flex-col items-center justify-center font-mono"
+      style={{
+        background: 'linear-gradient(to bottom, #000000 0%, #0a1f35 50%, #081a2e 100%)',
+        minHeight: '100vh'
+      }}
+    >
+      {/* Animated grid background */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0, 217, 255, 0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 217, 255, 0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+            animation: 'gridPulse 4s ease-in-out infinite'
+          }}
+        />
+      </div>
+      
+      {/* Scanlines overlay */}
+      <div className="fixed inset-0 pointer-events-none z-[1] opacity-10">
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'repeating-linear-gradient(0deg, rgba(0, 217, 255, 0.1) 0px, transparent 1px, transparent 2px, rgba(0, 217, 255, 0.1) 3px)',
+            animation: 'scanlines 8s linear infinite'
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 w-full max-w-2xl px-8 space-y-12">
+        {/* Depth Descent Animation */}
+        <div className="flex flex-col items-center space-y-6">
+          <div className="relative w-64 h-64 flex items-center justify-center">
+            {/* Outer pulse ring */}
             <motion.div
-              className="bg-[#1D1E15]"
+              className="absolute inset-0 border-2 border-[#00d9ff] rounded-full"
+              style={{
+                boxShadow: '0 0 30px rgba(0, 217, 255, 0.6), inset 0 0 30px rgba(0, 217, 255, 0.2)'
+              }}
               animate={{
-                scale: [1, 0.8, 1],
-                rotate: [0, 90, 0],
-                opacity: [1, 0.5, 1],
+                scale: [1, 1.2, 1],
+                opacity: [0.6, 0.3, 0.6],
               }}
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut",
-                times: [0, 0.5, 1]
+                ease: "easeInOut"
               }}
             />
+            
+            {/* Middle pulse ring */}
             <motion.div
-              className="bg-[#DF6C42]"
+              className="absolute inset-0 border-2 border-[#00d9ff] rounded-full"
+              style={{
+                boxShadow: '0 0 20px rgba(0, 217, 255, 0.5)'
+              }}
               animate={{
-                scale: [1, 0.8, 1],
-                rotate: [0, -90, 0],
-                opacity: [1, 0.5, 1],
+                scale: [1, 1.1, 1],
+                opacity: [0.8, 0.5, 0.8],
               }}
               transition={{
-                duration: 2,
+                duration: 1.5,
                 repeat: Infinity,
                 ease: "easeInOut",
-                times: [0, 0.5, 1],
-                delay: 0.2
+                delay: 0.3
               }}
             />
-             <motion.div
-              className="bg-[#DF6C42]"
-              animate={{
-                scale: [1, 0.8, 1],
-                rotate: [0, -90, 0],
-                opacity: [1, 0.5, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                times: [0, 0.5, 1],
-                delay: 0.4
-              }}
-            />
-             <motion.div
-              className="bg-[#1D1E15]"
-              animate={{
-                scale: [1, 0.8, 1],
-                rotate: [0, 90, 0],
-                opacity: [1, 0.5, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                times: [0, 0.5, 1],
-                delay: 0.6
-              }}
-            />
+
+            {/* Depth indicator */}
+            <div className="relative z-10 text-center">
+              <div className="text-6xl font-bold text-[#00d9ff] mb-2" style={{ 
+                textShadow: '0 0 20px rgba(0, 217, 255, 0.8), 0 0 40px rgba(0, 217, 255, 0.4)',
+                fontFamily: 'var(--font-mono)'
+              }}>
+                {currentDepth}m
+              </div>
+              <div className="text-lg text-white/70 uppercase tracking-[0.2em] font-semibold" style={{ 
+                textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
+              }}>
+                DEPTH
+              </div>
+              <div className="mt-4 text-sm text-[#00d9ff]/60 uppercase tracking-wider">
+                0m → {KELVIN_SEAMOUNTS_DEPTH}m
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Text Animation */}
-        <div className="h-8 relative overflow-hidden text-center">
+        {/* Mission Status Text */}
+        <div className="h-16 relative overflow-hidden text-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentMessage}
-              initial={{ y: 20, opacity: 0 }}
+              initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "backOut" }}
-              className="absolute inset-x-0 text-[#1D1E15] text-sm uppercase tracking-widest font-bold"
+              exit={{ y: -30, opacity: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="absolute inset-x-0 text-white text-2xl uppercase tracking-[0.15em] font-bold"
+              style={{ 
+                textShadow: '0 0 20px rgba(0, 217, 255, 0.6), 0 0 40px rgba(0, 217, 255, 0.3)',
+                fontFamily: 'var(--font-mono)'
+              }}
             >
               {MESSAGES[currentMessage]}
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Blocky Progress Bar */}
-        <div className="space-y-3">
-          <div className="flex justify-between text-sm font-medium text-[#1D1E15] uppercase tracking-wider">
-            <span>System Status: Loading</span>
-            <span className="text-3xl">{Math.min(100, Math.floor(progress))}%</span>
+        {/* Progress Bar Section */}
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <span className="text-lg text-white/80 uppercase tracking-[0.15em] font-semibold" style={{ 
+              textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
+            }}>
+              DIVE SYSTEM INITIALIZING
+            </span>
+            <span 
+              className="text-5xl font-bold text-[#00d9ff]" 
+              style={{ 
+                textShadow: '0 0 20px rgba(0, 217, 255, 0.8), 0 0 40px rgba(0, 217, 255, 0.4)',
+                fontFamily: 'var(--font-mono)'
+              }}
+            >
+              {Math.min(100, Math.floor(progress))}%
+            </span>
           </div>
-          <div className="flex gap-1.5 h-8">
-            {Array.from({ length: totalBlocks }).map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ scaleY: 0 }}
-                animate={{ 
-                  scaleY: i < filledBlocks ? 1 : 0.2,
-                  backgroundColor: i < filledBlocks ? '#DF6C42' : '#1D1E15'
-                }}
-                transition={{ duration: 0.2 }}
-                className="flex-1 origin-bottom opacity-80"
-              />
-            ))}
+          
+          {/* Enhanced Progress Bar */}
+          <div className="relative h-4 bg-[#0a2540] border-2 border-[#4080bf] rounded-full overflow-hidden" style={{
+            boxShadow: '0 0 15px rgba(64, 128, 191, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.5)'
+          }}>
+            <motion.div
+              className="h-full bg-gradient-to-r from-[#00d9ff] to-[#0099ff]"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              style={{
+                boxShadow: '0 0 20px rgba(0, 217, 255, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.2)'
+              }}
+            />
+            {/* Pulse overlay */}
+            <motion.div
+              className="absolute inset-0 bg-[#00d9ff]"
+              animate={{
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              style={{
+                width: `${progress}%`,
+                mixBlendMode: 'screen'
+              }}
+            />
           </div>
         </div>
         
-        <div className="text-center pt-4">
-             <div className="inline-block px-3 py-1 bg-[#1D1E15]/5 border border-[#1D1E15]/20 text-[#1D1E15]/60 text-[10px] uppercase tracking-widest">
-                V.2.0.4 - GEOSPATIAL ENGINE
-             </div>
+        {/* Version Tag */}
+        <div className="text-center pt-6">
+          <div 
+            className="inline-block px-6 py-2 border-2 border-[#4080bf] text-[#00d9ff] text-sm uppercase tracking-[0.15em] font-semibold"
+            style={{ 
+              backgroundColor: 'rgba(10, 37, 64, 0.5)',
+              boxShadow: '0 0 15px rgba(0, 217, 255, 0.3)',
+              textShadow: '0 0 10px rgba(0, 217, 255, 0.6)'
+            }}
+          >
+            RECOVERY ENGINE v2.0.4
+          </div>
         </div>
       </div>
+
+      {/* Cyberpunk animations */}
+      <style jsx global>{`
+        @keyframes gridPulse {
+          0%, 100% { opacity: 0.2; }
+          50% { opacity: 0.4; }
+        }
+        
+        @keyframes scanlines {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(50px); }
+        }
+      `}</style>
     </div>
   );
 }
