@@ -522,14 +522,14 @@ export default function Home() {
               </motion.div>
               
               <motion.h3 
-                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-12"
+                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-6"
                 variants={fadeInUp}
               >
                 Financial & Operational Impact
               </motion.h3>
               
               <motion.p 
-                className="text-xs opacity-60 italic mb-8"
+                className="text-sm text-white/70 italic mb-12"
                 variants={fadeInUp}
               >
                 All data shown is simulated and illustrative. These charts support decision-making but do not guarantee outcomes.
@@ -537,19 +537,24 @@ export default function Home() {
 
               {/* Chart 1: Estimated Financial Loss by Incident Type */}
               <motion.div 
-                className="border border-[#1e3a5f] mb-8 overflow-hidden"
+                className="border border-[#1e3a5f] mb-12 overflow-hidden"
                 variants={fadeInUp}
               >
-                <div className="p-8">
-                  <div className="mb-4">
-                    <div className="text-[10px] uppercase opacity-50 mb-2">Estimated Financial Loss by Incident Type (Simulated)</div>
-                    <p className="text-xs opacity-60 italic mb-4">
+                <div className="p-8 pt-10 pb-10">
+                  {/* Chart Header */}
+                  <div className="mb-16">
+                    <h4 className="text-lg font-bold text-white mb-3 uppercase tracking-wide">
+                      Estimated Financial Loss by Incident Type (Simulated)
+                    </h4>
+                    <p className="text-base text-white/80 leading-relaxed">
                       This chart illustrates how financial exposure increases with incident severity and distance from shore.
                     </p>
                   </div>
-                  <div className="flex flex-col md:flex-row gap-4 mb-6">
+                  
+                  {/* Chart Canvas */}
+                  <div className="flex flex-col md:flex-row gap-6 mb-8">
                     {/* Y-Axis */}
-                    <div className="flex flex-row md:flex-col justify-between md:h-80 text-[8px] uppercase opacity-40 pt-1 pb-2 md:pb-8 md:pr-2 gap-2 md:gap-0">
+                    <div className="flex flex-row md:flex-col justify-between md:h-80 text-sm font-semibold text-white pt-1 pb-2 md:pb-8 md:pr-4 gap-2 md:gap-0">
                       <span>$2.5M</span>
                       <span>$2.0M</span>
                       <span>$1.5M</span>
@@ -559,7 +564,7 @@ export default function Home() {
                     </div>
                     
                     {/* Stacked Bars */}
-                    <div className="flex-1 h-80 flex flex-wrap md:flex-nowrap items-end gap-4 relative">
+                    <div className="flex-1 h-80 flex flex-wrap md:flex-nowrap items-end gap-6 relative">
                       {[
                         { label: 'Nearshore Incident', cargo: 0.8, recovery: 0.3, penalties: 0.1 },
                         { label: 'Coastal Route', cargo: 1.2, recovery: 0.5, penalties: 0.2 },
@@ -576,7 +581,7 @@ export default function Home() {
                         return (
                           <div
                             key={idx}
-                            className="flex-1 flex flex-col items-center justify-end gap-2 h-full relative"
+                            className="flex-1 flex flex-col items-center justify-end gap-3 h-full relative"
                           >
                             <div className="flex flex-col items-end justify-end relative" style={{ height: '320px', width: '100%' }}>
                               <div className="flex flex-col w-full" style={{ height: `${totalHeight}px` }}>
@@ -597,25 +602,27 @@ export default function Home() {
                                 />
                               </div>
                             </div>
-                            <div className="text-[8px] uppercase opacity-40 mt-2 text-center px-1">{item.label}</div>
+                            <div className="text-sm font-medium text-white mt-3 text-center px-1">{item.label}</div>
                           </div>
                         );
                       })}
                     </div>
                   </div>
-                  <div className="pt-4">
-                    <div className="flex items-center justify-center gap-8 mb-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-[#1e3a5f]"></div>
-                        <div className="text-[10px] uppercase opacity-70">Estimated Cargo Value Loss</div>
+                  
+                  {/* Legend */}
+                  <div className="pt-6 border-t border-[#1e3a5f]">
+                    <div className="flex flex-wrap items-center justify-center gap-8">
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 bg-[#1e3a5f]"></div>
+                        <div className="text-sm font-semibold text-white">Estimated Cargo Value Loss</div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-[#DF6C42]"></div>
-                        <div className="text-[10px] uppercase opacity-70">Recovery Operation Cost</div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 bg-[#DF6C42]"></div>
+                        <div className="text-sm font-semibold text-white">Recovery Operation Cost</div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-[#8B2635]"></div>
-                        <div className="text-[10px] uppercase opacity-70">Delay & Environmental Penalties</div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 bg-[#8B2635]"></div>
+                        <div className="text-sm font-semibold text-white">Delay & Environmental Penalties</div>
                       </div>
                     </div>
                   </div>
@@ -624,17 +631,22 @@ export default function Home() {
 
               {/* Chart 2: Recovery Cost Comparison */}
               <motion.div 
-                className="border border-[#1e3a5f] mb-8 overflow-hidden"
+                className="border border-[#1e3a5f] mb-12 overflow-hidden"
                 variants={fadeInUp}
               >
-                <div className="p-8">
-                  <div className="mb-4">
-                    <div className="text-[10px] uppercase opacity-50 mb-2">Recovery Cost Comparison (Simulated)</div>
-                    <p className="text-xs opacity-60 italic mb-4">
+                <div className="p-8 pt-10 pb-10">
+                  {/* Chart Header */}
+                  <div className="mb-16">
+                    <h4 className="text-lg font-bold text-white mb-3 uppercase tracking-wide">
+                      Recovery Cost Comparison (Simulated)
+                    </h4>
+                    <p className="text-base text-white/80 leading-relaxed">
                       Simulation-first planning reduces unnecessary dives, operational cost, and mission failure rates.
                     </p>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+                  
+                  {/* Chart Canvas */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-6">
                     {[
                       { 
                         metric: 'Average Recovery Cost', 
@@ -664,26 +676,28 @@ export default function Home() {
                       
                       return (
                         <div key={idx} className="flex flex-col">
-                          <div className="text-[10px] uppercase opacity-50 mb-4 text-center">{item.metric}</div>
-                          <div className="flex items-end justify-center gap-4 h-52">
-                            <div className="flex flex-col items-center gap-2">
+                          <div className="text-base font-bold text-white mb-6 text-center uppercase tracking-wide">
+                            {item.metric}
+                          </div>
+                          <div className="flex items-end justify-center gap-6 h-52">
+                            <div className="flex flex-col items-center gap-3">
                               <div
-                                className="bg-[#0d2847] hover:bg-[#0d2847]/80 transition-colors w-16"
+                                className="bg-[#0d2847] hover:bg-[#0d2847]/80 transition-colors w-20"
                                 style={{ height: `${traditionalHeight}px` }}
                               />
-                              <div className="text-[8px] uppercase opacity-70 text-center">
-                                <div className="font-bold">{item.traditional}{item.unit === '%' ? '%' : item.unit === 'days' ? 'd' : 'M'}</div>
-                                <div className="opacity-50 mt-1">Traditional</div>
+                              <div className="text-sm font-semibold text-white text-center">
+                                <div className="text-base font-bold mb-1">{item.traditional}{item.unit === '%' ? '%' : item.unit === 'days' ? 'd' : 'M'}</div>
+                                <div className="text-white/70 text-xs uppercase">Traditional</div>
                               </div>
                             </div>
-                            <div className="flex flex-col items-center gap-2">
+                            <div className="flex flex-col items-center gap-3">
                               <div
-                                className="bg-[#DF6C42] hover:bg-[#DF6C42]/80 transition-colors w-16"
+                                className="bg-[#DF6C42] hover:bg-[#DF6C42]/80 transition-colors w-20"
                                 style={{ height: `${simulationHeight}px` }}
                               />
-                              <div className="text-[8px] uppercase opacity-70 text-center">
-                                <div className="font-bold">{item.simulation}{item.unit === '%' ? '%' : item.unit === 'days' ? 'd' : 'M'}</div>
-                                <div className="opacity-50 mt-1">Simulation-First</div>
+                              <div className="text-sm font-semibold text-white text-center">
+                                <div className="text-base font-bold mb-1">{item.simulation}{item.unit === '%' ? '%' : item.unit === 'days' ? 'd' : 'M'}</div>
+                                <div className="text-white/70 text-xs uppercase">Simulation-First</div>
                               </div>
                             </div>
                           </div>
@@ -696,19 +710,24 @@ export default function Home() {
 
               {/* Chart 3: Salvage Value Decay Over Time */}
               <motion.div 
-                className="border border-[#1e3a5f] mb-8 overflow-hidden"
+                className="border border-[#1e3a5f] mb-12 overflow-hidden"
                 variants={fadeInUp}
               >
-                <div className="p-8">
-                  <div className="mb-4">
-                    <div className="text-[10px] uppercase opacity-50 mb-2">Salvage Value Decay Over Time Underwater (Simulated)</div>
-                    <p className="text-xs opacity-60 italic mb-4">
+                <div className="p-8 pt-10 pb-10">
+                  {/* Chart Header */}
+                  <div className="mb-16">
+                    <h4 className="text-lg font-bold text-white mb-3 uppercase tracking-wide">
+                      Salvage Value Decay Over Time Underwater (Simulated)
+                    </h4>
+                    <p className="text-base text-white/80 leading-relaxed">
                       Delays in assessment rapidly reduce recoverable value, especially for high-value or sensitive cargo.
                     </p>
                   </div>
-                  <div className="flex flex-col md:flex-row gap-4 mb-6">
+                  
+                  {/* Chart Canvas */}
+                  <div className="flex flex-col md:flex-row gap-6 mb-8">
                     {/* Y-Axis */}
-                    <div className="flex flex-row md:flex-col justify-between md:h-80 text-[8px] uppercase opacity-40 pt-1 pb-2 md:pb-8 md:pr-2 gap-2 md:gap-0">
+                    <div className="flex flex-row md:flex-col justify-between md:h-80 text-sm font-semibold text-white pt-1 pb-2 md:pb-8 md:pr-4 gap-2 md:gap-0">
                       <span>100%</span>
                       <span>80%</span>
                       <span>60%</span>
@@ -728,7 +747,7 @@ export default function Home() {
                             y1={320 - (val * 320)}
                             x2="800"
                             y2={320 - (val * 320)}
-                            stroke="rgba(224, 242, 255, 0.1)"
+                            stroke="rgba(255, 255, 255, 0.1)"
                             strokeWidth="1"
                           />
                         ))}
@@ -738,7 +757,7 @@ export default function Home() {
                           points="0,320 100,280 200,240 300,200 400,160 500,120 600,80 700,50 800,30"
                           fill="none"
                           stroke="#8B2635"
-                          strokeWidth="2"
+                          strokeWidth="3"
                           strokeDasharray="5,5"
                         />
                         
@@ -747,12 +766,12 @@ export default function Home() {
                           points="0,320 100,300 200,280 300,260 400,240 500,220 600,200 700,185 800,175"
                           fill="none"
                           stroke="#DF6C42"
-                          strokeWidth="2"
+                          strokeWidth="3"
                         />
                       </svg>
                       
                       {/* X-Axis Labels */}
-                      <div className="absolute bottom-0 left-0 right-0 flex justify-between px-4 text-[8px] uppercase opacity-40">
+                      <div className="absolute bottom-0 left-0 right-0 flex justify-between px-4 text-sm font-semibold text-white">
                         <span>0d</span>
                         <span>10d</span>
                         <span>20d</span>
@@ -765,14 +784,18 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  <div className="pt-4 flex items-center justify-center gap-8">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-1 bg-[#8B2635]" style={{ borderTop: '2px dashed #8B2635' }}></div>
-                      <div className="text-[10px] uppercase opacity-70">No Early Assessment</div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-1 bg-[#DF6C42]"></div>
-                      <div className="text-[10px] uppercase opacity-70">Early Simulation-Based Assessment</div>
+                  
+                  {/* Legend */}
+                  <div className="pt-6 border-t border-[#1e3a5f]">
+                    <div className="flex flex-wrap items-center justify-center gap-8">
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-1 bg-[#8B2635]" style={{ borderTop: '3px dashed #8B2635' }}></div>
+                        <div className="text-sm font-semibold text-white">No Early Assessment</div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-1 bg-[#DF6C42]"></div>
+                        <div className="text-sm font-semibold text-white">Early Simulation-Based Assessment</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -780,17 +803,22 @@ export default function Home() {
 
               {/* Chart 4: Environmental Risk Multipliers */}
               <motion.div 
-                className="border border-[#1e3a5f] mb-8 overflow-hidden"
+                className="border border-[#1e3a5f] mb-12 overflow-hidden"
                 variants={fadeInUp}
               >
-                <div className="p-8">
-                  <div className="mb-4">
-                    <div className="text-[10px] uppercase opacity-50 mb-2">Environmental Risk Multipliers (Simulated)</div>
-                    <p className="text-xs opacity-60 italic mb-4">
+                <div className="p-8 pt-10 pb-10">
+                  {/* Chart Header */}
+                  <div className="mb-16">
+                    <h4 className="text-lg font-bold text-white mb-3 uppercase tracking-wide">
+                      Environmental Risk Multipliers (Simulated)
+                    </h4>
+                    <p className="text-base text-white/80 leading-relaxed">
                       Environmental conditions significantly increase recovery complexity and cost, reinforcing the need for pre-mission simulation.
                     </p>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  
+                  {/* Chart Canvas */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {[
                       { condition: 'Ocean Current Strength', values: [
                         { label: 'Low', multiplier: 1.0, color: '#1e3a5f' },
@@ -809,19 +837,21 @@ export default function Home() {
                       ]},
                     ].map((category, catIdx) => (
                       <div key={catIdx} className="border border-[#1e3a5f] p-6">
-                        <div className="text-[10px] uppercase opacity-50 mb-4">{category.condition}</div>
-                        <div className="space-y-3">
+                        <div className="text-base font-bold text-white mb-5 uppercase tracking-wide">
+                          {category.condition}
+                        </div>
+                        <div className="space-y-4">
                           {category.values.map((item, idx) => {
                             const maxMultiplier = 2.5;
                             const barWidth = (item.multiplier / maxMultiplier) * 100;
                             
                             return (
                               <div key={idx} className="group relative">
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="text-xs opacity-70">{item.label}</span>
-                                  <span className="text-xs font-bold">×{item.multiplier}</span>
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="text-base font-semibold text-white">{item.label}</span>
+                                  <span className="text-base font-bold text-white">×{item.multiplier}</span>
                                 </div>
-                                <div className="w-full h-4 bg-[#1e3a5f]/20 overflow-hidden">
+                                <div className="w-full h-5 bg-[#1e3a5f]/20 overflow-hidden">
                                   <div
                                     className="h-full transition-all"
                                     style={{ 
@@ -830,7 +860,7 @@ export default function Home() {
                                     }}
                                   />
                                 </div>
-                                <div className="absolute -top-8 left-0 bg-[#0a1929] border border-[#1e3a5f] px-2 py-1 text-[8px] opacity-0 group-hover:opacity-100 pointer-events-none z-10 whitespace-nowrap">
+                                <div className="absolute -top-10 left-0 bg-[#0a1929] border border-[#1e3a5f] px-3 py-2 text-sm font-medium text-white opacity-0 group-hover:opacity-100 pointer-events-none z-10 whitespace-nowrap">
                                   Recovery Cost Multiplier: ×{item.multiplier}
                                 </div>
                               </div>
