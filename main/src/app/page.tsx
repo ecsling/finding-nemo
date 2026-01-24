@@ -372,27 +372,9 @@ export default function Home() {
                >
                  <span className="relative z-10 font-black">LAUNCH DIVE →</span>
                </button>
-             </motion.div>
-           </motion.div>
-
-           {/* Ecosystem Partners */}
-           <div className="h-18 grid grid-cols-4 mt-auto">
-             {[
-               { name: 'GEMINI PRO', image: '/gemini-pro.png' },
-               { name: 'SKETCHFAB', image: '/sketch.png' },
-               { name: 'OPENAI', image: '/openai.png' },
-               { name: 'ARDUINO', image: '/arduino.png' }
-             ].map((partner) => (
-               <div key={partner.name} className="flex items-center justify-center opacity-40 hover:opacity-100 hover:bg-[#0d2847] transition-all cursor-default p-2">
-                 <img 
-                   src={partner.image} 
-                   alt={partner.name} 
-                   className="h-5 w-auto object-contain filter brightness-0 invert"
-                 />
-               </div>
-             ))}
-           </div>
-         </div>
+            </motion.div>
+          </motion.div>
+        </div>
 
         {/* Right Visualization Column */}
         <div id="map-viewer" className="col-span-12 lg:col-span-4 flex flex-col" style={{ backgroundColor: 'transparent' }}>
