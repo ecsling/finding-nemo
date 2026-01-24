@@ -81,6 +81,10 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   const [camConnected, setCamConnected] = useState(false);
   const [objDeviceName, setObjDeviceName] = useState<string>("—");
   const [camDeviceName, setCamDeviceName] = useState<string>("—");
+  
+  // Background landscape state
+  const [backgroundLandscapeId, setBackgroundLandscapeId] = useState<string>("kelvin-seamounts");
+  const backgroundLandscapeRef = useRef<THREE.Group | null>(null);
 
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -725,10 +729,10 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       containerRef.current.removeChild(containerRef.current.firstChild);
     }
 
-    // Initialize Three.js scene
+    // Initialize Three.js scene with underwater atmosphere
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xe5e6da); // Match new background
-    scene.fog = new THREE.FogExp2(0xe5e6da, 0.02);
+    scene.background = new THREE.Color(0x0a2540); // Dark underwater blue
+    scene.fog = new THREE.FogExp2(0x0a2540, 0.03); // Thicker fog for underwater effect
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(
@@ -764,7 +768,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.shadowMap.enabled = false; // Disable shadows
-    renderer.setClearColor(0xe5e6da, 1);
+    renderer.setClearColor(0x0a2540, 1); // Underwater blue
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
@@ -774,21 +778,28 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     controls.maxDistance = 100;
     controlsRef.current = controls;
 
-    // Lighting - Adjusted for light theme
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    // Lighting - Underwater atmosphere
+    const ambientLight = new THREE.AmbientLight(0x4080bf, 0.5); // Blue-tinted ambient light
     scene.add(ambientLight);
 
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    dirLight.position.set(10, 20, 10);
+    // Main directional light from above (simulating sunlight filtering through water)
+    const dirLight = new THREE.DirectionalLight(0x6ba3d4, 1.2);
+    dirLight.position.set(0, 30, 10);
     dirLight.castShadow = false;
-    // dirLight.shadow.mapSize.width = 2048;
-    // dirLight.shadow.mapSize.height = 2048;
     scene.add(dirLight);
 
-    const accentLight = new THREE.SpotLight(0xdf6c42, 2); // Orange accent
-    accentLight.position.set(-10, 5, -5);
+    // Accent spotlight (like underwater searchlight)
+    const accentLight = new THREE.SpotLight(0x8fcdff, 1.5); // Cyan-blue accent
+    accentLight.position.set(-10, 10, 5);
     accentLight.lookAt(0, 0, 0);
+    accentLight.angle = Math.PI / 6;
+    accentLight.penumbra = 0.3;
     scene.add(accentLight);
+    
+    // Backlight for depth
+    const backLight = new THREE.DirectionalLight(0x1e5a8f, 0.8);
+    backLight.position.set(0, 5, -20);
+    scene.add(backLight);
 
     // Shadow plane
     /*
@@ -827,6 +838,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     raycasterRef.current = raycaster;
 
     // Placeholder removed - no cube background
+    
+    // Load default background landscape
+    loadBackgroundLandscape(backgroundLandscapeId);
 
     // Animation loop
     let lastT = performance.now();
@@ -898,6 +912,11 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       }
 
       // Placeholder removed - no rotation logic needed
+      
+      // Rotate background landscape slowly for underwater effect
+      if (backgroundLandscapeRef.current) {
+        backgroundLandscapeRef.current.rotation.y += dt * 0.0001; // Slow rotation for seabed movement
+      }
 
       if (composerRef.current) composerRef.current.render();
     };
@@ -1220,18 +1239,93 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       }
     );
   };
+  
+  const loadBackgroundLandscape = (landscapeId: string) => {
+    if (!sceneRef.current) return;
+    
+    // Remove existing background landscape
+    if (backgroundLandscapeRef.current) {
+      sceneRef.current.remove(backgroundLandscapeRef.current);
+      backgroundLandscapeRef.current = null;
+    }
+    
+    // Find the landscape model
+    const model = DEMO_MODELS.find(m => m.id === landscapeId);
+    if (!model || !model.path) return;
+    
+    const loader = new GLTFLoader();
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    dracoLoader.setDecoderConfig({ type: 'js' });
+    loader.setDRACOLoader(dracoLoader);
+    
+    loader.load(
+      model.path,
+      (gltf) => {
+        const landscape = gltf.scene;
+        
+        // Scale up the landscape to be massive and encompassing
+        const box = new THREE.Box3().setFromObject(landscape);
+        const size = new THREE.Vector3();
+        box.getSize(size);
+        const center = new THREE.Vector3();
+        box.getCenter(center);
+        
+        // Make it 3x larger than normal models for immersive background
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = 20 / (maxDim || 1);  // Much larger scale
+        landscape.scale.set(scale, scale, scale);
+        
+        // Center it
+        landscape.position.copy(center).multiplyScalar(-scale);
+        // Position it below and behind the main model area
+        landscape.position.y -= 5;
+        
+        // Make all meshes semi-transparent with ocean blue color
+        landscape.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            const mat = new THREE.MeshStandardMaterial({
+              color: new THREE.Color(0x1e5a8f), // Deep ocean blue
+              transparent: true,
+              opacity: 0.6,
+              roughness: 0.8,
+              metalness: 0.3,
+              side: THREE.DoubleSide,
+            });
+            mesh.material = mat;
+            mesh.castShadow = false;
+            mesh.receiveShadow = false;
+          }
+        });
+        
+        const landscapeGroup = new THREE.Group();
+        landscapeGroup.add(landscape);
+        sceneRef.current!.add(landscapeGroup);
+        backgroundLandscapeRef.current = landscapeGroup;
+        
+        console.log("Background landscape loaded:", model.name);
+      },
+      undefined,
+      (error) => {
+        console.error("Error loading background landscape:", error);
+      }
+    );
+  };
+  
   const updateViewMode = () => {
     if (!sceneRef.current || !bloomPassRef.current || !rendererRef.current)
       return;
 
     const isSolid = viewMode === "solid";
 
-    // Always disable bloom to maintain exact background color #E5E6DA
-    bloomPassRef.current.enabled = false;
+    // Enable subtle bloom for underwater glow effect
+    bloomPassRef.current.enabled = true;
+    bloomPassRef.current.strength = 0.6;
 
-    sceneRef.current.background = new THREE.Color(0xe5e6da);
-    (sceneRef.current.fog as THREE.FogExp2).color.setHex(0xe5e6da);
-    rendererRef.current.setClearColor(0xe5e6da, 1);
+    sceneRef.current.background = new THREE.Color(0x0a2540); // Underwater blue
+    (sceneRef.current.fog as THREE.FogExp2).color.setHex(0x0a2540);
+    rendererRef.current.setClearColor(0x0a2540, 1);
 
     // Shadows only in solid mode
     if (shadowPlaneRef.current) {
@@ -1244,16 +1338,22 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           const mesh = child as THREE.Mesh;
           const mats = (mesh as any).userData.mats;
 
-          // Update materials for light theme if needed
+          // Update materials for underwater theme
           if (!isSolid) {
-            // For Holo mode in light theme, we want dark wireframes
+            // For Holo mode underwater, use cyan/blue wireframes with glow
             const holoMat = mats.holo as THREE.MeshPhysicalMaterial;
             if (holoMat) {
-              holoMat.color.setHex(0xdf6c42); // Orange wireframe
-              holoMat.emissive.setHex(0xdf6c42);
-              // Reduced intensity to prevent color blowout, increased opacity for visibility
-              holoMat.emissiveIntensity = 1.0;
-              holoMat.opacity = 0.8;
+              holoMat.color.setHex(0x00ffff); // Cyan wireframe
+              holoMat.emissive.setHex(0x00ffff);
+              holoMat.emissiveIntensity = 1.5; // Strong glow for underwater effect
+              holoMat.opacity = 0.9;
+            }
+          } else {
+            // For solid mode, add slight emissive glow
+            const solidMat = mats.solid as THREE.MeshStandardMaterial;
+            if (solidMat && "emissive" in solidMat) {
+              solidMat.emissive.setHex(0x0066aa);
+              solidMat.emissiveIntensity = 0.2;
             }
           }
 
@@ -1268,6 +1368,13 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   useEffect(() => {
     updateViewMode();
   }, [viewMode]);
+  
+  // Reload background landscape when selection changes
+  useEffect(() => {
+    if (backgroundLandscapeId) {
+      loadBackgroundLandscape(backgroundLandscapeId);
+    }
+  }, [backgroundLandscapeId]);
 
   const handleObjectClick = (object: THREE.Object3D) => {
     if (!sceneRef.current) return;
@@ -2012,7 +2119,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   };
 
   return (
-    <div className="absolute inset-0 bg-[#E5E6DA] z-0">
+    <div className="absolute inset-0 bg-[#0a2540] z-0">
       <div className="w-full h-full relative">
         {/* Onboarding Overlay */}
         {showOnboarding && (
@@ -2027,12 +2134,12 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           {/* Top Left - BLE Stick Controls */}
           <div className="flex items-center gap-2 pointer-events-auto">
             {/* OBJ Stick Controls */}
-            <div className="bg-[#E5E6DA]/90 border border-[#1D1E15] rounded-lg px-2 py-1.5 flex items-center gap-1.5 backdrop-blur-md">
-              <span className="text-[10px] font-bold text-[#1D1E15] uppercase">OBJ</span>
+            <div className="bg-[#0a2540]/90 border border-[#4080bf] rounded-lg px-2 py-1.5 flex items-center gap-1.5 backdrop-blur-md">
+              <span className="text-[10px] font-bold text-[#8fcdff] uppercase">OBJ</span>
               {!objConnected ? (
                 <button
                   onClick={handleObjConnect}
-                  className="px-2 py-1 bg-[#DF6C42] text-[#E5E6DA] text-[10px] rounded font-bold hover:bg-[#1D1E15] transition-colors uppercase cursor-pointer"
+                  className="px-2 py-1 bg-[#4080bf] text-white text-[10px] rounded font-bold hover:bg-[#1D1E15] transition-colors uppercase cursor-pointer"
                 >
                   Connect
                 </button>
@@ -2044,16 +2151,16 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                   >
                     Disconnect
                   </button>
-                  <span className="text-[10px] text-[#1D1E15] font-mono">{objDeviceName}</span>
+                  <span className="text-[10px] text-[#8fcdff] font-mono">{objDeviceName}</span>
                   <button
                     onClick={handleObjZero}
-                    className="px-2 py-1 bg-[#1D1E15] text-[#E5E6DA] text-[10px] rounded font-bold hover:bg-[#DF6C42] transition-colors uppercase cursor-pointer"
+                    className="px-2 py-1 bg-[#1D1E15] text-white text-[10px] rounded font-bold hover:bg-[#4080bf] transition-colors uppercase cursor-pointer"
                   >
                     Zero
                   </button>
                   <button
                     onClick={handleResetTranslate}
-                    className="px-2 py-1 bg-[#1D1E15] text-[#E5E6DA] text-[10px] rounded font-bold hover:bg-[#DF6C42] transition-colors uppercase cursor-pointer"
+                    className="px-2 py-1 bg-[#1D1E15] text-white text-[10px] rounded font-bold hover:bg-[#4080bf] transition-colors uppercase cursor-pointer"
                   >
                     Reset
                   </button>
@@ -2062,12 +2169,12 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             </div>
 
             {/* CAM Stick Controls */}
-            <div className="bg-[#E5E6DA]/90 border border-[#1D1E15] rounded-lg px-2 py-1.5 flex items-center gap-1.5 backdrop-blur-md">
-              <span className="text-[10px] font-bold text-[#1D1E15] uppercase">CAM</span>
+            <div className="bg-[#0a2540]/90 border border-[#4080bf] rounded-lg px-2 py-1.5 flex items-center gap-1.5 backdrop-blur-md">
+              <span className="text-[10px] font-bold text-[#8fcdff] uppercase">CAM</span>
               {!camConnected ? (
                 <button
                   onClick={handleCamConnect}
-                  className="px-2 py-1 bg-[#DF6C42] text-[#E5E6DA] text-[10px] rounded font-bold hover:bg-[#1D1E15] transition-colors uppercase cursor-pointer"
+                  className="px-2 py-1 bg-[#4080bf] text-white text-[10px] rounded font-bold hover:bg-[#1D1E15] transition-colors uppercase cursor-pointer"
                 >
                   Connect
                 </button>
@@ -2079,16 +2186,16 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                   >
                     Disconnect
                   </button>
-                  <span className="text-[10px] text-[#1D1E15] font-mono">{camDeviceName}</span>
+                  <span className="text-[10px] text-[#8fcdff] font-mono">{camDeviceName}</span>
                   <button
                     onClick={handleCamZero}
-                    className="px-2 py-1 bg-[#1D1E15] text-[#E5E6DA] text-[10px] rounded font-bold hover:bg-[#DF6C42] transition-colors uppercase cursor-pointer"
+                    className="px-2 py-1 bg-[#1D1E15] text-white text-[10px] rounded font-bold hover:bg-[#4080bf] transition-colors uppercase cursor-pointer"
                   >
                     Zero
                   </button>
                   <button
                     onClick={handleResetView}
-                    className="px-2 py-1 bg-[#1D1E15] text-[#E5E6DA] text-[10px] rounded font-bold hover:bg-[#DF6C42] transition-colors uppercase cursor-pointer"
+                    className="px-2 py-1 bg-[#1D1E15] text-white text-[10px] rounded font-bold hover:bg-[#4080bf] transition-colors uppercase cursor-pointer"
                   >
                     Reset
                   </button>
@@ -2098,31 +2205,31 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
             {/* M5Stick Instruction */}
             <div className="flex items-center gap-2">
-              <span className="text-[9px] font-mono text-[#1D1E15]/40">←</span>
-              <span className="text-[9px] font-mono text-[#1D1E15]/40">
+              <span className="text-[9px] font-mono text-[#8fcdff]/60">←</span>
+              <span className="text-[9px] font-mono text-[#8fcdff]/60">
                 If provisioning your own m5Stick, use these to connect!
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-2 pointer-events-auto">
-            <div className="flex items-center gap-1.5 bg-[#E5E6DA]/90 border border-[#1D1E15] p-1 backdrop-blur-md h-[32px]">
+            <div className="flex items-center gap-1.5 bg-[#0a2540]/90 border border-[#4080bf] p-1 backdrop-blur-md h-[32px] rounded">
               <button
                 onClick={() => setViewMode("holo")}
-                className={`h-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors cursor-pointer flex items-center justify-center ${
+                className={`h-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors cursor-pointer flex items-center justify-center rounded ${
                   viewMode === "holo"
-                    ? "bg-[#DF6C42] text-[#E5E6DA]"
-                    : "bg-transparent text-[#1D1E15] hover:bg-[#1D1E15] hover:text-[#E5E6DA]"
+                    ? "bg-[#4080bf] text-white"
+                    : "bg-transparent text-[#8fcdff] hover:bg-[#1D1E15] hover:text-white"
                 }`}
               >
                 Wireframe
               </button>
               <button
                 onClick={() => setViewMode("solid")}
-                className={`h-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors cursor-pointer flex items-center justify-center ${
+                className={`h-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors cursor-pointer flex items-center justify-center rounded ${
                   viewMode === "solid"
-                    ? "bg-[#DF6C42] text-[#E5E6DA]"
-                    : "bg-transparent text-[#1D1E15] hover:bg-[#1D1E15] hover:text-[#E5E6DA]"
+                    ? "bg-[#4080bf] text-white"
+                    : "bg-transparent text-[#8fcdff] hover:bg-[#1D1E15] hover:text-white"
                 }`}
               >
                 Solid
@@ -2130,7 +2237,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             </div>
             <button
               onClick={exportGLB}
-              className="h-[32px] px-3 bg-[#E5E6DA] border border-[#1D1E15] text-[#1D1E15] text-[10px] font-bold hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors flex items-center gap-1.5 uppercase tracking-wide cursor-pointer"
+              className="h-[32px] px-3 bg-[#0a2540] border border-[#4080bf] text-[#8fcdff] text-[10px] font-bold hover:bg-[#4080bf] hover:text-white transition-colors flex items-center gap-1.5 uppercase tracking-wide cursor-pointer rounded"
             >
               <svg
                 width="12"
@@ -2148,7 +2255,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             </button>
             <button
               onClick={resetView}
-              className="h-[32px] px-3 bg-[#E5E6DA] border border-[#1D1E15] text-[#1D1E15] text-[10px] font-bold hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors flex items-center gap-1.5 uppercase tracking-wide cursor-pointer"
+              className="h-[32px] px-3 bg-[#0a2540] border border-[#4080bf] text-[#8fcdff] text-[10px] font-bold hover:bg-[#4080bf] hover:text-white transition-colors flex items-center gap-1.5 uppercase tracking-wide cursor-pointer rounded"
             >
               <svg
                 width="12"
@@ -2173,15 +2280,19 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           </div>
         </div>
 
-        {/* Generate Prompt Bar - Hidden when onboarding is active to reduce clutter */}
+        {/* Model Selection Bar - Hidden when onboarding is active to reduce clutter */}
         {!showOnboarding && (
         <div className="absolute bottom-0 left-0 w-full z-10 p-4 pointer-events-none">
-          <div className="max-w-2xl mx-auto pointer-events-auto">
-            <div className="bg-[#E5E6DA]/80 border border-[#1D1E15] backdrop-blur-md p-1.5 flex gap-2 items-center shadow-lg">
+          <div className="max-w-3xl mx-auto pointer-events-auto">
+            <div className="bg-[#0a2540]/90 border border-[#4080bf] backdrop-blur-md p-1.5 flex gap-2 items-center shadow-lg rounded">
+              {/* Foreground Model Selector */}
               <div className="flex-1 relative" ref={bottomDropdownRef}>
+                <label className="text-[8px] text-[#8fcdff] uppercase tracking-wider mb-1 block px-1 font-bold">
+                  Foreground Object
+                </label>
                 <button
                   onClick={() => setIsBottomDropdownOpen(!isBottomDropdownOpen)}
-                  className="w-full bg-[#1D1E15] border border-[#1D1E15] text-[#E5E6DA] text-[10px] font-mono px-3 py-2 rounded outline-none focus:border-[#DF6C42] transition-colors flex items-center justify-between hover:bg-[#1D1E15]/90"
+                  className="w-full bg-[#1D1E15] border border-[#4080bf] text-[#E5E6DA] text-[10px] font-mono px-3 py-2 rounded outline-none focus:border-[#8fcdff] transition-colors flex items-center justify-between hover:bg-[#1D1E15]/90"
                 >
                   <span className={currentDemoModelId ? "text-[#E5E6DA]" : "text-[#E5E6DA]/60"}>
                     {currentDemoModelId
@@ -2202,21 +2313,36 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                 </button>
 
                 {isBottomDropdownOpen && (
-                  <div className="absolute bottom-full left-0 right-0 mb-1 bg-[#1D1E15] border border-[#1D1E15] rounded shadow-lg overflow-hidden z-50 max-h-48 overflow-y-auto">
-                    {DEMO_MODELS.map((model) => (
+                  <div className="absolute bottom-full left-0 right-0 mb-1 bg-[#1D1E15] border border-[#4080bf] rounded shadow-lg overflow-hidden z-50 max-h-48 overflow-y-auto">
+                    {DEMO_MODELS.filter(m => m.id !== "kelvin-seamounts" && m.id !== "san-pedro-preserve").map((model) => (
                       <button
                         key={model.id}
                         onClick={() => {
                           handleDemoSelect({ target: { value: model.id } } as any);
                           setIsBottomDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2.5 text-[10px] font-mono text-[#E5E6DA] hover:bg-[#DF6C42] hover:text-white transition-colors border-b border-[#E5E6DA]/10 last:border-0"
+                        className="w-full text-left px-3 py-2.5 text-[10px] font-mono text-[#E5E6DA] hover:bg-[#4080bf] hover:text-white transition-colors border-b border-[#E5E6DA]/10 last:border-0"
                       >
                         {model.name}
                       </button>
                     ))}
                   </div>
                 )}
+              </div>
+              
+              {/* Background Landscape Selector */}
+              <div className="flex-1 relative">
+                <label className="text-[8px] text-[#8fcdff] uppercase tracking-wider mb-1 block px-1 font-bold">
+                  Background Seabed
+                </label>
+                <select
+                  value={backgroundLandscapeId}
+                  onChange={(e) => setBackgroundLandscapeId(e.target.value)}
+                  className="w-full bg-[#1D1E15] border border-[#4080bf] text-[#E5E6DA] text-[10px] font-mono px-3 py-2 rounded outline-none focus:border-[#8fcdff] transition-colors cursor-pointer"
+                >
+                  <option value="kelvin-seamounts">Kelvin Seamounts</option>
+                  <option value="san-pedro-preserve">San Pedro Preserve</option>
+                </select>
               </div>
             </div>
           </div>
@@ -2225,8 +2351,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
         {/* Control Instructions */}
         {!showOnboarding && (
-        <div className="absolute bottom-16 right-4 z-10 pointer-events-none">
-          <div className="text-[9px] font-mono text-[#1D1E15]/40 space-y-0.5 text-right">
+        <div className="absolute bottom-20 right-4 z-10 pointer-events-none">
+          <div className="text-[9px] font-mono text-[#8fcdff]/60 space-y-0.5 text-right bg-[#0a2540]/60 px-3 py-2 rounded backdrop-blur-sm border border-[#4080bf]/30">
             <div>Left Click + Drag: Rotate</div>
             <div>Right Click + Drag: Pan</div>
             <div>Scroll: Zoom In/Out</div>
@@ -2238,30 +2364,30 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         {/* Inspector Panel */}
         {showInspector && (
           <div
-            className={`absolute top-20 left-4 bottom-20 w-64 bg-[#E5E6DA]/90 border border-[#1D1E15] backdrop-blur-md flex flex-col overflow-hidden transition-transform duration-300 shadow-xl z-20 ${
+            className={`absolute top-20 left-4 bottom-20 w-64 bg-[#0a2540]/95 border border-[#4080bf] backdrop-blur-md flex flex-col overflow-hidden transition-transform duration-300 shadow-xl z-20 rounded-lg ${
               showInspector ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            <div className="flex-shrink-0 border-b border-[#1D1E15]/20 pb-3 px-4 pt-4">
-              <h2 className="text-base font-bold text-[#1D1E15] mb-1.5 truncate font-sans">
+            <div className="flex-shrink-0 border-b border-[#4080bf]/20 pb-3 px-4 pt-4">
+              <h2 className="text-base font-bold text-[#8fcdff] mb-1.5 truncate font-sans">
                 {inspectorData.name}
               </h2>
-              <span className="px-1.5 py-0.5 bg-[#DF6C42]/10 border border-[#DF6C42] rounded text-[10px] text-[#DF6C42] font-mono uppercase">
+              <span className="px-1.5 py-0.5 bg-[#4080bf]/20 border border-[#4080bf] rounded text-[10px] text-[#8fcdff] font-mono uppercase">
                 {inspectorData.type}
               </span>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 font-mono">
               <div>
-                <h3 className="text-[10px] text-[#1D1E15]/50 uppercase tracking-wider mb-1.5">
+                <h3 className="text-[10px] text-[#8fcdff]/70 uppercase tracking-wider mb-1.5">
                   Description
                 </h3>
-                <p className="text-[10px] text-[#1D1E15] leading-relaxed break-words">
+                <p className="text-[10px] text-[#E5E6DA] leading-relaxed break-words">
                   {inspectorData.description}
                 </p>
                 <button
                   onClick={identifyPart}
                   disabled={isIdentifying}
-                  className="mt-3 w-full px-3 py-2 bg-[#E5E6DA] border border-[#1D1E15] text-[#1D1E15] text-[10px] font-bold hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors uppercase tracking-wide flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="mt-3 w-full px-3 py-2 bg-[#4080bf] border border-[#4080bf] text-white text-[10px] font-bold hover:bg-[#1D1E15] hover:border-[#8fcdff] transition-colors uppercase tracking-wide flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed rounded"
                 >
                   {isIdentifying ? (
                     <>
