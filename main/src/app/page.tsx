@@ -70,14 +70,21 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#E5E6DA] text-[#1D1E15] font-mono flex flex-col">
-      
+    <div className="relative min-h-screen bg-[#0a1929] text-[#e0f2ff] font-mono flex flex-col overflow-hidden">
+
+      {/* Animated Waves Background */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="wave"></div>
+        <div className="wave"></div>
+        <div className="wave"></div>
+      </div>
+
       {/* Navigation Header */}
-      <nav className="border-b border-[#1D1E15] px-0 h-16 flex justify-between items-center bg-[#E5E6DA] z-50">
+      <nav className="relative border-b border-[#1e3a5f] px-0 h-16 flex justify-between items-center bg-[#0a1929] z-50">
         <div className="flex items-center h-full flex-1">
           {/* Logo Box - Aligned with Left Sidebar */}
           {/* Scaled down from 179px */}
-          <div className="w-[134px] h-full flex items-center justify-center bg-[#E5E6DA] shrink-0">
+          <div className="w-[134px] h-full flex items-center justify-center bg-[#0a1929] shrink-0">
             <div className="w-10 h-10 flex items-center justify-center">
               <img src="/logo.png" alt="Mesh Logo" className="w-6 h-6 object-contain invert" />
             </div>
@@ -106,7 +113,7 @@ export default function Home() {
                 >
                   {item.name}
                 </a>
-                <span className="text-[#1D1E15]/20 group-last:hidden">/</span>
+                <span className="text-[#e0f2ff]/20 group-last:hidden">/</span>
               </div>
             ))}
           </div>
@@ -116,7 +123,7 @@ export default function Home() {
           <div className="text-[10px] uppercase tracking-widest opacity-50">Mesh</div>
           <Link
             href="/dashboard"
-            className="px-5 py-1.5 bg-[#DF6C42] text-[#E5E6DA] text-[10px] uppercase font-bold hover:bg-[#1D1E15] transition-colors"
+            className="px-5 py-1.5 bg-[#DF6C42] text-[#0a1929] text-[10px] uppercase font-bold hover:bg-[#0d2847] transition-colors"
             onClick={handleLaunchDemoClick}
           >
             View Demo
@@ -125,13 +132,13 @@ export default function Home() {
       </nav>
 
       {/* Main Content Grid */}
-      <main className="flex-1 grid grid-cols-12 divide-x divide-[#1D1E15]">
+      <main className="relative flex-1 grid grid-cols-12 divide-x divide-[#1e3a5f] z-10">
         
         {/* Left Sidebar (Empty/Decor) */}
-        <div className="hidden lg:block col-span-1 relative bg-[#E5E6DA] overflow-hidden">
+        <div className="hidden lg:block col-span-1 relative bg-[#0a1929] overflow-hidden">
           {/* Diagonal Lines SVG Background */}
           <div className="absolute inset-0 opacity-[0.1]" style={{ 
-            backgroundImage: 'repeating-linear-gradient(45deg, #1D1E15 0, #1D1E15 1px, transparent 0, transparent 50%)', 
+            backgroundImage: 'repeating-linear-gradient(45deg, #1e3a5f 0, #1e3a5f 1px, transparent 0, transparent 50%)', 
             backgroundSize: '10px 10px' 
           }} />
           
@@ -141,7 +148,7 @@ export default function Home() {
         </div>
 
          {/* Main Hero Content */}
-        <div className="col-span-12 lg:col-span-7 flex flex-col divide-y divide-[#1D1E15]">
+        <div className="col-span-12 lg:col-span-7 flex flex-col divide-y divide-[#1e3a5f]">
           
            {/* Hero Section */}
            <motion.div 
@@ -158,7 +165,7 @@ export default function Home() {
            />
 
              <motion.div 
-               className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1D1E15] text-[8px] lg:text-[10px] uppercase tracking-wider w-fit"
+               className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[8px] lg:text-[10px] uppercase tracking-wider w-fit"
                variants={staggerItem}
              >
               
@@ -167,22 +174,22 @@ export default function Home() {
              </motion.div>
              
              <motion.h2 
-               className="text-3xl lg:text-5xl font-sans font-medium leading-none tracking-tight text-[#1D1E15]"
+               className="text-3xl lg:text-5xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff]"
                variants={staggerItem}
              >
-               The Coordination<br/> Layer for GeoSpatial Data
+               Deep Sea<br/> Container Search
              </motion.h2>
              
              <motion.p 
                className="text-xs lg:text-sm opacity-70 max-w-lg lg:max-w-xl leading-relaxed"
                variants={staggerItem}
              >
-               Blazing fast 3D model processing. Generate meshes, split components, and visualize geometry — without complex pipelines.
+               Advanced underwater container location and recovery system. Track, identify, and retrieve lost cargo with precision 3D mapping and real-time visualization.
              </motion.p>
              
              {/* Mobile 3D Visualization Box */}
              <motion.div 
-               className="lg:hidden h-64 border border-[#1D1E15] relative overflow-hidden bg-[#E5E6DA] shrink-0 my-4"
+               className="lg:hidden h-64 border border-[#1e3a5f] relative overflow-hidden bg-[#0a1929] shrink-0 my-4"
                variants={staggerItem}
              >
                <div className="absolute inset-0 flex items-center justify-center">
@@ -197,12 +204,12 @@ export default function Home() {
                className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-2"
                variants={staggerItem}
              >
-              <button className="w-full sm:w-auto px-6 py-3 border border-[#1D1E15] text-[10px] uppercase font-bold hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors cursor-pointer">
+              <button className="w-full sm:w-auto px-6 py-3 border border-[#1e3a5f] text-[10px] uppercase font-bold hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors cursor-pointer">
                  Learn more
                </button>
                <Link
                  href="/dashboard"
-                 className="w-full sm:w-auto px-6 py-3 bg-[#DF6C42] text-[#E5E6DA] text-[10px] uppercase font-bold hover:bg-[#1D1E15] transition-colors text-center sm:text-left mb-2 sm:mb-0"
+                 className="w-full sm:w-auto px-6 py-3 bg-[#DF6C42] text-[#0a1929] text-[10px] uppercase font-bold hover:bg-[#0d2847] transition-colors text-center sm:text-left mb-2 sm:mb-0"
                  onClick={handleLaunchDemoClick}
                >
                  Launch Demo
@@ -211,18 +218,18 @@ export default function Home() {
            </motion.div>
 
            {/* Ecosystem Partners */}
-           <div className="h-18 grid grid-cols-4 divide-x divide-[#1D1E15] mt-auto border-b border-[#1D1E15]">
+           <div className="h-18 grid grid-cols-4 divide-x divide-[#1e3a5f] mt-auto border-b border-[#1e3a5f]">
              {[
                { name: 'GEMINI PRO', image: '/gemini-pro.png' },
                { name: 'SKETCHFAB', image: '/sketch.png' },
                { name: 'OPENAI', image: '/openai.png' },
                { name: 'ARDUINO', image: '/arduino.png' }
              ].map((partner) => (
-               <div key={partner.name} className="flex items-center justify-center opacity-40 hover:opacity-100 hover:bg-[#1D1E15] transition-all cursor-default p-2">
+               <div key={partner.name} className="flex items-center justify-center opacity-40 hover:opacity-100 hover:bg-[#0d2847] transition-all cursor-default p-2">
                  <img 
                    src={partner.image} 
                    alt={partner.name} 
-                   className="h-5 w-auto object-contain filter brightness-0"
+                   className="h-5 w-auto object-contain filter brightness-0 invert"
                  />
                </div>
              ))}
@@ -230,10 +237,10 @@ export default function Home() {
          </div>
 
         {/* Right Visualization Column */}
-        <div className="col-span-12 lg:col-span-4 flex flex-col divide-y divide-[#1D1E15] bg-[#E5E6DA]">
+        <div className="col-span-12 lg:col-span-4 flex flex-col divide-y divide-[#1e3a5f] bg-[#0a1929]">
           
           {/* 3D Visualization Box */}
-          <div className="hidden lg:block h-[50vh] border-b border-[#1D1E15] relative overflow-hidden bg-[#E5E6DA] shrink-0">
+          <div className="hidden lg:block h-[50vh] border-b border-[#1e3a5f] relative overflow-hidden bg-[#0a1929] shrink-0">
             <div className="absolute inset-0 flex items-center justify-center">
                 <CubeViewer />
             </div>
@@ -243,22 +250,22 @@ export default function Home() {
           </div>
 
           {/* Metrics Grid */}
-          <div className="flex-1 grid grid-rows-3 divide-y divide-[#1D1E15] min-h-0">
-            <div className="px-6 py-4 flex flex-col justify-center group hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors">
+          <div className="flex-1 grid grid-rows-3 divide-y divide-[#1e3a5f] min-h-0">
+            <div className="px-6 py-4 flex flex-col justify-center group hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors">
                 <div className="text-[10px] uppercase opacity-50 mb-2">Preloaded Models</div>
                 <div className="text-2xl font-bold mb-3">6</div>
                 <div className="w-full h-1 bg-[#DF6C42]/20 overflow-hidden">
                   <div className="h-full w-[95%] bg-[#DF6C42]"></div>
                 </div>
             </div>
-            <div className="px-6 py-4 flex flex-col justify-center group hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors">
+            <div className="px-6 py-4 flex flex-col justify-center group hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors">
                 <div className="text-[10px] uppercase opacity-50 mb-2">Meshes Processed</div>
                 <div className="text-2xl font-bold mb-3">2.1M</div>
                 <div className="w-full h-1 bg-[#DF6C42]/20 overflow-hidden">
                   <div className="h-full w-2/3 bg-[#DF6C42]"></div>
                 </div>
             </div>
-            <div className="px-6 py-4 flex flex-col justify-center group hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors">
+            <div className="px-6 py-4 flex flex-col justify-center group hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors">
                 <div className="text-[10px] uppercase opacity-50 mb-2">Total Vertices</div>
                 <div className="text-2xl font-bold mb-3">1.72B</div>
                 <div className="w-full h-1 bg-[#DF6C42]/20 overflow-hidden">
@@ -271,22 +278,22 @@ export default function Home() {
       </main>
 
       {/* How It Works Section */}
-      <section id="process" className="border-t border-[#1D1E15] bg-[#E5E6DA]">
-        <div className="grid grid-cols-12 divide-x divide-[#1D1E15]">
+      <section id="process" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
+        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-11">
             <motion.div 
-              className="px-10 py-16 border-b border-[#1D1E15]"
+              className="px-10 py-16 border-b border-[#1e3a5f]"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
               variants={staggerContainer}
             >
               <motion.div 
-                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1D1E15] text-[10px] uppercase tracking-wider w-fit mb-8"
+                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[10px] uppercase tracking-wider w-fit mb-8"
                 variants={fadeInDown}
               >
                 <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
@@ -294,14 +301,14 @@ export default function Home() {
               </motion.div>
               
               <motion.h3 
-                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#1D1E15] mb-12"
+                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-12"
                 variants={fadeInUp}
               >
                 How It Works
               </motion.h3>
               
               <motion.div 
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border border-[#1D1E15]"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border border-[#1e3a5f]"
                 variants={staggerContainer}
               >
                 {[
@@ -328,7 +335,7 @@ export default function Home() {
                 ].map((item, idx) => (
                   <motion.div
                     key={idx}
-                    className={`p-8 border-r border-[#1D1E15] last:border-r-0 hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors group`}
+                    className={`p-8 border-r border-[#1e3a5f] last:border-r-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors group`}
                     variants={staggerItem}
                   >
                     <div className="text-[10px] uppercase opacity-50 mb-4 font-mono">{item.step}</div>
@@ -336,7 +343,7 @@ export default function Home() {
                     <p className="text-sm opacity-70 leading-relaxed">{item.description}</p>
                     {idx < 3 && (
                       <div className="mt-6 flex items-center gap-2 opacity-20 group-hover:opacity-40">
-                        <div className="w-full h-px bg-[#1D1E15]"></div>
+                        <div className="w-full h-px bg-[#0d2847]"></div>
                         <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
                       </div>
                     )}
@@ -349,22 +356,22 @@ export default function Home() {
       </section>
 
       {/* Metrics Section */}
-      <section id="metrics" className="border-t border-[#1D1E15] bg-[#E5E6DA]">
-        <div className="grid grid-cols-12 divide-x divide-[#1D1E15]">
+      <section id="metrics" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
+        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-11">
             <motion.div 
-              className="px-10 py-16 border-b border-[#1D1E15]"
+              className="px-10 py-16 border-b border-[#1e3a5f]"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
               variants={staggerContainer}
             >
               <motion.div 
-                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1D1E15] text-[10px] uppercase tracking-wider w-fit mb-8"
+                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[10px] uppercase tracking-wider w-fit mb-8"
                 variants={fadeInDown}
               >
                 <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
@@ -372,7 +379,7 @@ export default function Home() {
               </motion.div>
               
               <motion.h3 
-                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#1D1E15] mb-12"
+                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-12"
                 variants={fadeInUp}
               >
                 Performance Metrics
@@ -380,19 +387,19 @@ export default function Home() {
               
               {/* Combined Bar Graph - Sketchfab Import vs SAM3D META Model */}
               <motion.div 
-                className="border border-[#1D1E15] mb-8 overflow-hidden"
+                className="border border-[#1e3a5f] mb-8 overflow-hidden"
                 variants={fadeInUp}
               >
                 <div className="p-8">
                   {/* Explanation Section */}
-                  <div className="mb-8 pb-6 border-b border-[#1D1E15]">
+                  <div className="mb-8 pb-6 border-b border-[#1e3a5f]">
                     <div className="text-[10px] uppercase opacity-50 mb-4">About the Solutions</div>
                     <div className="space-y-4 text-sm opacity-70 leading-relaxed">
                       <p>
-                        <span className="font-bold text-[#1D1E15]">SAM3D META Model</span> is a custom-built 3D segmentation model powered by Meta's SAM (Segment Anything Model) architecture, fine-tuned for geospatial mesh processing. It performs automated component extraction and mesh segmentation directly from 3D models.
+                        <span className="font-bold text-[#e0f2ff]">SAM3D META Model</span> is a custom-built 3D segmentation model powered by Meta's SAM (Segment Anything Model) architecture, fine-tuned for geospatial mesh processing. It performs automated component extraction and mesh segmentation directly from 3D models.
                       </p>
                       <p>
-                        <span className="font-bold text-[#1D1E15]">Sketchfab Import</span> refers to the pipeline that imports pre-processed 3D models from Sketchfab's platform, leveraging their optimized meshes and metadata for faster rendering times.
+                        <span className="font-bold text-[#e0f2ff]">Sketchfab Import</span> refers to the pipeline that imports pre-processed 3D models from Sketchfab's platform, leveraging their optimized meshes and metadata for faster rendering times.
                       </p>
                       <p className="text-xs opacity-60 italic">
                         The chart below compares render times across both solutions. We have working implementations for both approaches, but for deployment we focused on the Sketchfab import pipeline due to deployment constraints. Our server operates with 32GB VRAM, which limits our ability to deploy SAM3D for every use case. While SAM3D provides superior accuracy and performs much better on larger meshes, it requires more computational resources. For production, we prioritized the Sketchfab import solution which offers faster processing with pre-optimized assets, especially for smaller to medium-sized models.
@@ -450,11 +457,11 @@ export default function Home() {
                                   <img 
                                     src="/sketch.png" 
                                     alt="Sketchfab" 
-                                    className="w-8 h-8 object-contain filter brightness-0 opacity-60"
+                                    className="w-8 h-8 object-contain filter brightness-0 invert opacity-60"
                                   />
                                 </div>
                                 <div
-                                  className="bg-[#1D1E15] hover:bg-[#1D1E15]/80 transition-colors relative"
+                                  className="bg-[#0d2847] hover:bg-[#0d2847]/80 transition-colors relative"
                                   style={{ 
                                     height: `${sketchfabHeight}px`, 
                                     width: 'calc(45% - 4px)',
@@ -495,10 +502,10 @@ export default function Home() {
                       })}
                     </div>
                   </div>
-                  <div className="pt-4 border-t border-[#1D1E15]">
+                  <div className="pt-4 border-t border-[#1e3a5f]">
                     <div className="flex items-center justify-center gap-8 mb-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-[#1D1E15]"></div>
+                        <div className="w-4 h-4 bg-[#0d2847]"></div>
                         <div className="text-[10px] uppercase opacity-70">Sketchfab Import</div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -522,7 +529,7 @@ export default function Home() {
               
               {/* Key Metrics */}
               <motion.div 
-                className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-[#1D1E15] mb-8"
+                className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-[#1e3a5f] mb-8"
                 variants={staggerContainer}
               >
                 {[
@@ -550,7 +557,7 @@ export default function Home() {
                 ].map((stat, idx) => (
                   <motion.div
                     key={idx}
-                    className={`p-6 border-r border-[#1D1E15] last:border-r-0 hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors flex flex-col`}
+                    className={`p-6 border-r border-[#1e3a5f] last:border-r-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col`}
                     variants={staggerItem}
                   >
                     <div className="text-[10px] uppercase opacity-50 mb-2">{stat.label}</div>
@@ -569,22 +576,22 @@ export default function Home() {
       </section>
 
       {/* Integrations Section */}
-      <section id="integrations" className="border-t border-[#1D1E15] bg-[#E5E6DA]">
-        <div className="grid grid-cols-12 divide-x divide-[#1D1E15]">
+      <section id="integrations" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
+        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-11">
             <motion.div 
-              className="px-10 py-16 border-b border-[#1D1E15]"
+              className="px-10 py-16 border-b border-[#1e3a5f]"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
               variants={staggerContainer}
             >
               <motion.div 
-                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1D1E15] text-[10px] uppercase tracking-wider w-fit mb-8"
+                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[10px] uppercase tracking-wider w-fit mb-8"
                 variants={fadeInDown}
               >
                 <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
@@ -592,23 +599,23 @@ export default function Home() {
               </motion.div>
               
               <motion.h3 
-                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#1D1E15] mb-12"
+                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-12"
                 variants={fadeInUp}
               >
                 AI Model Integration
               </motion.h3>
               
               <motion.div 
-                className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-[#1D1E15]"
+                className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-[#1e3a5f]"
                 variants={staggerContainer}
               >
                 {/* Gemini Pro */}
                 <motion.div 
-                  className="p-8 border-r border-b border-[#1D1E15] lg:border-b-0 hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors flex flex-col h-full"
+                  className="p-8 border-r border-b border-[#1e3a5f] lg:border-b-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
                   variants={staggerItem}
                 >
                   <div className="flex items-center gap-4 mb-6">
-                    <img src="/gemini-pro.png" alt="Gemini Pro" className="h-8 w-auto object-contain filter brightness-0 opacity-60" />
+                    <img src="/gemini-pro.png" alt="Gemini Pro" className="h-8 w-auto object-contain filter brightness-0 invert opacity-60" />
                   </div>
                   <p className="text-sm opacity-70 leading-relaxed mb-6 flex-1">
                     Integrated via OpenRouter API for real-time 3D mesh component identification. When users 
@@ -617,7 +624,7 @@ export default function Home() {
                     scores. It also generates annotated images with wireframe overlays and labels for educational 
                     visualization.
                   </p>
-                  <div className="pt-4 border-t border-[#1D1E15] grid grid-cols-2 gap-4">
+                  <div className="pt-4 border-t border-[#1e3a5f] grid grid-cols-2 gap-4">
                     <div>
                       <div className="text-[10px] uppercase opacity-50 mb-1">Use Case</div>
                       <div className="text-sm font-medium">Component ID & Annotation</div>
@@ -631,11 +638,11 @@ export default function Home() {
                 
                 {/* OpenAI */}
                 <motion.div 
-                  className="p-8 hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors flex flex-col h-full"
+                  className="p-8 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
                   variants={staggerItem}
                 >
                   <div className="flex items-center gap-4 mb-6">
-                    <img src="/openai.png" alt="OpenAI" className="h-8 w-auto object-contain filter brightness-0 opacity-60" />
+                    <img src="/openai.png" alt="OpenAI" className="h-8 w-auto object-contain filter brightness-0 invert opacity-60" />
                   </div>
                   <p className="text-sm opacity-70 leading-relaxed mb-6 flex-1">
                     Processes identified mesh components to generate detailed educational explanations 
@@ -643,7 +650,7 @@ export default function Home() {
                     geometry, position, and context to provide comprehensive descriptions, functional 
                     explanations, and educational content about each component's role and characteristics.
                   </p>
-                  <div className="pt-4 border-t border-[#1D1E15] grid grid-cols-2 gap-4">
+                  <div className="pt-4 border-t border-[#1e3a5f] grid grid-cols-2 gap-4">
                     <div>
                       <div className="text-[10px] uppercase opacity-50 mb-1">Use Case</div>
                       <div className="text-sm font-medium">Mesh Explanation</div>
@@ -658,19 +665,19 @@ export default function Home() {
               
               {/* Mesh Extraction Explanation */}
               <motion.div 
-                className="mt-8 border border-[#1D1E15] p-8"
+                className="mt-8 border border-[#1e3a5f] p-8"
                 variants={fadeInUp}
               >
                 <div className="text-[10px] uppercase opacity-50 mb-6">Mesh Extraction via Gemini</div>
                 <div className="flex flex-col gap-6">
                   {/* Large Image */}
-                  <div className="relative border border-[#1D1E15] bg-[#E5E6DA] overflow-hidden">
+                  <div className="relative border border-[#1e3a5f] bg-[#0a1929] overflow-hidden">
                     <img 
                       src="/ironman.png" 
                       alt="Iron Man mesh extraction example" 
                       className="w-full h-auto object-contain filter opacity-90 max-h-[500px]"
                     />
-                    <div className="absolute top-2 right-2 text-[8px] uppercase opacity-40 bg-[#E5E6DA] px-2 py-1 border border-[#1D1E15]">
+                    <div className="absolute top-2 right-2 text-[8px] uppercase opacity-40 bg-[#0a1929] px-2 py-1 border border-[#1e3a5f]">
                       Example Mesh
                     </div>
                   </div>
@@ -691,19 +698,19 @@ export default function Home() {
                     </p>
                     
                     {/* Annotated Image */}
-                    <div className="relative border border-[#1D1E15] bg-[#E5E6DA] overflow-hidden mt-4">
+                    <div className="relative border border-[#1e3a5f] bg-[#0a1929] overflow-hidden mt-4">
                       <img 
                         src="/annotate.png" 
                         alt="Annotated mesh extraction example" 
                         className="w-full h-auto object-contain filter opacity-90"
                       />
-                      <div className="absolute top-2 right-2 text-[8px] uppercase opacity-40 bg-[#E5E6DA] px-2 py-1 border border-[#1D1E15]">
+                      <div className="absolute top-2 right-2 text-[8px] uppercase opacity-40 bg-[#0a1929] px-2 py-1 border border-[#1e3a5f]">
                         Annotated Output
                       </div>
                     </div>
                     
                     {/* Explanation of Markings */}
-                    <div className="mt-4 pt-4 border-t border-[#1D1E15]">
+                    <div className="mt-4 pt-4 border-t border-[#1e3a5f]">
                       <div className="text-[10px] uppercase opacity-50 mb-3">Marking Explanation</div>
                       <p className="text-sm opacity-70 leading-relaxed">
                         The annotated output shows how Gemini generates visual overlays on identified mesh 
@@ -719,22 +726,22 @@ export default function Home() {
               
               {/* Integration Flow */}
               <motion.div 
-                className="mt-8 border border-[#1D1E15] p-8"
+                className="mt-8 border border-[#1e3a5f] p-8"
                 variants={fadeInUp}
               >
                 <div className="text-[10px] uppercase opacity-50 mb-4">Model Workflow</div>
                 <div className="flex flex-col lg:flex-wrap items-center gap-4 lg:justify-center">
                   {['Upload', 'AI Identification Trigger', 'GPT-4 Processing', 'Gemini Pro Annotation', 'Export'].map((step, idx) => (
                     <React.Fragment key={idx}>
-                      <div className="px-4 py-2 border border-[#1D1E15] text-xs uppercase mx-auto lg:mx-0 w-fit lg:w-auto text-center lg:text-left">
+                      <div className="px-4 py-2 border border-[#1e3a5f] text-xs uppercase mx-auto lg:mx-0 w-fit lg:w-auto text-center lg:text-left">
                         {step}
                       </div>
                       {idx < 4 && (
-                        <div className="hidden lg:block w-6 h-px bg-[#1D1E15] opacity-20"></div>
+                        <div className="hidden lg:block w-6 h-px bg-[#0d2847] opacity-20"></div>
                       )}
                       {idx < 4 && (
                         <div className="lg:hidden w-full flex justify-center py-2">
-                          <div className="w-6 h-px bg-[#1D1E15] opacity-20"></div>
+                          <div className="w-6 h-px bg-[#0d2847] opacity-20"></div>
                         </div>
                       )}
                     </React.Fragment>
@@ -747,22 +754,22 @@ export default function Home() {
       </section>
 
       {/* Upload & Export Section */}
-      <section id="upload-export" className="border-t border-[#1D1E15] bg-[#E5E6DA]">
-        <div className="grid grid-cols-12 divide-x divide-[#1D1E15]">
+      <section id="upload-export" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
+        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-11">
             <motion.div 
-              className="px-10 py-16 border-b border-[#1D1E15]"
+              className="px-10 py-16 border-b border-[#1e3a5f]"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
               variants={staggerContainer}
             >
               <motion.div 
-                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1D1E15] text-[10px] uppercase tracking-wider w-fit mb-8"
+                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[10px] uppercase tracking-wider w-fit mb-8"
                 variants={fadeInDown}
               >
                 <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
@@ -770,23 +777,23 @@ export default function Home() {
               </motion.div>
               
               <motion.h3 
-                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#1D1E15] mb-12"
+                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-12"
                 variants={fadeInUp}
               >
                 Upload & Export
               </motion.h3>
               
               <motion.div 
-                className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-[#1D1E15]"
+                className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-[#1e3a5f]"
                 variants={staggerContainer}
               >
                 {/* Upload */}
                 <motion.div 
-                  className="p-8 border-r border-b border-[#1D1E15] lg:border-b-0 hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors flex flex-col h-full"
+                  className="p-8 border-r border-b border-[#1e3a5f] lg:border-b-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
                   variants={staggerItem}
                 >
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-8 h-8 border-2 border-[#1D1E15] flex items-center justify-center">
+                    <div className="w-8 h-8 border-2 border-[#1e3a5f] flex items-center justify-center">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                       </svg>
@@ -798,7 +805,7 @@ export default function Home() {
                     parts, materials, and structural elements, giving you instant insights into complex 3D models.
                     Perfect for engineering analysis, educational purposes, or design optimization.
                   </p>
-                  <div className="pt-4 border-t border-[#1D1E15] grid grid-cols-2 gap-4">
+                  <div className="pt-4 border-t border-[#1e3a5f] grid grid-cols-2 gap-4">
                     <div>
                       <div className="text-[10px] uppercase opacity-50 mb-1">Supported Formats</div>
                       <div className="text-sm font-medium">GLB (More coming soon!)</div>
@@ -812,11 +819,11 @@ export default function Home() {
                 
                 {/* Export */}
                 <motion.div 
-                  className="p-8 hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors flex flex-col h-full"
+                  className="p-8 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
                   variants={staggerItem}
                 >
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-8 h-8 border-2 border-[#1D1E15] flex items-center justify-center">
+                    <div className="w-8 h-8 border-2 border-[#1e3a5f] flex items-center justify-center">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
@@ -828,7 +835,7 @@ export default function Home() {
                     with precise measurements and material properties. Compatible with major CAD platforms 
                     including SolidWorks, AutoCAD, Fusion 360, and Blender.
                   </p>
-                  <div className="pt-4 border-t border-[#1D1E15] grid grid-cols-2 gap-4">
+                  <div className="pt-4 border-t border-[#1e3a5f] grid grid-cols-2 gap-4">
                     <div>
                       <div className="text-[10px] uppercase opacity-50 mb-1">Export Formats</div>
                       <div className="text-sm font-medium">GLB (More coming soon!)</div>
@@ -846,22 +853,22 @@ export default function Home() {
       </section>
 
       {/* Mesh Viewer Section */}
-      <section id="mesh-viewer" className="border-t border-[#1D1E15] bg-[#E5E6DA]">
-        <div className="grid grid-cols-12 divide-x divide-[#1D1E15]">
+      <section id="mesh-viewer" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
+        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-11">
             <motion.div 
-              className="px-10 py-16 border-b border-[#1D1E15]"
+              className="px-10 py-16 border-b border-[#1e3a5f]"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
               variants={staggerContainer}
             >
               <motion.div 
-                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1D1E15] text-[10px] uppercase tracking-wider w-fit mb-8"
+                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[10px] uppercase tracking-wider w-fit mb-8"
                 variants={fadeInDown}
               >
                 <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
@@ -869,7 +876,7 @@ export default function Home() {
               </motion.div>
               
               <motion.h3 
-                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#1D1E15] mb-12"
+                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-12"
                 variants={fadeInUp}
               >
                 Arduino M5StickCPlus2 Integration
@@ -877,7 +884,7 @@ export default function Home() {
               
               {/* Demo Video */}
               <motion.div 
-                className="border border-[#1D1E15] mb-8 bg-[#E5E6DA] overflow-hidden"
+                className="border border-[#1e3a5f] mb-8 bg-[#0a1929] overflow-hidden"
                 variants={fadeInUp}
               >
                 <video 
@@ -895,12 +902,12 @@ export default function Home() {
               
               {/* Camera Stick */}
               <motion.div 
-                className="border border-[#1D1E15] mb-8"
+                className="border border-[#1e3a5f] mb-8"
                 variants={fadeInUp}
               >
-                <div className="p-8 border-b border-[#1D1E15]">
+                <div className="p-8 border-b border-[#1e3a5f]">
                   <div className="flex items-center gap-4 mb-4">
-                    <img src="/arduino.png" alt="Arduino" className="h-8 w-auto object-contain filter brightness-0 opacity-60" />
+                    <img src="/arduino.png" alt="Arduino" className="h-8 w-auto object-contain filter brightness-0 invert opacity-60" />
                     <h4 className="text-xl font-regular">Camera Stick</h4>
                   </div>
                   <p className="text-sm opacity-70 leading-relaxed mb-6">
@@ -910,19 +917,19 @@ export default function Home() {
                   </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div className="border border-[#1D1E15] p-4">
+                    <div className="border border-[#1e3a5f] p-4">
                       <div className="text-[10px] uppercase opacity-50 mb-2">Madgwick Filter</div>
                       <div className="text-xs font-mono opacity-70 mb-2">AHRS.updateIMU(gx, gy, gz, ax, ay, az)</div>
                       <div className="text-[8px] opacity-60">Fuses gyro (rad/s) + accel (g) for orientation</div>
                     </div>
-                    <div className="border border-[#1D1E15] p-4">
+                    <div className="border border-[#1e3a5f] p-4">
                       <div className="text-[10px] uppercase opacity-50 mb-2">Relative Quaternion</div>
                       <div className="text-xs font-mono opacity-70 mb-2">q_rel = qCurr × conj(qRef)</div>
                       <div className="text-[8px] opacity-60">Re-centers orientation on button press</div>
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-[#1D1E15] pt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-[#1e3a5f] pt-4">
                     {[
                       { label: 'Streaming Rate', value: '500Hz', desc: 'BLE quaternion updates' },
                       { label: 'Gyro Calibration', value: '250 samples', desc: '1s bias estimation' },
@@ -930,7 +937,7 @@ export default function Home() {
                     ].map((stat, idx) => (
                       <div
                         key={idx}
-                        className={`p-4 border-r border-[#1D1E15] last:border-r-0`}
+                        className={`p-4 border-r border-[#1e3a5f] last:border-r-0`}
                       >
                         <div className="text-[10px] uppercase opacity-50 mb-1">{stat.label}</div>
                         <div className="text-lg font-bold mb-1">{stat.value}</div>
@@ -941,7 +948,7 @@ export default function Home() {
                 </div>
                 
                 {/* Camera Stick Math */}
-                <div className="p-8 bg-[#1D1E15]/5">
+                <div className="p-8 bg-[#0d2847]/30">
                   <div className="text-[10px] uppercase opacity-50 mb-4">Rotation Mathematics</div>
                   <div className="space-y-3 text-xs font-mono opacity-70">
                     <div>// Euler to Quaternion (ZYX order)</div>
@@ -955,12 +962,12 @@ export default function Home() {
               
               {/* Object Stick */}
               <motion.div 
-                className="border border-[#1D1E15] mb-8"
+                className="border border-[#1e3a5f] mb-8"
                 variants={fadeInUp}
               >
-                <div className="p-8 border-b border-[#1D1E15]">
+                <div className="p-8 border-b border-[#1e3a5f]">
                   <div className="flex items-center gap-4 mb-4">
-                    <img src="/arduino.png" alt="Arduino" className="h-8 w-auto object-contain filter brightness-0 opacity-60" />
+                    <img src="/arduino.png" alt="Arduino" className="h-8 w-auto object-contain filter brightness-0 invert opacity-60" />
                     <h4 className="text-xl font-regular">Object Stick</h4>
                   </div>
                   <p className="text-sm opacity-70 leading-relaxed mb-6">
@@ -970,12 +977,12 @@ export default function Home() {
                   </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div className="border border-[#1D1E15] p-4">
+                    <div className="border border-[#1e3a5f] p-4">
                       <div className="text-[10px] uppercase opacity-50 mb-2">Button A: AI Identify</div>
                       <div className="text-xs font-mono opacity-70 mb-2">q = {'{'}1.0, 1.0, 1.0, 0.0{'}'}</div>
                       <div className="text-[8px] opacity-60">Triggers Gemini Pro component analysis</div>
                     </div>
-                    <div className="border border-[#1D1E15] p-4">
+                    <div className="border border-[#1e3a5f] p-4">
                       <div className="text-[10px] uppercase opacity-50 mb-2">Button B: Zoom Control</div>
                       <div className="text-xs font-mono opacity-70 mb-2">Zoom In: {'{'}-1.0, -1.0, -1.0, 0.0{'}'}</div>
                       <div className="text-xs font-mono opacity-70">Zoom Out: {'{'}-2.0, -2.0, -2.0, 0.0{'}'}</div>
@@ -983,14 +990,14 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-[#1D1E15] pt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-[#1e3a5f] pt-4">
                     {[
                       { label: 'Connection Mode', value: 'BLE Identity', desc: 'Sends q = {0,0,0,1} when idle' },
                       { label: 'Re-advertise', value: 'Auto + Manual', desc: 'Long-press B for recovery' },
                     ].map((stat, idx) => (
                       <div
                         key={idx}
-                        className={`p-4 border-r border-[#1D1E15] last:border-r-0`}
+                        className={`p-4 border-r border-[#1e3a5f] last:border-r-0`}
                       >
                         <div className="text-[10px] uppercase opacity-50 mb-1">{stat.label}</div>
                         <div className="text-lg font-bold mb-1">{stat.value}</div>
@@ -1001,7 +1008,7 @@ export default function Home() {
                 </div>
                 
                 {/* Object Stick Protocol */}
-                <div className="p-8 bg-[#1D1E15]/5">
+                <div className="p-8 bg-[#0d2847]/30">
                   <div className="text-[10px] uppercase opacity-50 mb-4">BLE Protocol</div>
                   <div className="space-y-3 text-xs font-mono opacity-70">
                     <div>// Service UUID: 12345678-1234-5678-1234-56789abcdef0</div>
@@ -1017,8 +1024,8 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer id="visualize" className="border-t border-[#1D1E15] bg-[#E5E6DA]">
-        <div className="grid grid-cols-12 divide-x divide-[#1D1E15]">
+      <footer id="visualize" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
+        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
           
@@ -1031,14 +1038,14 @@ export default function Home() {
               viewport={{ once: true, amount: 0.2 }}
               variants={fadeIn}
             >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-[#1D1E15] pb-8 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-[#1e3a5f] pb-8 mb-6">
                 <div>
                   <div className="flex items-center gap-2 mb-4">
                     <img src="/logo.png" alt="Mesh Logo" className="w-6 h-6 object-contain invert" />
                     <span className="text-sm font-medium">Mesh</span>
                   </div>
                   <p className="text-xs opacity-60 leading-relaxed">
-                    The coordination layer for geospatial data. Blazing fast 3D model processing and visualization.
+                    Deep sea container search and recovery. Advanced 3D mapping and visualization for underwater operations.
                   </p>
                 </div>
                 
@@ -1108,11 +1115,11 @@ export default function Home() {
           />
           
           {/* Modal Content */}
-          <div className="relative bg-[#E5E6DA] border-2 border-[#1D1E15] p-8 max-w-sm w-full">
+          <div className="relative bg-[#0a1929] border-2 border-[#1e3a5f] p-8 max-w-sm w-full">
             {/* Close Button */}
             <button
               onClick={() => setShowMobileModal(false)}
-              className="absolute top-4 right-4 w-8 h-8 border border-[#1D1E15] flex items-center justify-center hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 border border-[#1e3a5f] flex items-center justify-center hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1126,7 +1133,7 @@ export default function Home() {
             </div>
             
             {/* Modal Title */}
-            <h3 className="text-2xl font-sans font-medium leading-none tracking-tight text-[#1D1E15] mb-4">
+            <h3 className="text-2xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-4">
               LARGER SCREEN<br/>RECOMMENDED
             </h3>
             
@@ -1138,7 +1145,7 @@ export default function Home() {
             {/* Action Button */}
             <button
               onClick={() => setShowMobileModal(false)}
-              className="w-full px-6 py-3 bg-[#DF6C42] text-[#E5E6DA] text-[10px] uppercase font-bold hover:bg-[#1D1E15] transition-colors"
+              className="w-full px-6 py-3 bg-[#DF6C42] text-[#0a1929] text-[10px] uppercase font-bold hover:bg-[#0d2847] transition-colors"
             >
               GOT IT
             </button>
