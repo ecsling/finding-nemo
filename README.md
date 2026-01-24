@@ -102,3 +102,10 @@ No backend infrastructure required for MVP deployment.
 3. Conclude at **Impact & Analytics View**:
    - Present quantitative metric (area reduction percentage)
    - Reference insurance analytics as phase 2 development target
+
+---
+
+## Future Development Roadmap (Post-MVP)
+- **Real-time recovery telemetry:** mark verified "found" coordinates and dynamically update probability field with Bayesian inference
+- **Insurance integration module:** damage assessment algorithms, claim validation framework, automated reporting export
+- **Live data stream integration:** oceanic current/weather API connectors, AIS trajectory ingestion, side-scan sonar data fusion
