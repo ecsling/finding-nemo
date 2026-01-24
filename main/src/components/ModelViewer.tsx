@@ -731,8 +731,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
     // Initialize Three.js scene with underwater atmosphere
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0a2540); // Dark underwater blue
-    scene.fog = new THREE.FogExp2(0x0a2540, 0.03); // Thicker fog for underwater effect
+    scene.background = new THREE.Color(0x1a4d6d); // Lighter underwater blue for better visibility
+    scene.fog = new THREE.FogExp2(0x1a4d6d, 0.015); // Lighter fog for better visibility
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(
@@ -768,7 +768,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.shadowMap.enabled = false; // Disable shadows
-    renderer.setClearColor(0x0a2540, 1); // Underwater blue
+    renderer.setClearColor(0x1a4d6d, 1); // Lighter underwater blue
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
@@ -778,18 +778,18 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     controls.maxDistance = 100;
     controlsRef.current = controls;
 
-    // Lighting - Underwater atmosphere
-    const ambientLight = new THREE.AmbientLight(0x4080bf, 0.5); // Blue-tinted ambient light
+    // Lighting - Brighter underwater atmosphere for better visibility
+    const ambientLight = new THREE.AmbientLight(0x7eb3d4, 1.2); // Brighter blue-tinted ambient light
     scene.add(ambientLight);
 
     // Main directional light from above (simulating sunlight filtering through water)
-    const dirLight = new THREE.DirectionalLight(0x6ba3d4, 1.2);
+    const dirLight = new THREE.DirectionalLight(0xadd8e6, 2.5); // Brighter directional light
     dirLight.position.set(0, 30, 10);
     dirLight.castShadow = false;
     scene.add(dirLight);
 
     // Accent spotlight (like underwater searchlight)
-    const accentLight = new THREE.SpotLight(0x8fcdff, 1.5); // Cyan-blue accent
+    const accentLight = new THREE.SpotLight(0xadd8e6, 2.0); // Brighter cyan-blue accent
     accentLight.position.set(-10, 10, 5);
     accentLight.lookAt(0, 0, 0);
     accentLight.angle = Math.PI / 6;
@@ -797,9 +797,14 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     scene.add(accentLight);
     
     // Backlight for depth
-    const backLight = new THREE.DirectionalLight(0x1e5a8f, 0.8);
+    const backLight = new THREE.DirectionalLight(0x5a9fc7, 1.5); // Brighter backlight
     backLight.position.set(0, 5, -20);
     scene.add(backLight);
+    
+    // Additional fill light from the side for better model visibility
+    const fillLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    fillLight.position.set(10, 5, 10);
+    scene.add(fillLight);
 
     // Shadow plane
     /*
@@ -913,9 +918,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
       // Placeholder removed - no rotation logic needed
       
-      // Rotate background landscape slowly for underwater effect
+      // Rotate background landscape for seabed movement effect
       if (backgroundLandscapeRef.current) {
-        backgroundLandscapeRef.current.rotation.y += dt * 0.0001; // Slow rotation for seabed movement
+        backgroundLandscapeRef.current.rotation.y += dt * 0.0003; // Faster rotation for noticeable seabed movement
       }
 
       if (composerRef.current) composerRef.current.render();
@@ -1201,8 +1206,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         const scale = 4 / (maxDim || 1);
         flatGroup.scale.set(scale, scale, scale);
 
-        // Center the model at origin
+        // Center the model at origin and position lower (on/in the seabed)
         flatGroup.position.copy(center).multiplyScalar(-scale);
+        flatGroup.position.y -= 2; // Lower the ship into the seabed
         flatGroup.updateMatrixWorld(true);
 
         sceneRef.current!.add(flatGroup);
@@ -1278,19 +1284,19 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         
         // Center it
         landscape.position.copy(center).multiplyScalar(-scale);
-        // Position it below and behind the main model area
-        landscape.position.y -= 5;
+        // Position it below the main model area (lowered more so ship sits on/in seabed)
+        landscape.position.y -= 8; // Moved higher so ships appear lower relative to it
         
-        // Make all meshes semi-transparent with ocean blue color
+        // Make all meshes semi-transparent with lighter ocean color for better visibility
         landscape.traverse((child) => {
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;
             const mat = new THREE.MeshStandardMaterial({
-              color: new THREE.Color(0x1e5a8f), // Deep ocean blue
+              color: new THREE.Color(0x4a8fb5), // Lighter ocean blue for better visibility
               transparent: true,
-              opacity: 0.6,
-              roughness: 0.8,
-              metalness: 0.3,
+              opacity: 0.5, // Slightly more transparent
+              roughness: 0.7,
+              metalness: 0.2,
               side: THREE.DoubleSide,
             });
             mesh.material = mat;
@@ -1323,9 +1329,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     bloomPassRef.current.enabled = true;
     bloomPassRef.current.strength = 0.6;
 
-    sceneRef.current.background = new THREE.Color(0x0a2540); // Underwater blue
-    (sceneRef.current.fog as THREE.FogExp2).color.setHex(0x0a2540);
-    rendererRef.current.setClearColor(0x0a2540, 1);
+    sceneRef.current.background = new THREE.Color(0x1a4d6d); // Lighter underwater blue
+    (sceneRef.current.fog as THREE.FogExp2).color.setHex(0x1a4d6d);
+    rendererRef.current.setClearColor(0x1a4d6d, 1);
 
     // Shadows only in solid mode
     if (shadowPlaneRef.current) {
