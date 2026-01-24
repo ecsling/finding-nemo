@@ -89,3 +89,16 @@ No backend infrastructure required for MVP deployment.
 - `@react-three/fiber` - React renderer for Three.js (optional)
 - `@react-three/drei` - Three.js helper utilities
 - Standard React ecosystem (Vite/Next.js build toolchain)
+
+---
+
+## Demonstration Protocol (Evaluation Flow)
+1. Begin at **Landing View**: present single-sentence problem statement for maritime recovery challenges.
+2. Navigate to **Interactive Geospatial Dashboard**:
+   - Initialize bathymetric mesh asset
+   - Input synthetic incident parameters (GPS coordinates + container serial)
+   - Display **legacy circular search pattern** (demonstrates baseline methodology with extensive search area)
+   - Toggle to **optimized probability view** (displays focused zones near trajectory + cluster regions)
+3. Conclude at **Impact & Analytics View**:
+   - Present quantitative metric (area reduction percentage)
+   - Reference insurance analytics as phase 2 development target
