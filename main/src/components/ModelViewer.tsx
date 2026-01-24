@@ -39,7 +39,6 @@ interface ModelViewerProps {
 export default function ModelViewer({ onClose }: ModelViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("holo");
-  const [prompt, setPrompt] = useState("");
   const [isExploded, setIsExploded] = useState(false);
   const [explosionDistance, setExplosionDistance] = useState(1.0);
   const [selectedObject, setSelectedObject] = useState<THREE.Object3D | null>(
@@ -48,7 +47,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   const [isIsolating, setIsIsolating] = useState(false);
   const [isIdentifying, setIsIdentifying] = useState(false);
   const [aiIdentifyActive, setAiIdentifyActive] = useState(false); // Track if AI identify modal is showing
-  const [generateStarted, setGenerateStarted] = useState(false);
   const [inspectorData, setInspectorData] = useState({
     name: "",
     description: "",
@@ -1246,97 +1244,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       }
     );
   };
-
-  const generateModel = async (prompt: string) => {
-    // Hide onboarding if active
-    if (showOnboarding) setShowOnboarding(false);
-
-    if (!sceneRef.current || !prompt.trim()) return;
-
-    setGenerateStarted(true);
-    setLoading(true);
-
-    try {
-      console.log("Searching for:", prompt);
-      const searchRes = await fetch(
-        `/api/search?q=${encodeURIComponent(prompt)}`
-      );
-      const searchData = await searchRes.json();
-
-      if (!searchRes.ok) {
-        throw new Error(
-          searchData.error +
-            (searchData.details
-              ? `: ${JSON.stringify(searchData.details)}`
-              : "") || "Search failed"
-        );
-      }
-
-      if (!searchData.uid) {
-        alert("No 3D model found for this prompt.");
-        setLoading(false);
-        return;
-      }
-
-      console.log("Found UID:", searchData.uid);
-      const downloadRes = await fetch(`/api/download?uid=${searchData.uid}`);
-      const downloadData = await downloadRes.json();
-
-      if (!downloadRes.ok || !downloadData.success) {
-        if (
-          downloadData.potentialUrls &&
-          downloadData.potentialUrls.length > 0
-        ) {
-          console.log("Using potential URL fallback");
-          // potentialUrls might be an array of strings. We need to find the best one.
-          // Filter for .glb or .gltf if possible
-          const bestUrl =
-            downloadData.potentialUrls.find((u: string) =>
-              u.includes(".glb")
-            ) ||
-            downloadData.potentialUrls.find((u: string) =>
-              u.includes(".gltf")
-            ) ||
-            downloadData.potentialUrls[0];
-
-          loadModelFromUrl(bestUrl, false);
-          return;
-        }
-        throw new Error(downloadData.message || "Failed to get download URL");
-      }
-
-      // Extract URL
-      let modelUrl = downloadData.data.glb?.url || downloadData.data.gltf?.url;
-
-      // Fallback: sometimes the structure is directly inside the data if the endpoint returned different format
-      if (!modelUrl && downloadData.data.gltf) {
-        modelUrl = downloadData.data.gltf.url;
-      }
-
-      if (!modelUrl) {
-        // If we have a successful response but no direct GLB/GLTF url in standard location
-        console.warn(
-          "Standard URL location failed, checking alternatives in response data...",
-          downloadData
-        );
-        throw new Error(
-          "No compatible model format (GLB/GLTF) found in API response."
-        );
-      }
-
-      console.log("Loading model from:", modelUrl);
-      loadModelFromUrl(modelUrl, false);
-    } catch (error) {
-      console.error("Generation error:", error);
-      alert(
-        "Failed to generate model. " +
-          (error instanceof Error ? error.message : "")
-      );
-      setLoading(false);
-      // Keep generateStarted true so the bar stays at bottom even on error
-    }
-  };
-
   const updateViewMode = () => {
     if (!sceneRef.current || !bloomPassRef.current || !rendererRef.current)
       return;
@@ -1797,22 +1704,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     }
   }, [modelReady, animationFinished]);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file || !sceneRef.current) return;
-    
-    // Hide onboarding if active
-    if (showOnboarding) setShowOnboarding(false);
-
-    const url = URL.createObjectURL(file);
-    loadModelFromUrl(url, true);
-
-    // Reset file input to allow re-uploading the same file
-    if (event.target) {
-      event.target.value = "";
-    }
-  };
-
   const setupMultiMeshExplodedView = (
     group: THREE.Group,
     meshes: THREE.Mesh[]
@@ -2150,13 +2041,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         {/* Onboarding Overlay */}
         {showOnboarding && (
           <OnboardingOverlay
-            isDemoMode={IS_PRODUCTION_DEMO}
-            onGenerate={generateModel}
             onSelectDemo={handleOnboardingDemoSelect}
-            onImport={() => {
-              document.getElementById("file-input")?.click();
-              // Don't dismiss immediately, wait for file selection in handleFileUpload
-            }}
             onDismiss={() => setShowOnboarding(false)}
           />
         )}
@@ -2267,31 +2152,6 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                 Solid
               </button>
             </div>
-            <input
-              type="file"
-              id="file-input"
-              accept=".glb,.gltf"
-              className="hidden"
-              onChange={handleFileUpload}
-            />
-            <label
-              htmlFor="file-input"
-              className="h-[32px] px-3 bg-[#E5E6DA] border border-[#1D1E15] text-[#1D1E15] text-[10px] font-bold hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors flex items-center gap-1.5 cursor-pointer uppercase tracking-wide"
-            >
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              Upload
-            </label>
             <button
               onClick={exportGLB}
               className="h-[32px] px-3 bg-[#E5E6DA] border border-[#1D1E15] text-[#1D1E15] text-[10px] font-bold hover:bg-[#1D1E15] hover:text-[#E5E6DA] transition-colors flex items-center gap-1.5 uppercase tracking-wide cursor-pointer"
@@ -2342,71 +2202,46 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         <div className="absolute bottom-0 left-0 w-full z-10 p-4 pointer-events-none">
           <div className="max-w-2xl mx-auto pointer-events-auto">
             <div className="bg-[#E5E6DA]/80 border border-[#1D1E15] backdrop-blur-md p-1.5 flex gap-2 items-center shadow-lg">
-              {IS_PRODUCTION_DEMO ? (
-                <div className="flex-1 relative" ref={bottomDropdownRef}>
-                  <button
-                    onClick={() => setIsBottomDropdownOpen(!isBottomDropdownOpen)}
-                    className="w-full bg-[#1D1E15] border border-[#1D1E15] text-[#E5E6DA] text-[10px] font-mono px-3 py-2 rounded outline-none focus:border-[#DF6C42] transition-colors flex items-center justify-between hover:bg-[#1D1E15]/90"
+              <div className="flex-1 relative" ref={bottomDropdownRef}>
+                <button
+                  onClick={() => setIsBottomDropdownOpen(!isBottomDropdownOpen)}
+                  className="w-full bg-[#1D1E15] border border-[#1D1E15] text-[#E5E6DA] text-[10px] font-mono px-3 py-2 rounded outline-none focus:border-[#DF6C42] transition-colors flex items-center justify-between hover:bg-[#1D1E15]/90"
+                >
+                  <span className={currentDemoModelId ? "text-[#E5E6DA]" : "text-[#E5E6DA]/60"}>
+                    {currentDemoModelId
+                      ? DEMO_MODELS.find(m => m.id === currentDemoModelId)?.name
+                      : "Select a Model"}
+                  </span>
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className={`transition-transform duration-200 ${isBottomDropdownOpen ? "rotate-180" : ""}`}
                   >
-                    <span className={currentDemoModelId ? "text-[#E5E6DA]" : "text-[#E5E6DA]/60"}>
-                      {currentDemoModelId 
-                        ? DEMO_MODELS.find(m => m.id === currentDemoModelId)?.name 
-                        : "Select a Demo Model"}
-                    </span>
-                    <svg 
-                      width="12" 
-                      height="12" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2"
-                      className={`transition-transform duration-200 ${isBottomDropdownOpen ? "rotate-180" : ""}`}
-                    >
-                      <path d="M6 9l6 6 6-6"/>
-                    </svg>
-                  </button>
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </button>
 
-                  {isBottomDropdownOpen && (
-                    <div className="absolute bottom-full left-0 right-0 mb-1 bg-[#1D1E15] border border-[#1D1E15] rounded shadow-lg overflow-hidden z-50 max-h-48 overflow-y-auto">
-                      {DEMO_MODELS.map((model) => (
-                        <button
-                          key={model.id}
-                          onClick={() => {
-                            handleDemoSelect({ target: { value: model.id } } as any);
-                            setIsBottomDropdownOpen(false);
-                          }}
-                          className="w-full text-left px-3 py-2.5 text-[10px] font-mono text-[#E5E6DA] hover:bg-[#DF6C42] hover:text-white transition-colors border-b border-[#E5E6DA]/10 last:border-0"
-                        >
-                          {model.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <>
-                  <input
-                    id="prompt-input"
-                    type="text"
-                    placeholder="Generate procedural model"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        generateModel(prompt);
-                      }
-                    }}
-                    className="flex-1 bg-transparent border-none outline-none text-[#1D1E15] placeholder-[#1D1E15]/40 text-[10px] font-mono px-3"
-                  />
-                  <button
-                    onClick={() => generateModel(prompt)}
-                    disabled={!prompt.trim() || loading}
-                    className="px-4 py-2 bg-[#1D1E15] text-[#E5E6DA] text-[10px] font-bold hover:bg-[#DF6C42] transition-colors flex-shrink-0 uppercase tracking-wide cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Generate
-                  </button>
-                </>
-              )}
+                {isBottomDropdownOpen && (
+                  <div className="absolute bottom-full left-0 right-0 mb-1 bg-[#1D1E15] border border-[#1D1E15] rounded shadow-lg overflow-hidden z-50 max-h-48 overflow-y-auto">
+                    {DEMO_MODELS.map((model) => (
+                      <button
+                        key={model.id}
+                        onClick={() => {
+                          handleDemoSelect({ target: { value: model.id } } as any);
+                          setIsBottomDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2.5 text-[10px] font-mono text-[#E5E6DA] hover:bg-[#DF6C42] hover:text-white transition-colors border-b border-[#E5E6DA]/10 last:border-0"
+                      >
+                        {model.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
