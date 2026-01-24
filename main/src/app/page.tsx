@@ -544,6 +544,111 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Interactive Search Optimization Demo Section */}
+      <section id="interactive-demo" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
+        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
+          {/* Left Sidebar Spacer */}
+          <div className="hidden lg:block col-span-1"></div>
+          
+          {/* Main Content */}
+          <div className="col-span-12 lg:col-span-11">
+            <motion.div 
+              className="px-10 py-16 border-b border-[#1e3a5f]"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={staggerContainer}
+            >
+              <motion.div 
+                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[10px] uppercase tracking-wider w-fit mb-8"
+                variants={fadeInDown}
+              >
+                <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
+                INTERACTIVE DEMO
+              </motion.div>
+              
+              <motion.h3 
+                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-6"
+                variants={fadeInUp}
+              >
+                Interactive Search Optimization Demo
+              </motion.h3>
+              
+              <motion.p 
+                className="text-sm opacity-70 leading-relaxed mb-8 max-w-3xl"
+                variants={fadeInUp}
+              >
+                This interactive 3D map visualizes how probability-weighted search zones reduce the area required to locate lost shipping containers compared to traditional uniform search methods.
+              </motion.p>
+
+              {/* Search Mode Toggle */}
+              <motion.div 
+                className="mb-6 flex items-center gap-4"
+                variants={fadeInUp}
+              >
+                <div className="text-[10px] uppercase opacity-50">Search Mode:</div>
+                <div className="flex gap-2">
+                  <button className="px-4 py-2 border border-[#1e3a5f] text-[10px] uppercase font-bold hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors">
+                    Traditional Search
+                  </button>
+                  <button className="px-4 py-2 bg-[#DF6C42] text-[#0a1929] text-[10px] uppercase font-bold hover:bg-[#0d2847] transition-colors">
+                    Optimized Search
+                  </button>
+                </div>
+              </motion.div>
+
+              {/* 3D Visualization Container */}
+              <motion.div 
+                className="border border-[#1e3a5f] mb-6 relative overflow-hidden bg-[#0a1929]"
+                style={{ height: '60vh', minHeight: '400px' }}
+                variants={fadeInUp}
+              >
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <CubeViewer />
+                </div>
+                
+                {/* Visualization Legend */}
+                <div className="absolute top-4 right-4 bg-[#0a1929]/90 border border-[#1e3a5f] p-4">
+                  <div className="text-[10px] uppercase opacity-50 mb-3">Priority Zones</div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-[#DF6C42]"></div>
+                      <div className="text-[10px] uppercase opacity-70">High Priority</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-[#DF6C42]/60"></div>
+                      <div className="text-[10px] uppercase opacity-70">Medium Priority</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-[#DF6C42]/30"></div>
+                      <div className="text-[10px] uppercase opacity-70">Low Priority</div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Helper Text */}
+              <motion.p 
+                className="text-xs opacity-60 italic mb-6"
+                variants={fadeInUp}
+              >
+                Rotate, zoom, and explore the ocean floor to see how optimized search zones concentrate recovery efforts in high-confidence areas.
+              </motion.p>
+
+              {/* Compare Button */}
+              <motion.div 
+                className="flex justify-center"
+                variants={fadeInUp}
+              >
+                <button className="px-6 py-3 bg-[#DF6C42] text-[#0a1929] text-[10px] uppercase font-bold hover:bg-[#0d2847] transition-colors">
+                  Compare Search Strategies
+                </button>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Integrations Section */}
       <section id="integrations" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
         <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
