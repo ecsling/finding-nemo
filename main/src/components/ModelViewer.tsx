@@ -38,7 +38,7 @@ interface ModelViewerProps {
 
 export default function ModelViewer({ onClose }: ModelViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>("holo");
+  const [viewMode, setViewMode] = useState<ViewMode>("solid"); // Default to solid, no glowing wireframe
   const [isExploded, setIsExploded] = useState(false);
   const [explosionDistance, setExplosionDistance] = useState(1.0);
   const [selectedObject, setSelectedObject] = useState<THREE.Object3D | null>(
@@ -745,10 +745,10 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       0.05,
       2000
     );
-    // Initialize camera at ship level for horizontal view (like looking at a shipwreck)
+    // Initialize camera at diver/submarine level (lower, looking slightly up at ship)
     const DEFAULT_AZ = Math.PI / 4;
-    const DEFAULT_EL = 0; // Horizontal view (0 elevation = same plane as ship)
-    const DEFAULT_R = 10; // Distance from ship
+    const DEFAULT_EL = -0.1; // Slightly below horizontal for diver perspective
+    const DEFAULT_R = 12; // Distance from ship
     cameraStateRef.current.camR = DEFAULT_R;
     cameraStateRef.current.camAz = DEFAULT_AZ;
     cameraStateRef.current.camEl = DEFAULT_EL;
@@ -756,12 +756,13 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     cameraStateRef.current.camElT = DEFAULT_EL;
     
     const shipHeight = -1; // Ship just above seabed
+    const diverHeight = shipHeight - 2; // Diver/sub is 2 units below ship
     camera.position.set(
       DEFAULT_R * Math.cos(DEFAULT_EL) * Math.sin(DEFAULT_AZ),
-      shipHeight, // Same height as ship for eye-level view
+      diverHeight, // Below ship level for diver perspective
       DEFAULT_R * Math.cos(DEFAULT_EL) * Math.cos(DEFAULT_AZ)
     );
-    camera.lookAt(0, shipHeight, 0); // Look at ship at same level
+    camera.lookAt(0, shipHeight, 0); // Look up at ship
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({
@@ -901,13 +902,14 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             .addScaledVector(right, state.translateV.x)
             .addScaledVector(upVec, state.translateV.y);
 
-          // Set camera position (at same level as ship for horizontal view)
+          // Set camera position (diver/submarine perspective - below ship)
           const shipFocusPoint = new THREE.Vector3(0, -1, 0);
+          const diverHeight = -3; // Diver is below ship
           const camPos = new THREE.Vector3().addVectors(basePos, translate);
-          camPos.y += shipFocusPoint.y; // Keep camera at ship level
+          camPos.y = diverHeight; // Keep camera below ship level
           camera.position.copy(camPos);
 
-          // Look at ship position at same level
+          // Look up at ship position from below
           const target = shipFocusPoint.clone().add(translate);
           camera.lookAt(target);
         }
@@ -1293,9 +1295,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         const center = new THREE.Vector3();
         box.getCenter(center);
         
-        // Make it 3x larger than normal models for immersive background
+        // Make it MASSIVE to dwarf the ship (diver/submarine perspective)
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 20 / (maxDim || 1);  // Much larger scale
+        const scale = 80 / (maxDim || 1);  // 4x larger than before - huge seabed
         landscape.scale.set(scale, scale, scale);
         
         // Center it
@@ -2232,28 +2234,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           </div>
 
           <div className="flex items-center gap-2 pointer-events-auto">
-            <div className="flex items-center gap-1.5 bg-[#0a2540]/90 border border-[#4080bf] p-1 backdrop-blur-md h-[32px] rounded">
-              <button
-                onClick={() => setViewMode("holo")}
-                className={`h-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors cursor-pointer flex items-center justify-center rounded ${
-                  viewMode === "holo"
-                    ? "bg-[#4080bf] text-white"
-                    : "bg-transparent text-[#8fcdff] hover:bg-[#1D1E15] hover:text-white"
-                }`}
-              >
-                Wireframe
-              </button>
-              <button
-                onClick={() => setViewMode("solid")}
-                className={`h-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors cursor-pointer flex items-center justify-center rounded ${
-                  viewMode === "solid"
-                    ? "bg-[#4080bf] text-white"
-                    : "bg-transparent text-[#8fcdff] hover:bg-[#1D1E15] hover:text-white"
-                }`}
-              >
-                Solid
-              </button>
-            </div>
+            {/* Removed wireframe/solid toggle - only solid mode now */}
             <button
               onClick={exportGLB}
               className="h-[32px] px-3 bg-[#0a2540] border border-[#4080bf] text-[#8fcdff] text-[10px] font-bold hover:bg-[#4080bf] hover:text-white transition-colors flex items-center gap-1.5 uppercase tracking-wide cursor-pointer rounded"
