@@ -58,6 +58,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   );
   const [showSplitSection, setShowSplitSection] = useState(false);
   const [showExplodedControls, setShowExplodedControls] = useState(false);
+  
+  // Store foreground objects separately so they don't rotate with background
+  const foregroundObjectsRef = useRef<THREE.Group | null>(null);
   const [loading, setLoading] = useState(false);
   const [modelReady, setModelReady] = useState(false);
   const [animationFinished, setAnimationFinished] = useState(false);
@@ -347,8 +350,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
   const handleResetView = () => {
     if (cameraRef.current && controlsRef.current) {
+      controlsRef.current.target.set(0, -4, 0); // Reset to ship position
       controlsRef.current.reset();
-      cameraStateRef.current.camR = 8;
+      cameraStateRef.current.camR = 12;
       cameraStateRef.current.camAz = Math.PI / 4;
       cameraStateRef.current.camEl = Math.PI / 6;
       cameraStateRef.current.camAzT = Math.PI / 4;
@@ -741,22 +745,23 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       0.05,
       2000
     );
-    // Initialize camera position to match default stick control values
+    // Initialize camera position focused on ship location (lower)
     const DEFAULT_AZ = Math.PI / 4;
     const DEFAULT_EL = Math.PI / 6;
-    const DEFAULT_R = 8;
+    const DEFAULT_R = 12; // Further back to see more of the scene
     cameraStateRef.current.camR = DEFAULT_R;
     cameraStateRef.current.camAz = DEFAULT_AZ;
     cameraStateRef.current.camEl = DEFAULT_EL;
     cameraStateRef.current.camAzT = DEFAULT_AZ;
     cameraStateRef.current.camElT = DEFAULT_EL;
     
+    const shipHeight = -4; // Ship is positioned lower
     camera.position.set(
       DEFAULT_R * Math.cos(DEFAULT_EL) * Math.sin(DEFAULT_AZ),
-      DEFAULT_R * Math.sin(DEFAULT_EL),
+      DEFAULT_R * Math.sin(DEFAULT_EL) + shipHeight,
       DEFAULT_R * Math.cos(DEFAULT_EL) * Math.cos(DEFAULT_AZ)
     );
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(0, shipHeight, 0); // Look at ship position
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({
@@ -776,6 +781,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.maxDistance = 100;
+    controls.target.set(0, -4, 0); // Focus on ship position (lower)
     controlsRef.current = controls;
 
     // Lighting - Brighter underwater atmosphere for better visibility
@@ -895,12 +901,13 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             .addScaledVector(right, state.translateV.x)
             .addScaledVector(upVec, state.translateV.y);
 
-          // Set camera position
-          const camPos = new THREE.Vector3().addVectors(basePos, translate);
+          // Set camera position (centered on ship at lower position)
+          const shipFocusPoint = new THREE.Vector3(0, -4, 0);
+          const camPos = new THREE.Vector3().addVectors(basePos, translate).add(shipFocusPoint);
           camera.position.copy(camPos);
 
-          // Look at target (origin + translate offset)
-          const target = new THREE.Vector3().add(translate);
+          // Look at ship position
+          const target = shipFocusPoint.clone().add(translate);
           camera.lookAt(target);
         }
 
@@ -1206,12 +1213,20 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         const scale = 4 / (maxDim || 1);
         flatGroup.scale.set(scale, scale, scale);
 
-        // Center the model at origin and position lower (on/in the seabed)
+        // Center the model at origin and position MUCH lower (deep in the seabed)
         flatGroup.position.copy(center).multiplyScalar(-scale);
-        flatGroup.position.y -= 2; // Lower the ship into the seabed
+        flatGroup.position.y -= 6; // Much lower so seabed hills are visible above
         flatGroup.updateMatrixWorld(true);
 
-        sceneRef.current!.add(flatGroup);
+        // Create a container group that won't rotate with background
+        if (foregroundObjectsRef.current) {
+          sceneRef.current!.remove(foregroundObjectsRef.current);
+        }
+        const foregroundContainer = new THREE.Group();
+        foregroundContainer.add(flatGroup);
+        foregroundContainer.position.y = 0; // Keep at origin
+        sceneRef.current!.add(foregroundContainer);
+        foregroundObjectsRef.current = foregroundContainer;
         generatedObjectsRef.current.push(flatGroup);
 
         // Placeholder removed - no hiding logic needed
@@ -1422,11 +1437,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     setIsIsolating(true);
 
     const userData = (object as any).userData;
-    if (object.type === "Mesh") {
-      setShowSplitSection(true);
-    } else {
-      setShowSplitSection(false);
-    }
+    // Removed split mesh feature
+    setShowSplitSection(false);
 
     // Dim all other meshes
     sceneRef.current.traverse((child) => {
@@ -2417,71 +2429,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                   )}
                 </button>
               </div>
-              {showSplitSection && (
-                <div className="mt-2 p-3 bg-[#1D1E15]/5 border border-[#1D1E15]/10 rounded-xl">
-                  <div className="text-[10px] text-[#1D1E15]/70 mb-2 font-bold uppercase tracking-wider">
-                    Actions
-                  </div>
-                  <button
-                    onClick={handleSplitMesh}
-                    className="w-full px-3 py-2 bg-[#1D1E15] text-[#E5E6DA] text-[10px] font-bold flex items-center justify-center gap-1.5 mb-2 hover:bg-[#DF6C42] transition-colors uppercase tracking-wide cursor-pointer"
-                  >
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M21 8v13H3V8" />
-                      <path d="M1 3h22v5H1z" />
-                      <path d="M10 12h4" />
-                    </svg>
-                    Split Mesh
-                  </button>
-                  <p className="text-[10px] text-[#1D1E15]/60 mb-2 leading-relaxed break-words">
-                    Separates disconnected geometry into distinct parts.
-                  </p>
-                  {showExplodedControls && (
-                    <div className="mt-2 pt-2 border-t border-[#1D1E15]/10">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <label className="text-[10px] text-[#1D1E15] font-bold uppercase">
-                          Exploded View
-                        </label>
-                        <button
-                          onClick={() => {
-                            setIsExploded(!isExploded);
-                          }}
-                          className={`px-2 py-1 text-[10px] font-bold uppercase border transition-colors cursor-pointer ${
-                            isExploded
-                              ? "bg-[#DF6C42] text-[#E5E6DA] border-[#DF6C42]"
-                              : "bg-transparent text-[#1D1E15] border-[#1D1E15] hover:bg-[#1D1E15] hover:text-[#E5E6DA]"
-                          }`}
-                        >
-                          {isExploded ? "On" : "Off"}
-                        </button>
-                      </div>
-                      <div className="mt-1.5">
-                        <label className="text-[10px] text-[#1D1E15]/60 block mb-1">
-                          Distance: {explosionDistance.toFixed(1)}
-                        </label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="3"
-                          step="0.1"
-                          value={explosionDistance}
-                          onChange={(e) =>
-                            setExplosionDistance(parseFloat(e.target.value))
-                          }
-                          className="w-full h-1 bg-[#1D1E15]/20 rounded-lg appearance-none cursor-pointer"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
+              {/* Split mesh feature removed */}
               <div className="grid grid-cols-2 gap-2">
                 <div className="bg-[#1D1E15]/5 p-2 border border-[#1D1E15]/10">
                   <div className="text-[10px] text-[#1D1E15]/50 mb-1 uppercase">
