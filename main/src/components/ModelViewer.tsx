@@ -2465,7 +2465,14 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                 </button>
 
                 {isBottomDropdownOpen && (
-                  <div className="absolute bottom-full left-0 right-0 mb-2 bg-[#0a2540] border-2 border-[#4080bf] rounded-lg shadow-xl overflow-hidden z-50 max-h-64 overflow-y-auto" style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)' }}>
+                  <div 
+                    className="mission-dropdown absolute bottom-full left-0 right-0 mb-2 bg-[#0a2540] border-2 border-[#4080bf] rounded-lg shadow-xl overflow-hidden z-50 max-h-[40vh] overflow-y-auto" 
+                    style={{ 
+                      boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)',
+                      scrollbarWidth: 'thin',
+                      scrollbarColor: 'rgba(0, 217, 255, 0.5) rgba(10, 37, 64, 0.8)'
+                    }}
+                  >
                     {DEMO_MODELS.filter(m => m.id !== "kelvin-seamounts" && m.id !== "san-pedro-preserve").map((model) => (
                       <button
                         key={model.id}

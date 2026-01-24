@@ -94,18 +94,44 @@ export default function OnboardingOverlay({
 
               {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-[#0a2540] border-2 border-[#4080bf] rounded-lg shadow-xl overflow-hidden z-50 max-h-64 overflow-y-auto" style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)' }}>
-                  {DEMO_MODELS.map((m) => (
-                    <button
-                      key={m.id}
-                      onClick={() => handleDemoSelect(m.id, m.name)}
-                      className="w-full text-left px-5 py-3.5 text-base font-mono text-white hover:bg-[#00d9ff] hover:text-black transition-all border-b border-[#4080bf]/20 last:border-0 font-semibold"
-                      style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}
-                    >
-                      {m.name}
-                    </button>
-                  ))}
-                </div>
+                <>
+                  <style jsx global>{`
+                    .mission-dropdown::-webkit-scrollbar {
+                      width: 8px;
+                    }
+                    .mission-dropdown::-webkit-scrollbar-track {
+                      background: rgba(10, 37, 64, 0.8);
+                      border-radius: 4px;
+                    }
+                    .mission-dropdown::-webkit-scrollbar-thumb {
+                      background: rgba(0, 217, 255, 0.5);
+                      border-radius: 4px;
+                      border: 1px solid rgba(0, 217, 255, 0.3);
+                    }
+                    .mission-dropdown::-webkit-scrollbar-thumb:hover {
+                      background: rgba(0, 217, 255, 0.7);
+                    }
+                  `}</style>
+                  <div 
+                    className="mission-dropdown absolute top-full left-0 right-0 mt-2 bg-[#0a2540] border-2 border-[#4080bf] rounded-lg shadow-xl overflow-hidden z-50 max-h-[40vh] overflow-y-auto" 
+                    style={{ 
+                      boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)',
+                      scrollbarWidth: 'thin',
+                      scrollbarColor: 'rgba(0, 217, 255, 0.5) rgba(10, 37, 64, 0.8)'
+                    }}
+                  >
+                    {DEMO_MODELS.map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => handleDemoSelect(m.id, m.name)}
+                        className="w-full text-left px-5 py-3.5 text-base font-mono text-white hover:bg-[#00d9ff] hover:text-black transition-all border-b border-[#4080bf]/20 last:border-0 font-semibold"
+                        style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}
+                      >
+                        {m.name}
+                      </button>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           </div>

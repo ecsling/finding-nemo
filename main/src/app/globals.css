@@ -242,3 +242,23 @@ input[type="range"]::-moz-range-track {
     rgba(14, 116, 144, 0.1) 100%
   );
 }
+
+/* Mission dropdown scrollbar styling */
+.mission-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mission-dropdown::-webkit-scrollbar-track {
+  background: rgba(10, 37, 64, 0.8);
+  border-radius: 4px;
+}
+
+.mission-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(0, 217, 255, 0.5);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 217, 255, 0.3);
+}
+
+.mission-dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 217, 255, 0.7);
+}
