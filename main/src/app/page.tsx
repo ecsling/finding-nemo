@@ -177,14 +177,14 @@ export default function Home() {
                className="text-3xl lg:text-5xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff]"
                variants={staggerItem}
              >
-               Deep Sea<br/> Container Search
+               Deep Sea Container Search
              </motion.h2>
              
              <motion.p 
                className="text-xs lg:text-sm opacity-70 max-w-lg lg:max-w-xl leading-relaxed"
                variants={staggerItem}
              >
-               Advanced underwater container location and recovery system. Track, identify, and retrieve lost cargo with precision 3D mapping and real-time visualization.
+               A 3D decision-support system that reduces underwater search time for lost shipping containers by prioritizing high-probability recovery zones.
              </motion.p>
              
              {/* Mobile 3D Visualization Box */}
@@ -195,25 +195,36 @@ export default function Home() {
                <div className="absolute inset-0 flex items-center justify-center">
                    <CubeViewer />
                </div>
-               {/* Overlay UI Elements */}
-               <div className="absolute top-4 left-4 text-[10px] uppercase opacity-50">Rendering...</div>
-               <div className="absolute bottom-4 right-4 text-[10px] uppercase opacity-50">36GB/s</div>
              </motion.div>
              
              <motion.div 
                className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-2"
                variants={staggerItem}
              >
-              <button className="w-full sm:w-auto px-6 py-3 border border-[#1e3a5f] text-[10px] uppercase font-bold hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors cursor-pointer">
-                 Learn more
+              <button 
+                className="w-full sm:w-auto px-6 py-3 border border-[#1e3a5f] text-[10px] uppercase font-bold hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const element = document.querySelector('#process');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }}
+              >
+                 How It Works
                </button>
-               <Link
-                 href="/dashboard"
+               <button
                  className="w-full sm:w-auto px-6 py-3 bg-[#DF6C42] text-[#0a1929] text-[10px] uppercase font-bold hover:bg-[#0d2847] transition-colors text-center sm:text-left mb-2 sm:mb-0"
-                 onClick={handleLaunchDemoClick}
+                 onClick={(e) => {
+                   e.preventDefault();
+                   const element = document.querySelector('#map-viewer');
+                   if (element) {
+                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                   }
+                 }}
                >
-                 Launch Demo
-               </Link>
+                 Launch Search Demo
+               </button>
              </motion.div>
            </motion.div>
 
@@ -237,16 +248,13 @@ export default function Home() {
          </div>
 
         {/* Right Visualization Column */}
-        <div className="col-span-12 lg:col-span-4 flex flex-col divide-y divide-[#1e3a5f] bg-[#0a1929]">
+        <div id="map-viewer" className="col-span-12 lg:col-span-4 flex flex-col divide-y divide-[#1e3a5f] bg-[#0a1929]">
           
           {/* 3D Visualization Box */}
           <div className="hidden lg:block h-[50vh] border-b border-[#1e3a5f] relative overflow-hidden bg-[#0a1929] shrink-0">
             <div className="absolute inset-0 flex items-center justify-center">
                 <CubeViewer />
             </div>
-            {/* Overlay UI Elements */}
-            <div className="absolute top-4 left-4 text-[10px] uppercase opacity-50">Rendering...</div>
-            <div className="absolute bottom-4 right-4 text-[10px] uppercase opacity-50">36GB/s</div>
           </div>
 
           {/* Metrics Grid */}
