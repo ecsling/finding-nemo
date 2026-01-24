@@ -10,13 +10,13 @@ export function CTASection() {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <section className="py-12 w-full flex justify-center items-center px-4 md:px-6">
+    <section className="w-full h-full flex justify-center items-center p-4 md:p-6">
       <div 
-        className="w-full max-w-7xl relative"
+        className="w-full h-full relative"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="relative overflow-hidden rounded-[48px] border border-border bg-card shadow-sm min-h-[600px] md:min-h-[600px] flex flex-col items-center justify-center duration-500">
+        <div className="relative overflow-hidden rounded-[48px] border border-border bg-card shadow-sm h-full flex flex-col items-center justify-center duration-500">
              <Suspense fallback={<div className="absolute inset-0 bg-muted/20" />}>
             <div className="absolute inset-0 z-0 pointer-events-none opacity-40 dark:opacity-30 mix-blend-multiply dark:mix-blend-screen">
               <Dithering
