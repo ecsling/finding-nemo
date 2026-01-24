@@ -125,7 +125,7 @@ export default function Home() {
             className="px-5 py-1.5 bg-[#DF6C42] text-[#0a1929] text-[10px] uppercase font-bold hover:bg-[#0d2847] transition-colors"
             onClick={handleLaunchDemoClick}
           >
-            View Demo
+            Launch Search Demo
           </Link>
         </div>
       </nav>
@@ -337,7 +337,7 @@ export default function Home() {
                   {
                     step: '04',
                     title: 'Recovery Focus',
-                    description: 'Teams concentrate efforts on high-confidence areas first, reducing overall search time, operational cost, and environmental disturbance.',
+                    description: 'Teams concentrate efforts on high-confidence recovery zones first, improving search efficiency and reducing operational cost and environmental disturbance.',
                   },
                 ].map((item, idx) => (
                   <motion.div
@@ -362,7 +362,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Metrics Section */}
+      {/* Search Impact Section */}
       <section id="metrics" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
         <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
           {/* Left Sidebar Spacer */}
@@ -397,6 +397,13 @@ export default function Home() {
                 variants={fadeInUp}
               >
                 This system is designed to reduce underwater search time and operational cost by prioritizing high-probability recovery zones instead of uniform search patterns.
+              </motion.p>
+              
+              <motion.p 
+                className="text-xs opacity-60 italic mb-8"
+                variants={fadeInUp}
+              >
+                The following metrics demonstrate the operational impact of search optimization.
               </motion.p>
               
               {/* Combined Bar Graph - Traditional vs Optimized Search */}
@@ -574,10 +581,17 @@ export default function Home() {
               </motion.h3>
               
               <motion.p 
-                className="text-sm opacity-70 leading-relaxed mb-8 max-w-3xl"
+                className="text-sm opacity-70 leading-relaxed mb-4 max-w-3xl"
                 variants={fadeInUp}
               >
                 This interactive 3D map visualizes how probability-weighted search zones reduce the area required to locate lost shipping containers compared to traditional uniform search methods.
+              </motion.p>
+
+              <motion.p 
+                className="text-xs opacity-60 italic mb-6"
+                variants={fadeInUp}
+              >
+                Toggle between traditional and optimized search to compare coverage efficiency.
               </motion.p>
 
               {/* Search Mode Toggle */}
@@ -631,7 +645,7 @@ export default function Home() {
                 className="text-xs opacity-60 italic mb-6"
                 variants={fadeInUp}
               >
-                Rotate, zoom, and explore the ocean floor to see how optimized search zones concentrate recovery efforts in high-confidence areas.
+                Rotate, zoom, and explore the ocean floor to see how search optimization concentrates recovery efforts in high-confidence areas.
               </motion.p>
 
               {/* Compare Button */}
