@@ -95,9 +95,8 @@ export default function Home() {
             {[
               { name: 'Process', href: '#process' },
               { name: 'Metrics', href: '#metrics' },
-              { name: 'Integrations', href: '#integrations' },
-              { name: 'Motion Control', href: '#mesh-viewer' },
-              { name: 'Visualize', href: '#visualize' }
+              { name: 'Interactive Demo', href: '#interactive-demo' },
+              { name: 'Future Extensions', href: '#future-extensions' }
             ].map((item) => (
               <div key={item.name} className="flex items-center gap-8 group">
                 <a 
@@ -649,8 +648,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Integrations Section */}
-      <section id="integrations" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
+      {/* Future Extensions Section */}
+      <section id="future-extensions" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
         <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
           {/* Left Sidebar Spacer */}
           <div className="hidden lg:block col-span-1"></div>
@@ -669,428 +668,49 @@ export default function Home() {
                 variants={fadeInDown}
               >
                 <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
-                INTEGRATIONS
+                FUTURE EXTENSIONS
               </motion.div>
               
               <motion.h3 
                 className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-12"
                 variants={fadeInUp}
               >
-                AI Model Integration
+                Future Extensions
               </motion.h3>
               
               <motion.div 
-                className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-[#1e3a5f]"
+                className="grid grid-cols-1 lg:grid-cols-3 gap-0 border border-[#1e3a5f]"
                 variants={staggerContainer}
               >
-                {/* Gemini Pro */}
                 <motion.div 
-                  className="p-8 border-r border-b border-[#1e3a5f] lg:border-b-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
+                  className="p-8 border-r border-b border-[#1e3a5f] lg:border-b-0 last:border-r-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
                   variants={staggerItem}
                 >
-                  <div className="flex items-center gap-4 mb-6">
-                    <img src="/gemini-pro.png" alt="Gemini Pro" className="h-8 w-auto object-contain filter brightness-0 invert opacity-60" />
-                  </div>
-                  <p className="text-sm opacity-70 leading-relaxed mb-6 flex-1">
-                    Integrated via OpenRouter API for real-time 3D mesh component identification. When users 
-                    trigger AI identification, Gemini analyzes highlighted mesh components from screenshots, 
-                    providing structured JSON responses with part names, descriptions, categories, and confidence 
-                    scores. It also generates annotated images with wireframe overlays and labels for educational 
-                    visualization.
+                  <h4 className="text-xl font-medium mb-3">Insurance Loss Assessment</h4>
+                  <p className="text-sm opacity-70 leading-relaxed flex-1">
+                    Recovered container condition data can support faster and more accurate insurance claim validation.
                   </p>
-                  <div className="pt-4 border-t border-[#1e3a5f] grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-[10px] uppercase opacity-50 mb-1">Use Case</div>
-                      <div className="text-sm font-medium">Component ID & Annotation</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] uppercase opacity-50 mb-1">Model</div>
-                      <div className="text-sm font-medium">gemini-2.0-flash-exp</div>
-                    </div>
-                  </div>
                 </motion.div>
                 
-                {/* OpenAI */}
                 <motion.div 
-                  className="p-8 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
+                  className="p-8 border-r border-b border-[#1e3a5f] lg:border-b-0 last:border-r-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
                   variants={staggerItem}
                 >
-                  <div className="flex items-center gap-4 mb-6">
-                    <img src="/openai.png" alt="OpenAI" className="h-8 w-auto object-contain filter brightness-0 invert opacity-60" />
-                  </div>
-                  <p className="text-sm opacity-70 leading-relaxed mb-6 flex-1">
-                    Processes identified mesh components to generate detailed educational explanations 
-                    of individual object meshes. After component identification, GPT-4 analyzes mesh 
-                    geometry, position, and context to provide comprehensive descriptions, functional 
-                    explanations, and educational content about each component's role and characteristics.
+                  <h4 className="text-xl font-medium mb-3">Automated Recovery Planning</h4>
+                  <p className="text-sm opacity-70 leading-relaxed flex-1">
+                    Future versions could integrate additional environmental data to further refine search prioritization.
                   </p>
-                  <div className="pt-4 border-t border-[#1e3a5f] grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-[10px] uppercase opacity-50 mb-1">Use Case</div>
-                      <div className="text-sm font-medium">Mesh Explanation</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] uppercase opacity-50 mb-1">Model</div>
-                      <div className="text-sm font-medium">GPT-4</div>
-                    </div>
-                  </div>
                 </motion.div>
-              </motion.div>
-              
-              {/* Mesh Extraction Explanation */}
-              <motion.div 
-                className="mt-8 border border-[#1e3a5f] p-8"
-                variants={fadeInUp}
-              >
-                <div className="text-[10px] uppercase opacity-50 mb-6">Mesh Extraction via Gemini</div>
-                <div className="flex flex-col gap-6">
-                  {/* Large Image */}
-                  <div className="relative border border-[#1e3a5f] bg-[#0a1929] overflow-hidden">
-                    <img 
-                      src="/ironman.png" 
-                      alt="Iron Man mesh extraction example" 
-                      className="w-full h-auto object-contain filter opacity-90 max-h-[500px]"
-                    />
-                    <div className="absolute top-2 right-2 text-[8px] uppercase opacity-40 bg-[#0a1929] px-2 py-1 border border-[#1e3a5f]">
-                      Example Mesh
-                    </div>
-                  </div>
-                  
-                  {/* Title and Explanation Below */}
-                  <div className="flex flex-col gap-4">
-                    <h4 className="text-lg font-regular">How Gemini Extracts Mesh Components</h4>
-                    <p className="text-sm opacity-70 leading-relaxed">
-                      We use Gemini Pro to analyze 3D model structures and intelligently identify individual 
-                      components within complex meshes. The model processes geometric data and contextual 
-                      information to segment models into distinct parts.
-                    </p>
-                    <p className="text-sm opacity-70 leading-relaxed">
-                      For example, when processing a character model like Iron Man, Gemini analyzes the 
-                      mesh geometry to identify separate components such as the helmet, chest plate, 
-                      gauntlets, and other modular parts. This enables automated component extraction 
-                      without manual labeling.
-                    </p>
-                    
-                    {/* Annotated Image */}
-                    <div className="relative border border-[#1e3a5f] bg-[#0a1929] overflow-hidden mt-4">
-                      <img 
-                        src="/annotate.png" 
-                        alt="Annotated mesh extraction example" 
-                        className="w-full h-auto object-contain filter opacity-90"
-                      />
-                      <div className="absolute top-2 right-2 text-[8px] uppercase opacity-40 bg-[#0a1929] px-2 py-1 border border-[#1e3a5f]">
-                        Annotated Output
-                      </div>
-                    </div>
-                    
-                    {/* Explanation of Markings */}
-                    <div className="mt-4 pt-4 border-t border-[#1e3a5f]">
-                      <div className="text-[10px] uppercase opacity-50 mb-3">Marking Explanation</div>
-                      <p className="text-sm opacity-70 leading-relaxed">
-                        The annotated output shows how Gemini generates visual overlays on identified mesh 
-                        components. Purple markings highlight the selected component being analyzed, while 
-                        white wireframe lines and labels indicate relationships between parts. Arrows and 
-                        diagrams illustrate component boundaries and spatial relationships, making it easier 
-                        to understand the mesh structure and identify individual elements.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-              
-              {/* Integration Flow */}
-              <motion.div 
-                className="mt-8 border border-[#1e3a5f] p-8"
-                variants={fadeInUp}
-              >
-                <div className="text-[10px] uppercase opacity-50 mb-4">Model Workflow</div>
-                <div className="flex flex-col lg:flex-wrap items-center gap-4 lg:justify-center">
-                  {['Upload', 'AI Identification Trigger', 'GPT-4 Processing', 'Gemini Pro Annotation', 'Export'].map((step, idx) => (
-                    <React.Fragment key={idx}>
-                      <div className="px-4 py-2 border border-[#1e3a5f] text-xs uppercase mx-auto lg:mx-0 w-fit lg:w-auto text-center lg:text-left">
-                        {step}
-                      </div>
-                      {idx < 4 && (
-                        <div className="hidden lg:block w-6 h-px bg-[#0d2847] opacity-20"></div>
-                      )}
-                      {idx < 4 && (
-                        <div className="lg:hidden w-full flex justify-center py-2">
-                          <div className="w-6 h-px bg-[#0d2847] opacity-20"></div>
-                        </div>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Upload & Export Section */}
-      <section id="upload-export" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
-        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
-          {/* Left Sidebar Spacer */}
-          <div className="hidden lg:block col-span-1"></div>
-          
-          {/* Main Content */}
-          <div className="col-span-12 lg:col-span-11">
-            <motion.div 
-              className="px-10 py-16 border-b border-[#1e3a5f]"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={staggerContainer}
-            >
-              <motion.div 
-                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[10px] uppercase tracking-wider w-fit mb-8"
-                variants={fadeInDown}
-              >
-                <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
-                FILE MANAGEMENT
-              </motion.div>
-              
-              <motion.h3 
-                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-12"
-                variants={fadeInUp}
-              >
-                Upload & Export
-              </motion.h3>
-              
-              <motion.div 
-                className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-[#1e3a5f]"
-                variants={staggerContainer}
-              >
-                {/* Upload */}
+                
                 <motion.div 
-                  className="p-8 border-r border-b border-[#1e3a5f] lg:border-b-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
+                  className="p-8 border-r border-b border-[#1e3a5f] lg:border-b-0 last:border-r-0 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
                   variants={staggerItem}
                 >
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-8 h-8 border-2 border-[#1e3a5f] flex items-center justify-center">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                      </svg>
-                    </div>
-                  </div>
-                  <p className="text-sm opacity-70 leading-relaxed mb-6 flex-1">
-                    Upload your own GLB files created on any CAD software to break down and learn about its 
-                    components in real time. Our intelligent mesh analysis automatically identifies individual 
-                    parts, materials, and structural elements, giving you instant insights into complex 3D models.
-                    Perfect for engineering analysis, educational purposes, or design optimization.
+                  <h4 className="text-xl font-medium mb-3">Fleet-Level Analytics</h4>
+                  <p className="text-sm opacity-70 leading-relaxed flex-1">
+                    Aggregated loss data may reveal systemic risk patterns across routes and vessel types.
                   </p>
-                  <div className="pt-4 border-t border-[#1e3a5f] grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-[10px] uppercase opacity-50 mb-1">Supported Formats</div>
-                      <div className="text-sm font-medium">GLB (More coming soon!)</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] uppercase opacity-50 mb-1">Max Size</div>
-                      <div className="text-sm font-medium">100MB</div>
-                    </div>
-                  </div>
                 </motion.div>
-                
-                {/* Export */}
-                <motion.div 
-                  className="p-8 hover:bg-[#0d2847] hover:text-[#0a1929] transition-colors flex flex-col h-full"
-                  variants={staggerItem}
-                >
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-8 h-8 border-2 border-[#1e3a5f] flex items-center justify-center">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <p className="text-sm opacity-70 leading-relaxed mb-6 flex-1">
-                    Use our wide variety of models to export into your favourite CAD softwares and resize 
-                    for commercial use or 3D printing. Export individual components or complete assemblies 
-                    with precise measurements and material properties. Compatible with major CAD platforms 
-                    including SolidWorks, AutoCAD, Fusion 360, and Blender.
-                  </p>
-                  <div className="pt-4 border-t border-[#1e3a5f] grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-[10px] uppercase opacity-50 mb-1">Export Formats</div>
-                      <div className="text-sm font-medium">GLB (More coming soon!)</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] uppercase opacity-50 mb-1">Use Cases</div>
-                      <div className="text-sm font-medium">3D Printing, CAD and more!</div>
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Mesh Viewer Section */}
-      <section id="mesh-viewer" className="relative border-t border-[#1e3a5f] bg-[#0a1929] z-10">
-        <div className="grid grid-cols-12 divide-x divide-[#1e3a5f]">
-          {/* Left Sidebar Spacer */}
-          <div className="hidden lg:block col-span-1"></div>
-          
-          {/* Main Content */}
-          <div className="col-span-12 lg:col-span-11">
-            <motion.div 
-              className="px-10 py-16 border-b border-[#1e3a5f]"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={staggerContainer}
-            >
-              <motion.div 
-                className="inline-flex items-center gap-2 px-2 py-0.5 border border-[#1e3a5f] text-[10px] uppercase tracking-wider w-fit mb-8"
-                variants={fadeInDown}
-              >
-                <div className="w-1.5 h-1.5 bg-[#DF6C42]"></div>
-                MOTION CONTROL
-              </motion.div>
-              
-              <motion.h3 
-                className="text-4xl font-sans font-medium leading-none tracking-tight text-[#e0f2ff] mb-12"
-                variants={fadeInUp}
-              >
-                Arduino M5StickCPlus2 Integration
-              </motion.h3>
-              
-              {/* Demo Video */}
-              <motion.div 
-                className="border border-[#1e3a5f] mb-8 bg-[#0a1929] overflow-hidden"
-                variants={fadeInUp}
-              >
-                <video 
-                  src="/movement.mp4" 
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-auto object-contain"
-                  style={{ maxHeight: '600px' }}
-                >
-                  Your browser does not support the video tag.
-                </video>
-              </motion.div>
-              
-              {/* Camera Stick */}
-              <motion.div 
-                className="border border-[#1e3a5f] mb-8"
-                variants={fadeInUp}
-              >
-                <div className="p-8 border-b border-[#1e3a5f]">
-                  <div className="flex items-center gap-4 mb-4">
-                    <img src="/arduino.png" alt="Arduino" className="h-8 w-auto object-contain filter brightness-0 invert opacity-60" />
-                    <h4 className="text-xl font-regular">Camera Stick</h4>
-                  </div>
-                  <p className="text-sm opacity-70 leading-relaxed mb-6">
-                    Real-time 3D mesh rotation control using the M5StickCPlus2's IMU sensors. The device 
-                    streams quaternion orientation data via BLE at 500Hz, enabling smooth camera rotation 
-                    in the 3D viewer. Button A toggles streaming, Button B triggers mesh splitting.
-                  </p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div className="border border-[#1e3a5f] p-4">
-                      <div className="text-[10px] uppercase opacity-50 mb-2">Madgwick Filter</div>
-                      <div className="text-xs font-mono opacity-70 mb-2">AHRS.updateIMU(gx, gy, gz, ax, ay, az)</div>
-                      <div className="text-[8px] opacity-60">Fuses gyro (rad/s) + accel (g) for orientation</div>
-                    </div>
-                    <div className="border border-[#1e3a5f] p-4">
-                      <div className="text-[10px] uppercase opacity-50 mb-2">Relative Quaternion</div>
-                      <div className="text-xs font-mono opacity-70 mb-2">q_rel = qCurr × conj(qRef)</div>
-                      <div className="text-[8px] opacity-60">Re-centers orientation on button press</div>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-[#1e3a5f] pt-4">
-                    {[
-                      { label: 'Streaming Rate', value: '500Hz', desc: 'BLE quaternion updates' },
-                      { label: 'Gyro Calibration', value: '250 samples', desc: '1s bias estimation' },
-                      { label: 'Latency', value: '<2ms', desc: 'End-to-end response' },
-                    ].map((stat, idx) => (
-                      <div
-                        key={idx}
-                        className={`p-4 border-r border-[#1e3a5f] last:border-r-0`}
-                      >
-                        <div className="text-[10px] uppercase opacity-50 mb-1">{stat.label}</div>
-                        <div className="text-lg font-bold mb-1">{stat.value}</div>
-                        <div className="text-[8px] uppercase opacity-40">{stat.desc}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Camera Stick Math */}
-                <div className="p-8 bg-[#0d2847]/30">
-                  <div className="text-[10px] uppercase opacity-50 mb-4">Rotation Mathematics</div>
-                  <div className="space-y-3 text-xs font-mono opacity-70">
-                    <div>// Euler to Quaternion (ZYX order)</div>
-                    <div>q_w = cos(r/2)cos(p/2)cos(y/2) + sin(r/2)sin(p/2)sin(y/2)</div>
-                    <div>q_x = sin(r/2)cos(p/2)cos(y/2) - cos(r/2)sin(p/2)sin(y/2)</div>
-                    <div>q_y = cos(r/2)sin(p/2)cos(y/2) + sin(r/2)cos(p/2)sin(y/2)</div>
-                    <div>q_z = cos(r/2)cos(p/2)sin(y/2) - sin(r/2)sin(p/2)cos(y/2)</div>
-                  </div>
-                </div>
-              </motion.div>
-              
-              {/* Object Stick */}
-              <motion.div 
-                className="border border-[#1e3a5f] mb-8"
-                variants={fadeInUp}
-              >
-                <div className="p-8 border-b border-[#1e3a5f]">
-                  <div className="flex items-center gap-4 mb-4">
-                    <img src="/arduino.png" alt="Arduino" className="h-8 w-auto object-contain filter brightness-0 invert opacity-60" />
-                    <h4 className="text-xl font-regular">Object Stick</h4>
-                  </div>
-                  <p className="text-sm opacity-70 leading-relaxed mb-6">
-                    Button-based controller for 3D model interactions. Sends special quaternion patterns 
-                    via BLE to trigger specific actions in the viewer. Button A triggers AI identification, 
-                    Button B cycles through zoom levels (2x zoom in, 2x zoom out).
-                  </p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div className="border border-[#1e3a5f] p-4">
-                      <div className="text-[10px] uppercase opacity-50 mb-2">Button A: AI Identify</div>
-                      <div className="text-xs font-mono opacity-70 mb-2">q = {'{'}1.0, 1.0, 1.0, 0.0{'}'}</div>
-                      <div className="text-[8px] opacity-60">Triggers Gemini Pro component analysis</div>
-                    </div>
-                    <div className="border border-[#1e3a5f] p-4">
-                      <div className="text-[10px] uppercase opacity-50 mb-2">Button B: Zoom Control</div>
-                      <div className="text-xs font-mono opacity-70 mb-2">Zoom In: {'{'}-1.0, -1.0, -1.0, 0.0{'}'}</div>
-                      <div className="text-xs font-mono opacity-70">Zoom Out: {'{'}-2.0, -2.0, -2.0, 0.0{'}'}</div>
-                      <div className="text-[8px] opacity-60 mt-2">4-state cycle: 2x in, 2x out</div>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-[#1e3a5f] pt-4">
-                    {[
-                      { label: 'Connection Mode', value: 'BLE Identity', desc: 'Sends q = {0,0,0,1} when idle' },
-                      { label: 'Re-advertise', value: 'Auto + Manual', desc: 'Long-press B for recovery' },
-                    ].map((stat, idx) => (
-                      <div
-                        key={idx}
-                        className={`p-4 border-r border-[#1e3a5f] last:border-r-0`}
-                      >
-                        <div className="text-[10px] uppercase opacity-50 mb-1">{stat.label}</div>
-                        <div className="text-lg font-bold mb-1">{stat.value}</div>
-                        <div className="text-[8px] uppercase opacity-40">{stat.desc}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Object Stick Protocol */}
-                <div className="p-8 bg-[#0d2847]/30">
-                  <div className="text-[10px] uppercase opacity-50 mb-4">BLE Protocol</div>
-                  <div className="space-y-3 text-xs font-mono opacity-70">
-                    <div>// Service UUID: 12345678-1234-5678-1234-56789abcdef0</div>
-                    <div>// Characteristic UUID: 12345678-1234-5678-1234-56789abcdef1</div>
-                    <div>// Packet: struct QuatPacket {'{'} float qx, qy, qz, qw; {'}'}</div>
-                    <div>// Actions encoded as special quaternion patterns</div>
-                  </div>
-                </div>
               </motion.div>
             </motion.div>
           </div>
@@ -1119,7 +739,7 @@ export default function Home() {
                     <span className="text-sm font-medium">Mesh</span>
                   </div>
                   <p className="text-xs opacity-60 leading-relaxed">
-                    Deep sea container search and recovery. Advanced 3D mapping and visualization for underwater operations.
+                    A 3D decision-support tool for optimizing underwater cargo recovery.
                   </p>
                 </div>
                 
@@ -1129,8 +749,8 @@ export default function Home() {
                     {[
                       { name: 'Process', href: '#process' },
                       { name: 'Metrics', href: '#metrics' },
-                      { name: 'Integrations', href: '#integrations' },
-                      { name: 'Motion Control', href: '#mesh-viewer' },
+                      { name: 'Interactive Demo', href: '#interactive-demo' },
+                      { name: 'Future Extensions', href: '#future-extensions' },
                     ].map((item) => (
                       <a
                         key={item.name}
