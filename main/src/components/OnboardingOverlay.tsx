@@ -33,50 +33,46 @@ export default function OnboardingOverlay({
   };
 
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm animate-in fade-in duration-500">
-      <div className="w-full max-w-2xl p-10 text-center space-y-10">
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-[#E5E6DA]/95 backdrop-blur-sm animate-in fade-in duration-500">
+      <div className="w-full max-w-lg p-8 text-center space-y-8">
         
         {/* Header */}
-        <div className="space-y-4 text-left">
-          <div className="w-20 h-20 flex items-center justify-center mb-6 mx-auto">
-            <div className="w-16 h-16 flex items-center justify-center relative">
-              <div className="absolute inset-0 border-2 border-[#00d9ff] animate-pulse" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 30px rgba(0, 217, 255, 0.6)' }}></div>
-              <div className="w-10 h-10 bg-black border-2 border-[#00d9ff] relative z-10" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 20px rgba(0, 217, 255, 0.8)' }}></div>
-            </div>
+        <div className="space-y-3 text-left pl-1">
+          <div className="w-16 h-16 flex items-center justify-center mb-6 overflow-hidden -ml-3">
+             <img src="/logo.png" alt="Mesh Logo" className="w-10 h-10 object-contain invert" />
           </div>
-          <p className="text-white font-mono text-base uppercase tracking-[0.15em] max-w-lg leading-relaxed text-center mx-auto" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.4)' }}>
-            Deep Sea Recovery System // Mission Setup Interface <br/>
-            <span className="text-[#00d9ff] text-sm">Load dive model to begin recovery operation.</span>
+          <p className="text-[#1D1E15]/60 font-mono text-xs uppercase tracking-wider max-w-md leading-relaxed">
+            Advanced spatial visualization & analysis platform. <br/>
+            Connect hardware or explore local models.
           </p>
         </div>
 
         {/* Actions Container */}
-        <div className="bg-black/80 border-2 border-[#00d9ff] p-6 rounded-lg shadow-2xl" style={{ boxShadow: '0 0 30px rgba(0, 217, 255, 0.3)' }}>
+        <div className="bg-[#E5E6DA] border border-[#1D1E15] p-1.5 rounded-xl shadow-2xl">
 
           {/* Custom Dropdown */}
-          <div className="p-6 space-y-5 bg-black/40 rounded-lg border border-[#00d9ff]/30">
-            <div className="text-left space-y-3 relative" ref={dropdownRef}>
-              <label className="text-sm font-bold uppercase text-white tracking-[0.2em] block" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.6)' }}>
-                Load Dive Model
+          <div className="p-4 space-y-4 bg-[#1D1E15]/5 rounded-lg border border-[#1D1E15]/5">
+            <div className="text-left space-y-1.5 relative" ref={dropdownRef}>
+              <label className="text-[10px] font-bold uppercase text-[#1D1E15] tracking-wider">
+                Select Local Model
               </label>
 
               {/* Custom Dropdown Trigger */}
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-full bg-black border-2 border-[#00d9ff] text-white text-base font-mono p-4 rounded-lg outline-none focus:border-[#00d9ff] focus:ring-2 focus:ring-[#00d9ff]/50 transition-all flex items-center justify-between hover:bg-[#00d9ff]/10 hover:shadow-[0_0_20px_rgba(0,217,255,0.4)]"
-                style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.2)' }}
+                className="w-full bg-[#1D1E15] border border-[#1D1E15] text-[#E5E6DA] text-xs font-mono p-3 rounded-lg outline-none focus:border-[#DF6C42] transition-colors flex items-center justify-between hover:bg-[#1D1E15]/90"
               >
-                <span className={selectedDemo ? "text-white" : "text-white/60"}>
-                  {selectedDemo || "Select mission model..."}
+                <span className={selectedDemo ? "text-[#E5E6DA]" : "text-[#E5E6DA]/60"}>
+                  {selectedDemo || "Choose a model to inspect..."}
                 </span>
                 <svg
-                  width="16"
-                  height="16"
+                  width="12"
+                  height="12"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="3"
-                  className={`transition-transform duration-200 text-[#00d9ff] ${isDropdownOpen ? "rotate-180" : ""}`}
+                  strokeWidth="2"
+                  className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
                 >
                   <path d="M6 9l6 6 6-6"/>
                 </svg>
@@ -84,12 +80,12 @@ export default function OnboardingOverlay({
 
               {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-black border-2 border-[#00d9ff] rounded-lg shadow-xl overflow-hidden z-50 max-h-64 overflow-y-auto" style={{ boxShadow: '0 0 30px rgba(0, 217, 255, 0.5)' }}>
+                <div className="absolute top-full left-0 right-0 mt-1 bg-[#1D1E15] border border-[#1D1E15] rounded-lg shadow-lg overflow-hidden z-50 max-h-48 overflow-y-auto">
                   {DEMO_MODELS.map((m) => (
                     <button
                       key={m.id}
                       onClick={() => handleDemoSelect(m.id, m.name)}
-                      className="w-full text-left px-4 py-3 text-base font-mono text-white hover:bg-[#00d9ff] hover:text-black transition-all border-b border-[#00d9ff]/20 last:border-0 font-semibold"
+                      className="w-full text-left px-3 py-2.5 text-xs font-mono text-[#E5E6DA] hover:bg-[#DF6C42] hover:text-white transition-colors border-b border-[#E5E6DA]/10 last:border-0"
                     >
                       {m.name}
                     </button>
@@ -101,18 +97,18 @@ export default function OnboardingOverlay({
         </div>
 
         {/* Footer Info */}
-        <div className="flex items-center justify-center gap-8 text-sm text-white/70 font-mono uppercase tracking-[0.2em]">
+        <div className="flex items-center justify-center gap-6 text-[10px] text-[#1D1E15]/40 font-mono uppercase tracking-widest">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#00d9ff] animate-pulse" style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}></div>
-            <span>System Capabilities</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#DF6C42]"></div>
+            Web Bluetooth
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#00d9ff] animate-pulse" style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}></div>
-            <span>AI Analysis</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#DF6C42]"></div>
+            AI Analysis
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#00d9ff] animate-pulse" style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}></div>
-            <span>3D Visualization</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#DF6C42]"></div>
+            Hardware Controls
           </div>
         </div>
 
