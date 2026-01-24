@@ -73,3 +73,19 @@ Output: continuous probability density field for search zone delineation.
    - Search-area reduction performance metric
    - Operational value proposition (temporal/fiscal savings)
    - Product roadmap: insurance claim validation pipeline
+
+---
+
+## Technical Stack
+- **Frontend Framework:** React.js with Three.js renderer (React Three Fiber integration option)
+- **3D Asset Pipeline:** GLTFLoader for mesh deserialization
+- **Heatmap Rendering:** Grid-based spatial sampling with color gradient mapping + vertex/plane overlay
+- **Data Layer:** Local JSON fixtures (container registry, historical incident records, route samples)
+
+No backend infrastructure required for MVP deployment.
+
+**Dependencies:**
+- `three.js` - WebGL 3D rendering engine
+- `@react-three/fiber` - React renderer for Three.js (optional)
+- `@react-three/drei` - Three.js helper utilities
+- Standard React ecosystem (Vite/Next.js build toolchain)
