@@ -5,6 +5,13 @@ import { DiveSession, OCEANOGRAPHIC_DATA } from '@/models/DiveSession';
 // GET - Fetch current dive session
 export async function GET(request: NextRequest) {
   try {
+    if (!clientPromise) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      );
+    }
+
     const client = await clientPromise;
     const db = client.db('oceancache');
     
@@ -54,7 +61,7 @@ export async function GET(request: NextRequest) {
         updatedAt: new Date(),
       };
       
-      const result = await db.collection('dive_sessions').insertOne(newSession);
+      const result = await db.collection('dive_sessions').insertOne(newSession as any);
       
       return NextResponse.json({
         success: true,
@@ -78,9 +85,16 @@ export async function GET(request: NextRequest) {
 // POST - Update dive session
 export async function POST(request: NextRequest) {
   try {
+    if (!clientPromise) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      );
+    }
+
     const body = await request.json();
     const { sessionId, updates } = body;
-    
+
     const client = await clientPromise;
     const db = client.db('oceancache');
     
