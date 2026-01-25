@@ -14,6 +14,7 @@ import CustomCursor from '@/components/CustomCursor';
 import { setCurrentStep, getSelectedContainer, setSelectedContainer as saveContainer } from '@/lib/mission-state';
 import dynamic from 'next/dynamic';
 import ComparisonView from '@/components/ComparisonView';
+import MouseTrail from '@/components/MouseTrail';
 
 const UnderwaterScene = dynamic(
   () => import('@/components/simulation/UnderwaterScene'),
@@ -146,6 +147,8 @@ export default function SimulationPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-mono relative overflow-hidden">
+      <MouseTrail />
+      
       {/* Custom Cursor */}
       <CustomCursor mode={cursorMode} />
 
@@ -329,32 +332,37 @@ export default function SimulationPage() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="fixed right-6 top-24 bg-black/90 backdrop-blur-md border border-[#00d9ff]/30 p-4 z-40"
-            style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.2)' }}
+            className="fixed right-6 top-24 backdrop-blur-md p-4 z-40"
+            style={{ 
+              backgroundColor: '#E6E3D6',
+              border: '1px solid #B8B6A4',
+              boxShadow: 'none',
+              outline: 'none'
+            }}
           >
-            <div className="text-[10px] text-white/60 uppercase tracking-widest font-mono mb-4">
+            <div className="text-[10px] uppercase tracking-widest font-mono mb-4 font-bold" style={{ color: '#1D1E15' }}>
               Map Legend
             </div>
             <div className="space-y-3 text-xs">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-[#DF6C42] rounded-full" />
-                <span className="text-white/80">Floating Container</span>
+                <span style={{ color: '#1D1E15', opacity: 0.8 }}>Floating Container</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-red-500 rounded-full" />
-                <span className="text-white/80">Sunken Container</span>
+                <span style={{ color: '#1D1E15', opacity: 0.8 }}>Sunken Container</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-1 bg-[#00d9ff]" />
-                <span className="text-white/80">Ship Route</span>
+                <div className="w-8 h-1 bg-[#9B8F7A]" />
+                <span style={{ color: '#1D1E15', opacity: 0.8 }}>Ship Route</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-1 bg-[#9B59B6]" />
-                <span className="text-white/80">Drift Trail</span>
+                <span style={{ color: '#1D1E15', opacity: 0.8 }}>Drift Trail</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-1 bg-[#00ff88]" />
-                <span className="text-white/80">Ocean Current</span>
+                <span style={{ color: '#1D1E15', opacity: 0.8 }}>Ocean Current</span>
               </div>
             </div>
           </motion.div>

@@ -44,44 +44,52 @@ export default function ContainerDataPanel({
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -400, opacity: 0 }}
           transition={{ type: 'spring', damping: 25 }}
-          className="fixed left-6 top-24 w-96 bg-black/90 backdrop-blur-md border border-[#00d9ff] shadow-2xl z-50"
-          style={{ boxShadow: '0 0 30px rgba(0, 217, 255, 0.3)' }}
+          className="fixed left-6 top-24 w-96 backdrop-blur-md shadow-2xl z-50"
+          style={{ 
+            backgroundColor: '#E6E3D6',
+            border: '1px solid #B8B6A4',
+            boxShadow: 'none',
+            outline: 'none'
+          }}
         >
           {/* Header */}
-          <div className="border-b border-[#00d9ff]/30 p-4 flex items-center justify-between">
+          <div className="p-4 flex items-center justify-between" style={{ borderBottom: '1px solid #B8B6A4' }}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#DF6C42]/20 border border-[#DF6C42] flex items-center justify-center">
-                <Package size={20} className="text-[#DF6C42]" />
+              <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: '#D8D6C4', border: '1px solid #B8B6A4' }}>
+                <Package size={20} className="text-[#1D1E15]" />
               </div>
               <div>
-                <div className="text-xs text-white/60 uppercase tracking-wider font-mono">
+                <div className="text-xs uppercase tracking-wider font-mono" style={{ color: '#1D1E15', opacity: 0.6 }}>
                   Container ID
                 </div>
-                <div className="text-sm text-white font-mono font-bold">
+                <div className="text-sm font-mono font-bold" style={{ color: '#1D1E15' }}>
                   {container.serialNumber}
                 </div>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-white/60 hover:text-white transition-colors"
+              className="transition-colors"
+              style={{ color: '#1D1E15', opacity: 0.6 }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = '0.6'}
             >
               <X size={20} />
             </button>
           </div>
 
           {/* Status Badge */}
-          <div className="px-4 py-3 bg-black/40 border-b border-[#00d9ff]/10">
+          <div className="px-4 py-3" style={{ backgroundColor: '#D8D6C4', borderBottom: '1px solid #B8B6A4' }}>
             <div className="flex items-center gap-2">
               <div
                 className={`w-2 h-2 rounded-full animate-pulse ${
                   container.status === 'floating' ? 'bg-[#DF6C42]' : 'bg-red-500'
                 }`}
               />
-              <span className="text-xs text-white uppercase tracking-widest font-mono">
+              <span className="text-xs uppercase tracking-widest font-mono" style={{ color: '#1D1E15' }}>
                 {container.status === 'floating' ? 'Drifting' : 'On Seabed'}
               </span>
-              <span className="text-xs text-white/40 ml-auto">
+              <span className="text-xs ml-auto" style={{ color: '#1D1E15', opacity: 0.5 }}>
                 Origin: {container.shipName}
               </span>
             </div>
@@ -91,19 +99,19 @@ export default function ContainerDataPanel({
           <div className="p-4 space-y-4">
             {/* Position */}
             <div className="space-y-2">
-              <div className="text-[10px] text-[#00d9ff] uppercase tracking-widest font-mono">
+              <div className="text-[10px] uppercase tracking-widest font-mono font-bold" style={{ color: '#1D1E15' }}>
                 Current Position
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                  <div className="text-[9px] text-white/40">LAT</div>
-                  <div className="text-sm text-white font-mono">
+                <div className="p-2" style={{ backgroundColor: '#D8D6C4', border: '1px solid #B8B6A4' }}>
+                  <div className="text-[9px]" style={{ color: '#1D1E15', opacity: 0.5 }}>LAT</div>
+                  <div className="text-sm font-mono" style={{ color: '#1D1E15' }}>
                     {container.position[0].toFixed(4)}°N
                   </div>
                 </div>
-                <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                  <div className="text-[9px] text-white/40">LON</div>
-                  <div className="text-sm text-white font-mono">
+                <div className="p-2" style={{ backgroundColor: '#D8D6C4', border: '1px solid #B8B6A4' }}>
+                  <div className="text-[9px]" style={{ color: '#1D1E15', opacity: 0.5 }}>LON</div>
+                  <div className="text-sm font-mono" style={{ color: '#1D1E15' }}>
                     {container.position[1].toFixed(4)}°W
                   </div>
                 </div>
@@ -113,42 +121,42 @@ export default function ContainerDataPanel({
             {/* Drift Data */}
             <div className="grid grid-cols-2 gap-3">
               <div className="flex items-start gap-2">
-                <Waves size={14} className="text-[#00d9ff] mt-1" />
+                <Waves size={14} className="mt-1" style={{ color: '#9B8F7A' }} />
                 <div>
-                  <div className="text-[9px] text-white/40 uppercase">Drift Speed</div>
-                  <div className="text-sm text-white font-mono">{container.driftSpeed} m/s</div>
+                  <div className="text-[9px] uppercase" style={{ color: '#1D1E15', opacity: 0.5 }}>Drift Speed</div>
+                  <div className="text-sm font-mono" style={{ color: '#1D1E15' }}>{container.driftSpeed} m/s</div>
                 </div>
               </div>
               <div className="flex items-start gap-2">
-                <Clock size={14} className="text-[#00d9ff] mt-1" />
+                <Clock size={14} className="mt-1" style={{ color: '#9B8F7A' }} />
                 <div>
-                  <div className="text-[9px] text-white/40 uppercase">Time Lost</div>
-                  <div className="text-sm text-white font-mono">{container.timeInWater}h</div>
+                  <div className="text-[9px] uppercase" style={{ color: '#1D1E15', opacity: 0.5 }}>Time Lost</div>
+                  <div className="text-sm font-mono" style={{ color: '#1D1E15' }}>{container.timeInWater}h</div>
                 </div>
               </div>
             </div>
 
             {/* Cargo Specs */}
-            <div className="border-t border-[#00d9ff]/10 pt-4 space-y-3">
-              <div className="text-[10px] text-[#00d9ff] uppercase tracking-widest font-mono">
+            <div className="pt-4 space-y-3" style={{ borderTop: '1px solid #B8B6A4' }}>
+              <div className="text-[10px] uppercase tracking-widest font-mono font-bold" style={{ color: '#1D1E15' }}>
                 Cargo Specifications
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex items-start gap-2">
-                  <Weight size={14} className="text-[#DF6C42] mt-1" />
+                  <Weight size={14} className="mt-1" style={{ color: '#9B8F7A' }} />
                   <div>
-                    <div className="text-[9px] text-white/40 uppercase">Weight</div>
-                    <div className="text-sm text-white font-mono">
+                    <div className="text-[9px] uppercase" style={{ color: '#1D1E15', opacity: 0.5 }}>Weight</div>
+                    <div className="text-sm font-mono" style={{ color: '#1D1E15' }}>
                       {(container.weight / 1000).toFixed(1)}t
                     </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Box size={14} className="text-[#DF6C42] mt-1" />
+                  <Box size={14} className="mt-1" style={{ color: '#9B8F7A' }} />
                   <div>
-                    <div className="text-[9px] text-white/40 uppercase">Dimensions</div>
-                    <div className="text-xs text-white font-mono">
+                    <div className="text-[9px] uppercase" style={{ color: '#1D1E15', opacity: 0.5 }}>Dimensions</div>
+                    <div className="text-xs font-mono" style={{ color: '#1D1E15' }}>
                       {container.dimensions.length}×{container.dimensions.width}×
                       {container.dimensions.height}m
                     </div>
@@ -156,35 +164,35 @@ export default function ContainerDataPanel({
                 </div>
               </div>
 
-              <div className="bg-[#DF6C42]/10 p-2 border border-[#DF6C42]/30">
-                <div className="text-[9px] text-white/60 uppercase mb-1">Contents</div>
-                <div className="text-sm text-white font-mono">{container.contents}</div>
+              <div className="p-2" style={{ backgroundColor: '#D8D6C4', border: '1px solid #B8B6A4' }}>
+                <div className="text-[9px] uppercase mb-1" style={{ color: '#1D1E15', opacity: 0.6 }}>Contents</div>
+                <div className="text-sm font-mono" style={{ color: '#1D1E15' }}>{container.contents}</div>
               </div>
 
-              <div className="bg-black/40 p-2 border border-[#00d9ff]/20">
-                <div className="text-[9px] text-white/60 uppercase mb-1">Buoyancy</div>
-                <div className="text-sm text-white font-mono">{container.buoyancy}</div>
+              <div className="p-2" style={{ backgroundColor: '#D8D6C4', border: '1px solid #B8B6A4' }}>
+                <div className="text-[9px] uppercase mb-1" style={{ color: '#1D1E15', opacity: 0.6 }}>Buoyancy</div>
+                <div className="text-sm font-mono" style={{ color: '#1D1E15' }}>{container.buoyancy}</div>
               </div>
             </div>
 
             {/* Predicted Position */}
-            <div className="border-t border-[#00d9ff]/10 pt-4 space-y-2">
+            <div className="pt-4 space-y-2" style={{ borderTop: '1px solid #B8B6A4' }}>
               <div className="flex items-center gap-2">
-                <TrendingDown size={12} className="text-[#00d9ff]" />
-                <div className="text-[10px] text-[#00d9ff] uppercase tracking-widest font-mono">
+                <TrendingDown size={12} style={{ color: '#9B8F7A' }} />
+                <div className="text-[10px] uppercase tracking-widest font-mono font-bold" style={{ color: '#1D1E15' }}>
                   Predicted Position (24h)
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                  <div className="text-[9px] text-white/40">LAT</div>
-                  <div className="text-sm text-white font-mono">
+                <div className="p-2" style={{ backgroundColor: '#D8D6C4', border: '1px solid #B8B6A4' }}>
+                  <div className="text-[9px]" style={{ color: '#1D1E15', opacity: 0.5 }}>LAT</div>
+                  <div className="text-sm font-mono" style={{ color: '#1D1E15' }}>
                     {predictedPosition[0].toFixed(4)}°N
                   </div>
                 </div>
-                <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                  <div className="text-[9px] text-white/40">LON</div>
-                  <div className="text-sm text-white font-mono">
+                <div className="p-2" style={{ backgroundColor: '#D8D6C4', border: '1px solid #B8B6A4' }}>
+                  <div className="text-[9px]" style={{ color: '#1D1E15', opacity: 0.5 }}>LON</div>
+                  <div className="text-sm font-mono" style={{ color: '#1D1E15' }}>
                     {predictedPosition[1].toFixed(4)}°W
                   </div>
                 </div>
@@ -195,7 +203,20 @@ export default function ContainerDataPanel({
             {onDiveClick && (
               <button
                 onClick={onDiveClick}
-                className="w-full mt-4 bg-[#DF6C42] hover:bg-[#DF6C42]/80 text-black font-mono uppercase text-sm py-3 px-4 transition-all border-2 border-[#DF6C42] hover:shadow-[0_0_20px_rgba(223,108,66,0.5)]"
+                className="w-full mt-4 font-mono uppercase text-sm py-3 px-4 transition-all"
+                style={{
+                  backgroundColor: '#1D1E15',
+                  color: '#E5E6DA',
+                  border: '1px solid #1D1E15'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#9B8F7A';
+                  e.currentTarget.style.borderColor = '#9B8F7A';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#1D1E15';
+                  e.currentTarget.style.borderColor = '#1D1E15';
+                }}
               >
                 Dive to Container →
               </button>
@@ -203,8 +224,8 @@ export default function ContainerDataPanel({
           </div>
 
           {/* Footer */}
-          <div className="border-t border-[#00d9ff]/30 px-4 py-2 bg-black/60">
-            <div className="text-[9px] text-white/40 uppercase tracking-widest font-mono">
+          <div className="px-4 py-2" style={{ borderTop: '1px solid #B8B6A4', backgroundColor: '#D8D6C4' }}>
+            <div className="text-[9px] uppercase tracking-widest font-mono" style={{ color: '#1D1E15', opacity: 0.5 }}>
               Live Tracking • Updated {Math.floor(Math.random() * 5)} min ago
             </div>
           </div>

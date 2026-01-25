@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import MissionProgress from '@/components/mission/MissionProgress';
 import MissionNavigation from '@/components/mission/MissionNavigation';
 import PageTransition, { ScaleTransition, SlideTransition } from '@/components/mission/PageTransition';
+import MouseTrail from '@/components/MouseTrail';
 
 const DEMO_STEPS = [
   {
@@ -71,6 +72,8 @@ export default function MissionDemoPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-mono overflow-hidden">
+      <MouseTrail />
+      
       {/* Header */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-[#00d9ff]/30 px-6 py-4">
         <div className="flex items-center justify-between">

@@ -116,6 +116,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   const animationFrameRef = useRef<number | null>(null);
   const isIsolatingRef = useRef(false);
   const selectedObjectRef = useRef<THREE.Object3D | null>(null);
+  const selectedObjectsGroupRef = useRef<THREE.Object3D[]>([]); // Store all selected objects of same color
   // Store AI annotations mapped by object UUID to persist session knowledge correctly
   // Key: Object UUID, Value: { annotatedImage: string, name: string, description: string, type: string }
   const annotationsCacheRef = useRef<Record<string, any>>({});
@@ -958,21 +959,80 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
   const highlightMaterial = (obj: THREE.Mesh) => {
     if (!(obj as any).userData.mats) return;
-    const currentMat = (obj.material as THREE.Material).clone();
+    
+    // Store original material if not already stored
+    if (!(obj as any).userData.originalMaterial) {
+      (obj as any).userData.originalMaterial = obj.material;
+    }
+    
+    // Clone the original material for highlighting
+    const currentMat = ((obj as any).userData.originalMaterial as THREE.Material).clone();
+    
     if ("emissive" in currentMat) {
-      (currentMat as THREE.MeshStandardMaterial).emissive.setHex(0xffffff);
-      (currentMat as THREE.MeshStandardMaterial).emissiveIntensity = 0.5;
+      (currentMat as THREE.MeshStandardMaterial).emissive.setHex(0x9B8F7A);
+      (currentMat as THREE.MeshStandardMaterial).emissiveIntensity = 0.6;
     }
     if (viewModeRef.current === "solid" && "color" in currentMat) {
-      (currentMat as THREE.MeshStandardMaterial).color.offsetHSL(0, 0, 0.2);
+      (currentMat as THREE.MeshStandardMaterial).color.offsetHSL(0, 0, 0.15);
     }
     obj.material = currentMat;
   };
 
   const restoreMaterial = (obj: THREE.Mesh) => {
     if (!obj || !(obj as any).userData.mats) return;
-    const mats = (obj as any).userData.mats;
-    obj.material = viewModeRef.current === "solid" ? mats.solid : mats.holo;
+    
+    // If we stored the original material, use it
+    if ((obj as any).userData.originalMaterial) {
+      obj.material = (obj as any).userData.originalMaterial;
+    } else {
+      // Fallback to mats
+      const mats = (obj as any).userData.mats;
+      obj.material = viewModeRef.current === "solid" ? mats.solid : mats.holo;
+    }
+  };
+
+  // Helper to get the base color of a mesh (from original material)
+  const getMeshColor = (mesh: THREE.Mesh): THREE.Color | null => {
+    // Try to get the original material first for accurate color comparison
+    const originalMaterial = (mesh as any).userData?.originalMaterial;
+    const material = originalMaterial || mesh.material as THREE.Material;
+    
+    if ('color' in material) {
+      return (material as THREE.MeshStandardMaterial).color.clone();
+    }
+    return null;
+  };
+
+  // Helper to compare two colors with tolerance
+  const colorsAreSimilar = (color1: THREE.Color, color2: THREE.Color, tolerance: number = 0.1): boolean => {
+    const diff = Math.abs(color1.r - color2.r) + Math.abs(color1.g - color2.g) + Math.abs(color1.b - color2.b);
+    return diff < tolerance;
+  };
+
+  // Find all meshes with similar color to the clicked mesh
+  const findMeshesByColor = (targetMesh: THREE.Mesh): THREE.Mesh[] => {
+    if (!sceneRef.current) return [];
+    
+    const targetColor = getMeshColor(targetMesh);
+    if (!targetColor) return [targetMesh];
+    
+    const similarMeshes: THREE.Mesh[] = [];
+    
+    sceneRef.current.traverse((child) => {
+      if (
+        (child as THREE.Mesh).isMesh &&
+        child !== shadowPlaneRef.current &&
+        (child as any).userData?.mats
+      ) {
+        const mesh = child as THREE.Mesh;
+        const meshColor = getMeshColor(mesh);
+        if (meshColor && colorsAreSimilar(targetColor, meshColor)) {
+          similarMeshes.push(mesh);
+        }
+      }
+    });
+    
+    return similarMeshes;
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
@@ -998,21 +1058,35 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
     if (intersects.length > 0) {
       const object = intersects[0].object as THREE.Mesh;
-      if (
-        (object as any).userData.name &&
-        object !== hoveredObjectRef.current &&
-        object !== selectedObjectRef.current
-      ) {
-        if (
-          hoveredObjectRef.current &&
-          hoveredObjectRef.current !== selectedObjectRef.current
-        ) {
-          restoreMaterial(hoveredObjectRef.current as THREE.Mesh);
+      
+      // Check if this is a valid hoverable object
+      if ((object as any).userData.name) {
+        // Check if this object is part of the selected group
+        const isPartOfSelectedGroup = selectedObjectsGroupRef.current.includes(object);
+        
+        // If we're hovering over a new object (different from current hover)
+        if (object !== hoveredObjectRef.current) {
+          // Restore previous hovered object (if not selected and not part of selected group)
+          if (
+            hoveredObjectRef.current &&
+            hoveredObjectRef.current !== selectedObjectRef.current &&
+            !selectedObjectsGroupRef.current.includes(hoveredObjectRef.current)
+          ) {
+            restoreMaterial(hoveredObjectRef.current as THREE.Mesh);
+          }
+          
+          // Update hover reference
+          hoveredObjectRef.current = object;
+          
+          // Highlight new object (if not already selected and not part of selected group)
+          if (object !== selectedObjectRef.current && !isPartOfSelectedGroup) {
+            highlightMaterial(object);
+          }
         }
-        hoveredObjectRef.current = object;
-        highlightMaterial(object);
+        
+        // Update cursor and tooltip
         containerRef.current.style.cursor = "pointer";
-
+        
         if (tooltipRef.current) {
           tooltipRef.current.textContent = (object as any).userData.name;
           tooltipRef.current.style.opacity = "1";
@@ -1022,9 +1096,11 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         }
       }
     } else {
+      // No intersection - clear hover state
       if (
         hoveredObjectRef.current &&
-        hoveredObjectRef.current !== selectedObjectRef.current
+        hoveredObjectRef.current !== selectedObjectRef.current &&
+        !selectedObjectsGroupRef.current.includes(hoveredObjectRef.current)
       ) {
         restoreMaterial(hoveredObjectRef.current as THREE.Mesh);
         hoveredObjectRef.current = null;
@@ -1237,6 +1313,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           // Create fresh userData without any cached annotations from previous models
           (mesh as any).userData = {
             mats,
+            originalMaterial: mats.solid, // Store original material for hover restoration
             name: mesh.name || `Part ${meshes.length}`,
             description: "Imported Geometry",
             type: "Imported",
@@ -1404,6 +1481,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       return;
 
     const isSolid = viewMode === "solid";
+    
+    // Clear hover state to avoid stale highlights
+    hoveredObjectRef.current = null;
 
     // Enable subtle bloom for underwater glow effect
     bloomPassRef.current.enabled = true;
@@ -1444,6 +1524,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           }
 
           mesh.material = isSolid ? mats.solid : mats.holo;
+          // Update original material reference for hover effects
+          (mesh as any).userData.originalMaterial = mesh.material;
           mesh.castShadow = false; // Shadows only in solid mode
           mesh.receiveShadow = false;
         }
@@ -1475,11 +1557,21 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     const userData = (object as any).userData;
     if (!userData?.name) return;
 
-    if (isIsolating && selectedObject !== object) {
+    // Find all meshes with the same color
+    const mesh = object as THREE.Mesh;
+    const similarMeshes = findMeshesByColor(mesh);
+    
+    // Check if we're clicking the same color group again
+    const isSameColorGroup = selectedObjectsGroupRef.current.length > 0 &&
+      selectedObjectsGroupRef.current.some(selectedMesh => 
+        similarMeshes.includes(selectedMesh as THREE.Mesh)
+      );
+
+    if (isIsolating && !isSameColorGroup) {
       resetView();
-      setTimeout(() => isolateComponent(object), 100);
-    } else {
-      isolateComponent(object);
+      setTimeout(() => isolateComponentGroup(similarMeshes), 100);
+    } else if (!isIsolating) {
+      isolateComponentGroup(similarMeshes);
     }
   };
 
@@ -1561,6 +1653,72 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     setShowInspector(true);
   };
 
+  const isolateComponentGroup = (meshes: THREE.Mesh[]) => {
+    if (!sceneRef.current || meshes.length === 0) return;
+
+    // Store the selected group
+    selectedObjectsGroupRef.current = meshes;
+    setSelectedObject(meshes[0]); // Set first mesh as primary selected object
+    setIsIsolating(true);
+
+    const userData = (meshes[0] as any).userData;
+    setShowSplitSection(false);
+
+    // Dim all other meshes (those not in the selected group)
+    sceneRef.current.traverse((child) => {
+      if (
+        (child as THREE.Mesh).isMesh &&
+        child !== shadowPlaneRef.current &&
+        !meshes.includes(child as THREE.Mesh)
+      ) {
+        const mesh = child as THREE.Mesh;
+        if ((mesh as any).userData?.mats) {
+          const mats = (mesh as any).userData.mats;
+          mesh.material = (
+            viewMode === "solid" ? mats.solid : mats.holo
+          ).clone();
+        }
+        (mesh.material as THREE.Material).transparent = true;
+        (mesh.material as THREE.Material).opacity = 0.1;
+      }
+    });
+
+    // Highlight all selected meshes with the same color
+    meshes.forEach((mesh) => {
+      const mats = (mesh as any).userData.mats;
+      if (viewMode === "holo") {
+        mesh.material = mats.holo.clone();
+        (mesh.material as THREE.MeshPhysicalMaterial).color.setHex(0x9B8F7A);
+        (mesh.material as THREE.Material).opacity = 1;
+      } else {
+        mesh.material = mats.solid.clone();
+        (mesh.material as THREE.MeshStandardMaterial).emissive.setHex(0x9B8F7A);
+        (mesh.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.5;
+      }
+    });
+
+    // Count how many parts were selected
+    const colorGroupName = meshes.length > 1 
+      ? `${userData.name} (${meshes.length} parts)` 
+      : userData.name;
+
+    setInspectorData({
+      name: colorGroupName,
+      description: userData.description,
+      type: userData.type,
+    });
+
+    // Load cached annotation if available
+    if (userData.annotatedImage) {
+      setAnnotatedImage(userData.annotatedImage);
+      setShowAnnotatedModal(true);
+    } else {
+      setAnnotatedImage(null);
+    }
+
+    setShowInspector(true);
+  };
+
   const resetView = () => {
     if (!sceneRef.current) return;
 
@@ -1579,6 +1737,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     });
 
     setSelectedObject(null);
+    selectedObjectsGroupRef.current = []; // Clear the selected group
     setIsIsolating(false);
     setShowInspector(false);
     setShowSplitSection(false);
@@ -1742,15 +1901,17 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         const mats =
           (mesh as any).userData.mats ||
           createDualMaterials(new THREE.Color(0x00aaff));
+        const currentMaterial = viewMode === "solid" ? mats.solid : mats.holo;
         const newMesh = new THREE.Mesh(
           newGeo,
-          viewMode === "solid" ? mats.solid : mats.holo
+          currentMaterial
         );
         (newMesh as any).userData = {
           name: `${(mesh as any).userData.name || "Part"} - Sub ${idx + 1}`,
           description: "Split component.",
           type: "Sub-assembly",
           mats,
+          originalMaterial: currentMaterial, // Store original material for hover restoration
         };
         newMesh.castShadow = false;
         newMesh.receiveShadow = false;
@@ -2398,12 +2559,15 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         {/* Tooltip */}
         <div
           ref={tooltipRef}
-          className="fixed z-50 px-4 py-3 bg-[#0a2540] text-white border-2 border-[#00d9ff] text-sm font-mono uppercase tracking-[0.15em] pointer-events-none opacity-0 transition-opacity duration-150 shadow-xl rounded-lg"
+          className="fixed z-50 px-4 py-3 text-sm font-mono uppercase tracking-[0.15em] pointer-events-none opacity-0 transition-opacity duration-150 rounded-lg"
           style={{ 
             top: 0, 
             left: 0,
-            boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)',
-            textShadow: '0 0 5px rgba(255, 255, 255, 0.3)'
+            backgroundColor: '#E6E3D6',
+            border: '1px solid #B8B6A4',
+            boxShadow: 'none',
+            color: '#1D1E15',
+            outline: 'none'
           }}
         />
 

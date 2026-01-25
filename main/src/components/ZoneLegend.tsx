@@ -43,13 +43,18 @@ export default function ZoneLegend({ showProbabilities = false, className = '' }
 
   return (
     <motion.div
-      className={`border border-[#1e3a5f] p-4 ${className}`}
-      style={{ backgroundColor: 'rgba(5, 15, 26, 0.9)' }}
+      className={`p-4 ${className}`}
+      style={{ 
+        backgroundColor: '#E6E3D6',
+        border: '1px solid #B8B6A4',
+        boxShadow: 'none',
+        outline: 'none'
+      }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="text-[10px] uppercase opacity-50 mb-3 font-mono tracking-wider">
+      <div className="text-[10px] uppercase mb-3 font-mono tracking-wider font-bold" style={{ color: '#1D1E15' }}>
         Priority Zones
       </div>
 
@@ -67,17 +72,17 @@ export default function ZoneLegend({ showProbabilities = false, className = '' }
 
             {/* Label & Description */}
             <div className="flex-1">
-              <div className="text-xs font-semibold text-white uppercase tracking-wide">
+              <div className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1D1E15' }}>
                 {zone.label}
               </div>
               {showProbabilities && (
-                <div className="text-[10px] text-white/60 mt-0.5">{zone.description}</div>
+                <div className="text-[10px] mt-0.5" style={{ color: '#1D1E15', opacity: 0.6 }}>{zone.description}</div>
               )}
             </div>
 
             {/* Probability Range (Optional) */}
             {showProbabilities && (
-              <div className="text-[10px] font-mono text-[#00d9ff] shrink-0">
+              <div className="text-[10px] font-mono shrink-0" style={{ color: '#9B8F7A' }}>
                 {(zone.rangeMin * 100).toFixed(0)}-{(zone.rangeMax * 100).toFixed(0)}%
               </div>
             )}
@@ -86,8 +91,8 @@ export default function ZoneLegend({ showProbabilities = false, className = '' }
       </div>
 
       {/* Additional Info */}
-      <div className="mt-4 pt-3 border-t border-[#1e3a5f]">
-        <div className="text-[9px] text-white/40 leading-relaxed">
+      <div className="mt-4 pt-3" style={{ borderTop: '1px solid #B8B6A4' }}>
+        <div className="text-[9px] leading-relaxed" style={{ color: '#1D1E15', opacity: 0.5 }}>
           Zones calculated using multi-factor spatial analysis: distance decay, route proximity,
           ocean current influence, and historical incident clustering.
         </div>
@@ -102,21 +107,21 @@ export default function ZoneLegend({ showProbabilities = false, className = '' }
 export function CompactLegend({ className = '' }: { className?: string }) {
   return (
     <div className={`flex items-center gap-4 ${className}`}>
-      <div className="text-[10px] uppercase opacity-50">Probability:</div>
+      <div className="text-[10px] uppercase font-bold" style={{ color: '#1D1E15' }}>Probability:</div>
 
       <div className="flex items-center gap-2">
-        <div className="w-3 h-3 bg-[#FF0000]" style={{ boxShadow: '0 0 8px #FF000060' }} />
-        <div className="text-[10px] text-white/70">High</div>
+        <div className="w-3 h-3 bg-[#FF0000]" style={{ border: '1px solid #B8B6A4' }} />
+        <div className="text-[10px]" style={{ color: '#1D1E15', opacity: 0.7 }}>High</div>
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="w-3 h-3 bg-[#FFFF00]" style={{ boxShadow: '0 0 8px #FFFF0060' }} />
-        <div className="text-[10px] text-white/70">Medium</div>
+        <div className="w-3 h-3 bg-[#FFFF00]" style={{ border: '1px solid #B8B6A4' }} />
+        <div className="text-[10px]" style={{ color: '#1D1E15', opacity: 0.7 }}>Medium</div>
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="w-3 h-3 bg-[#0000FF]" style={{ boxShadow: '0 0 8px #0000FF60' }} />
-        <div className="text-[10px] text-white/70">Low</div>
+        <div className="w-3 h-3 bg-[#0000FF]" style={{ border: '1px solid #B8B6A4' }} />
+        <div className="text-[10px]" style={{ color: '#1D1E15', opacity: 0.7 }}>Low</div>
       </div>
     </div>
   );
