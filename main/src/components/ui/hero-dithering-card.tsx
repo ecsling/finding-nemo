@@ -44,12 +44,11 @@ export function CTASection() {
             </div>
 
             <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight text-[#1D1E15] mb-8 leading-[1.05] italic">
-              Vessel Tracking, <br />
-              <span className="text-[#1D1E15]/80">made easy.</span>
+              Finding N.E.M.O.
             </h2>
 
-            <p className="text-[#4b4f52] text-lg md:text-xl max-w-2xl mb-12 leading-relaxed font-mono">
-              Some subtitle here.
+            <p className="text-[#4b4f52] text-xl md:text-2xl max-w-2xl mb-12 leading-relaxed font-mono">
+              Nautical Emergency & Monitoring Operator
             </p>
 
             <Link
