@@ -39,7 +39,6 @@ const OrbitControls = dynamic(() => import('@react-three/drei').then(mod => ({ d
 const PerspectiveCamera = dynamic(() => import('@react-three/drei').then(mod => ({ default: mod.PerspectiveCamera })), { ssr: false });
 const Environment = dynamic(() => import('@react-three/drei').then(mod => ({ default: mod.Environment })), { ssr: false });
 const ProbabilityHeatmap = dynamic(() => import('@/components/ProbabilityHeatmap').then(mod => ({ default: mod.default })), { ssr: false });
-const HeatmapToggle = dynamic(() => import('@/components/ProbabilityHeatmap').then(mod => ({ default: mod.HeatmapToggle })), { ssr: false });
 const MissionProgress = dynamic(() => import('@/components/mission/MissionProgress'), { ssr: false });
 const MissionNavigation = dynamic(() => import('@/components/mission/MissionNavigation'), { ssr: false });
 
@@ -369,12 +368,8 @@ export default function SearchOptimizerPage() {
             {/* Overlay Controls */}
             {showVisualization && !loading && (
               <>
-                {/* Top Bar - Mode Toggle and Legend */}
+                {/* Top Bar - Simulation Progress */}
                 <div className="absolute top-4 left-4 right-4 z-10 flex items-start justify-between gap-4">
-                  <div className="bg-white/90 backdrop-blur-sm border border-[#1D1E15]/10 p-3 rounded-xl shadow-lg">
-                    <HeatmapToggle mode={searchMode} onModeChange={setSearchMode} />
-                  </div>
-
                   {/* Simulation Progress - Compact */}
                   {isSimulationRunning && simulationPhase !== 'settled' && (
                     <motion.div
@@ -395,9 +390,6 @@ export default function SearchOptimizerPage() {
                     </motion.div>
                   )}
 
-                  <div className="bg-white/90 backdrop-blur-sm border border-[#1D1E15]/10 p-3 rounded-xl shadow-lg">
-                    <CompactLegend />
-                  </div>
                 </div>
 
                 {/* Simplified HUD */}
@@ -463,13 +455,28 @@ export default function SearchOptimizerPage() {
                         <span className="text-cyan-400">[00:00]</span> Container lost overboard
                       </div>
                       <div className="text-gray-300">
-                        <span className="text-cyan-400">[00:01]</span> GPS: {incidentSnapshot?.gpsCoordinates?.latitude.toFixed(2)}°N, {incidentSnapshot?.gpsCoordinates?.longitude.toFixed(2)}°E
+                        <span className="text-cyan-400">[00:01]</span> Location: Kelvin Seamounts, North Atlantic
                       </div>
                       <div className="text-gray-300">
-                        <span className="text-cyan-400">[00:02]</span> Serial: {incidentSnapshot?.containerSerialId}
+                        <span className="text-cyan-400">[00:02]</span> GPS: {incidentSnapshot?.gpsCoordinates?.latitude.toFixed(2)}°N, {incidentSnapshot?.gpsCoordinates?.longitude.toFixed(2)}°E
+                      </div>
+                      <div className="text-gray-300">
+                        <span className="text-cyan-400">[00:03]</span> Serial: {incidentSnapshot?.containerSerialId}
                       </div>
                       <div className="text-gray-300">
                         <span className="text-cyan-400">[00:05]</span> Target Depth: {Math.abs(incidentSnapshot?.gpsCoordinates?.altitude || 0)}m
+                      </div>
+                      {/* Location Image Preview */}
+                      <div className="mt-3 border-t border-cyan-400/20 pt-3">
+                        <div className="text-[8px] text-cyan-400/70 uppercase tracking-wide mb-2">Seafloor Terrain</div>
+                        <div className="relative w-full h-24 bg-black/40 rounded overflow-hidden border border-cyan-400/10">
+                          <img 
+                            src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=200&fit=crop&q=80" 
+                            alt="Kelvin Seamounts seafloor" 
+                            className="w-full h-full object-cover opacity-70"
+                          />
+                          <div className="absolute bottom-1 right-1 text-[7px] text-white/50 bg-black/60 px-1 rounded">Bathymetric Data</div>
+                        </div>
                       </div>
                       {simulationPhase !== 'idle' && (
                         <>
@@ -531,23 +538,6 @@ export default function SearchOptimizerPage() {
             )}
           </div>
 
-          {/* Compact key metrics */}
-          {showVisualization && comparisonData && !loading && (
-            <div className="border-t border-[#1D1E15]/10 bg-[#E5E6DA]/60 p-2">
-              <div className="flex gap-3 justify-center">
-                {[
-                  ['Area', `${(activeZones.length * 25).toFixed(0)}km²`],
-                  ['Chance', `${Math.round((comparisonData.optimized.metrics.recoveryProbability || 0.26) * 100)}%`],
-                  ['Duration', `${comparisonData.optimized.metrics.estimatedDuration.toFixed(0)}d`],
-                ].map(([label, value]) => (
-                  <div key={label} className="bg-white/70 border border-[#1D1E15]/10 px-3 py-1.5 rounded">
-                    <div className="text-[8px] text-[#1D1E15]/40 uppercase">{label}</div>
-                    <div className="text-sm font-bold text-[#1D1E15]">{value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </main>
 
@@ -668,9 +658,6 @@ function ContainerSimulation({
         position={[0, 0, 0]}
         currentDirection={85}
       />
-      
-      {/* Floating debris particles */}
-      <FloatingDebris position={[0, 20, 0]} />
     </group>
   );
 }
@@ -826,25 +813,8 @@ function AssetRoute({ comparison, referencePoint, surfaceY, searchMode }: { comp
 
   return (
     <group>
-      {/* Simple route line */}
+      {/* Clean route line only - no spheres */}
       <primitive object={routeLine} />
-      {/* Clean waypoint markers */}
-      {pts.map((p, i) => {
-        const c = gpsToCartesian(p, referencePoint, SCENE_SCALE);
-        const isFirst = i === 0;
-        const isLast = i === pts.length - 1;
-        
-        return (
-          <mesh key={i} position={[c.x, surfaceY + 2, c.z]}>
-            <sphereGeometry args={[6, 16, 16]} />
-            <meshStandardMaterial 
-              color={isFirst ? '#4ade80' : isLast ? '#ef4444' : routeColor} 
-              emissive={isFirst ? '#4ade80' : isLast ? '#ef4444' : routeColor} 
-              emissiveIntensity={0.5} 
-            />
-          </mesh>
-        );
-      })}
     </group>
   );
 }
@@ -1016,7 +986,7 @@ function formatCurrency(v: number) {
 
 // Water stream lines showing current flow
 function WaterStreamLines({ position, currentDirection }: { position: [number, number, number]; currentDirection: number }) {
-  const streamCount = 16; // MORE stream lines
+  const streamCount = 32; // MASSIVE stream lines for professional look
   const dirRad = degreesToRadians(currentDirection);
   
   const streamLines = useMemo(() => {
@@ -1046,48 +1016,6 @@ function WaterStreamLines({ position, currentDirection }: { position: [number, n
       {streamLines.map((line, i) => (
         <primitive key={i} object={line} />
       ))}
-    </group>
-  );
-}
-
-// Floating debris for realism
-function FloatingDebris({ position }: { position: [number, number, number] }) {
-  const debrisRef = useRef<THREE.Group>(null);
-  const debrisCount = 30;
-  
-  useFrame((state) => {
-    if (!debrisRef.current) return;
-    
-    debrisRef.current.children.forEach((debris, i) => {
-      // Slow floating motion
-      debris.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.5 + i) * 15;
-      debris.rotation.x = state.clock.elapsedTime * 0.2 + i;
-      debris.rotation.y = state.clock.elapsedTime * 0.15 + i * 0.5;
-    });
-  });
-  
-  return (
-    <group ref={debrisRef} position={position}>
-      {Array.from({ length: debrisCount }).map((_, i) => {
-        const angle = (i / debrisCount) * Math.PI * 2;
-        const radius = 40 + Math.random() * 60;
-        const x = Math.cos(angle) * radius;
-        const z = Math.sin(angle) * radius;
-        const size = 1 + Math.random() * 2;
-        
-        return (
-          <mesh key={i} position={[x, 0, z]}>
-            <boxGeometry args={[size, size * 0.5, size * 0.3]} />
-            <meshStandardMaterial 
-              color="#8B4513" 
-              transparent
-              opacity={0.4}
-              metalness={0.2}
-              roughness={0.8}
-            />
-          </mesh>
-        );
-      })}
     </group>
   );
 }
@@ -1157,10 +1085,10 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
   return (
     <points ref={particlesRef} position={position} geometry={geometry}>
       <pointsMaterial
-        size={3}
+        size={1.5}
         color="#00E5FF"
         transparent
-        opacity={0.8}
+        opacity={0.6}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
       />
