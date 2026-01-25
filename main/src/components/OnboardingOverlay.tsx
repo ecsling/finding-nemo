@@ -32,9 +32,12 @@ export default function OnboardingOverlay({
     }
   };
 
+  // Filter to only show Cargo Ship
+  const filteredModels = DEMO_MODELS.filter(m => m.id === 'cargo-ship');
+
   return (
     <div className="absolute inset-0 z-50 bg-black/95 backdrop-blur-sm animate-in fade-in duration-500">
-      <div className="absolute left-1/2 top-32 -translate-x-1/2 w-80 z-50">
+      <div className="absolute left-1/2 top-32 -translate-x-1/2 w-[600px] z-50">
         {/* Actions Container */}
         <div className="border-2 border-[#00d9ff] p-2 rounded-lg shadow-2xl" style={{ backgroundColor: 'rgba(5, 15, 26, 0.9)', boxShadow: '0 0 25px rgba(0, 217, 255, 0.4)' }}>
 
@@ -98,7 +101,7 @@ export default function OnboardingOverlay({
                       scrollbarColor: 'rgba(0, 217, 255, 0.5) rgba(10, 37, 64, 0.8)'
                     }}
                   >
-                    {DEMO_MODELS.map((m) => (
+                    {filteredModels.map((m) => (
                       <button
                         key={m.id}
                         onClick={() => handleDemoSelect(m.id, m.name)}
