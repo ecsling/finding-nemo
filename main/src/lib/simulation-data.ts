@@ -4,7 +4,8 @@ export interface TimelineEvent {
   time: number;
   title: string;
   description: string;
-  type: 'info' | 'warning' | 'success' | 'error';
+  type: 'info' | 'warning' | 'success' | 'error' | 'contact' | 'threat';
+  data?: any;
 }
 
 export const ASSET_CONFIG = {
