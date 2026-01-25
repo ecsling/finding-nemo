@@ -54,35 +54,10 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
     <div 
       className="fixed inset-0 z-[60] flex flex-col items-center justify-center font-mono"
       style={{
-        background: 'linear-gradient(to bottom, #000000 0%, #0a1f35 50%, #081a2e 100%)',
+        background: 'linear-gradient(to bottom, #E5E6DA 0%, #D8D6C4 50%, #D0CEBC 100%)',
         minHeight: '100vh'
       }}
     >
-      {/* Animated grid background */}
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(0, 217, 255, 0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(0, 217, 255, 0.3) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-            animation: 'gridPulse 4s ease-in-out infinite'
-          }}
-        />
-      </div>
-      
-      {/* Scanlines overlay */}
-      <div className="fixed inset-0 pointer-events-none z-[1] opacity-10">
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundImage: 'repeating-linear-gradient(0deg, rgba(0, 217, 255, 0.1) 0px, transparent 1px, transparent 2px, rgba(0, 217, 255, 0.1) 3px)',
-            animation: 'scanlines 8s linear infinite'
-          }}
-        />
-      </div>
 
       <div className="relative z-10 w-full max-w-2xl px-8 space-y-12">
         {/* Depth Descent Animation */}
@@ -90,9 +65,10 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
           <div className="relative w-64 h-64 flex items-center justify-center">
             {/* Outer pulse ring */}
             <motion.div
-              className="absolute inset-0 border-2 border-[#00d9ff] rounded-full"
+              className="absolute inset-0 border-2 rounded-full"
               style={{
-                boxShadow: '0 0 30px rgba(0, 217, 255, 0.6), inset 0 0 30px rgba(0, 217, 255, 0.2)'
+                borderColor: '#B8B6A4',
+                boxShadow: 'none'
               }}
               animate={{
                 scale: [1, 1.2, 1],
@@ -107,9 +83,10 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
             
             {/* Middle pulse ring */}
             <motion.div
-              className="absolute inset-0 border-2 border-[#00d9ff] rounded-full"
+              className="absolute inset-0 border-2 rounded-full"
               style={{
-                boxShadow: '0 0 20px rgba(0, 217, 255, 0.5)'
+                borderColor: '#B8B6A4',
+                boxShadow: 'none'
               }}
               animate={{
                 scale: [1, 1.1, 1],
@@ -125,18 +102,20 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
 
             {/* Depth indicator */}
             <div className="relative z-10 text-center">
-              <div className="text-6xl font-bold text-[#00d9ff] mb-2" style={{ 
-                textShadow: '0 0 20px rgba(0, 217, 255, 0.8), 0 0 40px rgba(0, 217, 255, 0.4)',
+              <div className="text-6xl font-bold mb-2" style={{ 
+                color: '#1D1E15',
+                textShadow: 'none',
                 fontFamily: 'var(--font-mono)'
               }}>
                 {currentDepth}m
               </div>
-              <div className="text-lg text-white/70 uppercase tracking-[0.2em] font-semibold" style={{ 
-                textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
+              <div className="text-lg uppercase tracking-[0.2em] font-semibold" style={{ 
+                color: '#1D1E15',
+                textShadow: 'none'
               }}>
                 DEPTH
               </div>
-              <div className="mt-4 text-sm text-[#00d9ff]/60 uppercase tracking-wider">
+              <div className="mt-4 text-sm uppercase tracking-wider" style={{ color: '#1D1E15' }}>
                 0m → {KELVIN_SEAMOUNTS_DEPTH}m
               </div>
             </div>
@@ -152,9 +131,10 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -30, opacity: 0 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="absolute inset-x-0 text-white text-2xl uppercase tracking-[0.15em] font-bold"
+              className="absolute inset-x-0 text-2xl uppercase tracking-[0.15em] font-bold"
               style={{ 
-                textShadow: '0 0 20px rgba(0, 217, 255, 0.6), 0 0 40px rgba(0, 217, 255, 0.3)',
+                color: '#1D1E15',
+                textShadow: 'none',
                 fontFamily: 'var(--font-mono)'
               }}
             >
@@ -166,15 +146,17 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
         {/* Progress Bar Section */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-lg text-white/80 uppercase tracking-[0.15em] font-semibold" style={{ 
-              textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
+            <span className="text-lg uppercase tracking-[0.15em] font-semibold" style={{ 
+              color: '#1D1E15',
+              textShadow: 'none'
             }}>
               DIVE SYSTEM INITIALIZING
             </span>
             <span 
-              className="text-5xl font-bold text-[#00d9ff]" 
+              className="text-5xl font-bold" 
               style={{ 
-                textShadow: '0 0 20px rgba(0, 217, 255, 0.8), 0 0 40px rgba(0, 217, 255, 0.4)',
+                color: '#1D1E15',
+                textShadow: 'none',
                 fontFamily: 'var(--font-mono)'
               }}
             >
@@ -183,32 +165,19 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
           </div>
           
           {/* Enhanced Progress Bar */}
-          <div className="relative h-4 bg-[#0a2540] border-2 border-[#4080bf] rounded-full overflow-hidden" style={{
-            boxShadow: '0 0 15px rgba(64, 128, 191, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.5)'
+          <div className="relative h-4 rounded-full overflow-hidden" style={{
+            backgroundColor: '#D8D6C4',
+            border: '1px solid #B8B6A4',
+            boxShadow: 'none'
           }}>
             <motion.div
-              className="h-full bg-gradient-to-r from-[#00d9ff] to-[#0099ff]"
+              className="h-full"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3, ease: "easeOut" }}
               style={{
-                boxShadow: '0 0 20px rgba(0, 217, 255, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.2)'
-              }}
-            />
-            {/* Pulse overlay */}
-            <motion.div
-              className="absolute inset-0 bg-[#00d9ff]"
-              animate={{
-                opacity: [0.3, 0.6, 0.3],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              style={{
-                width: `${progress}%`,
-                mixBlendMode: 'screen'
+                backgroundColor: '#9B8F7A',
+                boxShadow: 'none'
               }}
             />
           </div>
@@ -217,30 +186,19 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
         {/* Version Tag */}
         <div className="text-center pt-6">
           <div 
-            className="inline-block px-6 py-2 border-2 border-[#4080bf] text-[#00d9ff] text-sm uppercase tracking-[0.15em] font-semibold"
+            className="inline-block px-6 py-2 text-sm uppercase tracking-[0.15em] font-semibold rounded-lg"
             style={{ 
-              backgroundColor: 'rgba(10, 37, 64, 0.5)',
-              boxShadow: '0 0 15px rgba(0, 217, 255, 0.3)',
-              textShadow: '0 0 10px rgba(0, 217, 255, 0.6)'
+              backgroundColor: '#E6E3D6',
+              border: '1px solid #B8B6A4',
+              color: '#1D1E15',
+              boxShadow: 'none',
+              textShadow: 'none'
             }}
           >
             RECOVERY ENGINE v2.0.4
           </div>
         </div>
       </div>
-
-      {/* Cyberpunk animations */}
-      <style jsx global>{`
-        @keyframes gridPulse {
-          0%, 100% { opacity: 0.2; }
-          50% { opacity: 0.4; }
-        }
-        
-        @keyframes scanlines {
-          0% { transform: translateY(0); }
-          100% { transform: translateY(50px); }
-        }
-      `}</style>
     </div>
   );
 }
