@@ -54,7 +54,7 @@ export function CTASection() {
 
             {/* Button */}
             <Link 
-              href="/dashboard/Glb File Controller.html"
+              href="/dashboard"
               className="group relative inline-flex h-14 items-center justify-center gap-3 overflow-hidden rounded-full bg-primary px-12 text-base font-medium text-primary-foreground transition-all duration-300 hover:bg-primary/90 hover:scale-105 active:scale-95 hover:ring-4 hover:ring-primary/20"
             >
               <span className="relative z-10">View Demo</span>
