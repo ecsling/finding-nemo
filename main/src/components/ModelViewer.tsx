@@ -2188,116 +2188,85 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           />
         )}
         
-        {/* Diver HUD - Cyberpunk Game Card */}
+        {/* Telemetry Panel */}
         {!showOnboarding && (
           <div className="absolute top-32 left-4 z-30 pointer-events-none">
-            {/* Geometric card with glowing borders */}
-            <div className="relative">
-              {/* Outer glow effect */}
-              <div className="absolute -inset-1 bg-gradient-to-br from-[#00d9ff]/30 via-[#0099ff]/20 to-[#00d9ff]/30 blur-md animate-pulse"></div>
-              
-              {/* Geometric border frame */}
-              <div className="relative bg-black/90 backdrop-blur-xl w-[220px]">
-                {/* Clipped corner effect */}
-                <div 
-                  className="relative border-2 border-[#00d9ff] p-3 font-mono shadow-2xl"
-                  style={{
-                    clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))',
-                    boxShadow: '0 0 20px rgba(0, 217, 255, 0.4), inset 0 0 20px rgba(0, 217, 255, 0.1)'
-                  }}
-                >
-                  {/* Corner accent lines */}
-                  <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#00d9ff]" style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }}></div>
-                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#00d9ff]" style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }}></div>
-                  
-                  {/* Scan line effect */}
-                  <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
-                    <div 
-                      className="w-full h-px bg-gradient-to-r from-transparent via-[#00d9ff] to-transparent"
-                      style={{
-                        animation: 'scanline 3s linear infinite'
-                      }}
-                    ></div>
+            <div className="relative w-[280px]">
+              <div 
+                className="relative p-5 font-mono rounded-lg"
+                style={{
+                  backgroundColor: '#E6E3D6',
+                  border: '1px solid #B8B6A4',
+                  boxShadow: 'none',
+                  outline: 'none'
+                }}
+              >
+                {/* Status indicator */}
+                <div className="flex items-center justify-between mb-3 pb-3 border-b" style={{ borderColor: '#B8B6A4' }}>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#6B7A5F' }}></div>
+                    <span className="text-[12px] font-bold tracking-[0.2em] uppercase" style={{ color: '#1D1E15' }}>ACTIVE</span>
+                  </div>
+                  <span className="text-[10px] tracking-wider" style={{ color: '#1D1E15' }}>DVR-001</span>
+                </div>
+                
+                {/* Compact stats grid */}
+                <div className="space-y-2 text-[12px]">
+                  {/* Depth & Pressure */}
+                  <div className="flex justify-end items-center">
+                    <span className="tracking-wider" style={{ color: '#1D1E15' }}>DEPTH</span>
+                    <span className="font-bold tracking-wider ml-3 text-[15px]" style={{ color: '#1D1E15' }}>{depth}m</span>
+                  </div>
+                  <div className="flex justify-end items-center">
+                    <span className="tracking-wider" style={{ color: '#1D1E15' }}>PRESSURE</span>
+                    <span className="font-bold tracking-wider ml-3 text-[15px]" style={{ color: '#1D1E15' }}>{pressure} bar</span>
                   </div>
                   
-                  {/* Status indicator */}
-                  <div className="flex items-center justify-between mb-2 pb-2 border-b border-[#00d9ff]/30">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 bg-[#00ff00] animate-pulse shadow-lg shadow-[#00ff00]/50" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
-                      <span className="text-[10px] font-bold tracking-[0.2em] text-white uppercase" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>ACTIVE</span>
+                  {/* Oxygen bar - compact */}
+                  <div className="py-1.5">
+                    <div className="flex justify-end items-center mb-1">
+                      <span className="tracking-wider" style={{ color: '#1D1E15' }}>O₂</span>
+                      <span className="font-bold tracking-wider ml-3 text-[15px]" style={{ color: '#1D1E15' }}>{oxygen}%</span>
                     </div>
-                    <span className="text-[8px] text-[#00d9ff]/60 tracking-wider">DVR-001</span>
-                  </div>
-                  
-                  {/* Compact stats grid */}
-                  <div className="space-y-1.5 text-[10px]">
-                    {/* Depth & Pressure */}
-                    <div className="flex justify-end items-center">
-                      <span className="text-white/50 tracking-wider">DEPTH</span>
-                      <span className="font-bold text-[#00d9ff] tracking-wider" style={{ textShadow: '0 0 8px rgba(0, 217, 255, 0.6)' }}>{depth}m</span>
-                    </div>
-                    <div className="flex justify-end items-center">
-                      <span className="text-white/50 tracking-wider">PRESSURE</span>
-                      <span className="font-bold text-white tracking-wider">{pressure} bar</span>
-                    </div>
-                    
-                    {/* Oxygen bar - compact */}
-                    <div className="py-1">
-                      <div className="flex justify-end items-center mb-0.5">
-                        <span className="text-white/50 tracking-wider">O₂</span>
-                        <span className="font-bold text-white tracking-wider">{oxygen}%</span>
-                      </div>
-                      <div className="h-2 bg-black/60 border border-[#00d9ff]/30 overflow-hidden relative">
-                        <div 
-                          className={`h-full transition-all duration-300 ${
-                            oxygen > 50 ? 'bg-[#00ff00]' : 
-                            oxygen > 25 ? 'bg-[#ffff00]' : 
-                            'bg-[#ff0000]'
-                          }`}
-                          style={{ 
-                            width: `${oxygen}%`,
-                            boxShadow: oxygen > 50 ? '0 0 10px rgba(0, 255, 0, 0.6)' : oxygen > 25 ? '0 0 10px rgba(255, 255, 0, 0.6)' : '0 0 10px rgba(255, 0, 0, 0.6)'
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                    
-                    {/* Temperature */}
-                    <div className="flex justify-end items-center">
-                      <span className="text-white/50 tracking-wider">TEMP</span>
-                      <span className="font-bold text-white tracking-wider">{temperature}°C</span>
-                    </div>
-                    
-                    {/* Heading */}
-                    <div className="flex justify-end items-center">
-                      <span className="text-white/50 tracking-wider">HDG</span>
-                      <span className="font-bold text-white tracking-wider">{compass}°</span>
-                    </div>
-                    
-                    {/* Photos */}
-                    <div className="flex justify-end items-center pt-1 border-t border-[#00d9ff]/30">
-                      <span className="text-white/50 tracking-wider">PHOTOS</span>
-                      <span className="font-bold text-[#00d9ff] tracking-wider" style={{ textShadow: '0 0 8px rgba(0, 217, 255, 0.6)' }}>{photosCollected}/{maxPhotos}</span>
+                    <div className="h-3 rounded overflow-hidden relative" style={{ backgroundColor: '#D8D6C4', border: '1px solid #B8B6A4' }}>
+                      <div 
+                        className="h-full transition-all duration-300"
+                        style={{ 
+                          width: `${oxygen}%`,
+                          backgroundColor: oxygen > 50 ? '#8B956D' : oxygen > 25 ? '#A89B6F' : '#9B7A6F'
+                        }}
+                      ></div>
                     </div>
                   </div>
                   
-                  {/* Location footer */}
-                  <div className="mt-2 pt-2 border-t border-[#00d9ff]/30 text-[8px] text-white/40 text-center tracking-wider">
-                    KELVIN SEAMOUNTS • {KELVIN_SEAMOUNTS_LAT}°N {Math.abs(KELVIN_SEAMOUNTS_LON)}°W
+                  {/* Temperature */}
+                  <div className="flex justify-end items-center">
+                    <span className="tracking-wider" style={{ color: '#1D1E15' }}>TEMP</span>
+                    <span className="font-bold tracking-wider ml-3 text-[15px]" style={{ color: '#1D1E15' }}>{temperature}°C</span>
                   </div>
+                  
+                  {/* Heading */}
+                  <div className="flex justify-end items-center">
+                    <span className="tracking-wider" style={{ color: '#1D1E15' }}>HDG</span>
+                    <span className="font-bold tracking-wider ml-3 text-[15px]" style={{ color: '#1D1E15' }}>{compass}°</span>
+                  </div>
+                  
+                  {/* Photos */}
+                  <div className="flex justify-end items-center pt-1.5 border-t" style={{ borderColor: '#B8B6A4' }}>
+                    <span className="tracking-wider" style={{ color: '#1D1E15' }}>PHOTOS</span>
+                    <span className="font-bold tracking-wider ml-3 text-[15px]" style={{ color: '#1D1E15' }}>{photosCollected}/{maxPhotos}</span>
+                  </div>
+                </div>
+                
+                {/* Location footer */}
+                <div className="mt-3 pt-3 border-t text-[10px] text-center tracking-wider" style={{ borderColor: '#B8B6A4', color: '#1D1E15' }}>
+                  KELVIN SEAMOUNTS • {KELVIN_SEAMOUNTS_LAT}°N {Math.abs(KELVIN_SEAMOUNTS_LON)}°W
                 </div>
               </div>
             </div>
           </div>
         )}
         
-        {/* Add scanline animation keyframes */}
-        <style jsx>{`
-          @keyframes scanline {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(300%); }
-          }
-        `}</style>
         
         {/* Top Controls */}
         <div className="absolute top-0 left-0 w-full z-10 p-6 flex justify-end items-center pointer-events-none">
@@ -2305,10 +2274,19 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
             {/* Removed wireframe/solid toggle - only solid mode now */}
             <button
               onClick={resetView}
-              className="h-12 px-5 bg-[#0a2540] border-2 border-[#4080bf] text-[#00d9ff] text-sm font-bold hover:bg-[#4080bf] hover:text-white transition-all flex items-center gap-2 uppercase tracking-[0.15em] cursor-pointer rounded-lg"
+              className="h-12 px-5 text-sm font-bold transition-all flex items-center gap-2 uppercase tracking-[0.15em] cursor-pointer rounded-xl"
               style={{ 
-                boxShadow: '0 0 15px rgba(64, 128, 191, 0.3)',
-                textShadow: '0 0 5px rgba(0, 217, 255, 0.5)'
+                backgroundColor: '#E6E3D3',
+                border: '1px solid #C8C4AE',
+                color: '#1D1E15',
+                boxShadow: 'none',
+                outline: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#D8D6C4';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#E6E3D3';
               }}
             >
               <svg
