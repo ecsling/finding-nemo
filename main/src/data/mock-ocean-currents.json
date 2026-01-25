@@ -1,0 +1,213 @@
+{
+  "regions": [
+    {
+      "name": "Kelvin Seamounts (North Atlantic)",
+      "latitude": 37.5,
+      "longitude": -14.5,
+      "currents": [
+        {
+          "depth": 0,
+          "speed": 0.42,
+          "direction": 85,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        },
+        {
+          "depth": 100,
+          "speed": 0.35,
+          "direction": 82,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        },
+        {
+          "depth": 500,
+          "speed": 0.28,
+          "direction": 78,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        },
+        {
+          "depth": 1000,
+          "speed": 0.18,
+          "direction": 75,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        },
+        {
+          "depth": 2850,
+          "speed": 0.12,
+          "direction": 70,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        }
+      ],
+      "seaState": 3,
+      "visibility": 25,
+      "temperature": 4.2,
+      "salinity": 35.5,
+      "windSpeed": 8.5,
+      "windDirection": 320
+    },
+    {
+      "name": "Mediterranean Sea",
+      "latitude": 36.0,
+      "longitude": 14.0,
+      "currents": [
+        {
+          "depth": 0,
+          "speed": 0.15,
+          "direction": 90,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        },
+        {
+          "depth": 100,
+          "speed": 0.12,
+          "direction": 88,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        }
+      ],
+      "seaState": 2,
+      "visibility": 35,
+      "temperature": 14.5,
+      "salinity": 38.5,
+      "windSpeed": 5.2,
+      "windDirection": 270
+    },
+    {
+      "name": "North Sea",
+      "latitude": 55.0,
+      "longitude": 4.0,
+      "currents": [
+        {
+          "depth": 0,
+          "speed": 0.52,
+          "direction": 45,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        },
+        {
+          "depth": 50,
+          "speed": 0.38,
+          "direction": 42,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        }
+      ],
+      "seaState": 4,
+      "visibility": 15,
+      "temperature": 6.8,
+      "salinity": 34.9,
+      "windSpeed": 12.3,
+      "windDirection": 225
+    },
+    {
+      "name": "South China Sea",
+      "latitude": 12.0,
+      "longitude": 115.0,
+      "currents": [
+        {
+          "depth": 0,
+          "speed": 0.38,
+          "direction": 210,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        },
+        {
+          "depth": 100,
+          "speed": 0.25,
+          "direction": 205,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        }
+      ],
+      "seaState": 3,
+      "visibility": 22,
+      "temperature": 28.5,
+      "salinity": 33.8,
+      "windSpeed": 7.8,
+      "windDirection": 135
+    },
+    {
+      "name": "Gulf of Mexico",
+      "latitude": 25.0,
+      "longitude": -90.0,
+      "currents": [
+        {
+          "depth": 0,
+          "speed": 0.65,
+          "direction": 180,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        },
+        {
+          "depth": 100,
+          "speed": 0.48,
+          "direction": 175,
+          "timestamp": "2026-01-24T00:00:00Z",
+          "source": "mock"
+        }
+      ],
+      "seaState": 2,
+      "visibility": 30,
+      "temperature": 24.2,
+      "salinity": 36.2,
+      "windSpeed": 6.5,
+      "windDirection": 165
+    }
+  ],
+  "historicalIncidents": [
+    {
+      "id": "INC-2024-001",
+      "location": {
+        "latitude": 37.52,
+        "longitude": -14.48,
+        "altitude": -2840
+      },
+      "timestamp": "2024-03-15T14:30:00Z",
+      "containerCount": 12,
+      "recovered": true,
+      "recoveryDuration": 16,
+      "cause": "Severe weather - wave impact"
+    },
+    {
+      "id": "INC-2024-002",
+      "location": {
+        "latitude": 37.48,
+        "longitude": -14.52,
+        "altitude": -2865
+      },
+      "timestamp": "2024-07-22T09:15:00Z",
+      "containerCount": 8,
+      "recovered": true,
+      "recoveryDuration": 21,
+      "cause": "Improper stacking"
+    },
+    {
+      "id": "INC-2023-003",
+      "location": {
+        "latitude": 37.55,
+        "longitude": -14.45,
+        "altitude": -2820
+      },
+      "timestamp": "2023-11-08T18:45:00Z",
+      "containerCount": 15,
+      "recovered": false,
+      "cause": "Vessel maneuvering"
+    },
+    {
+      "id": "INC-2023-004",
+      "location": {
+        "latitude": 37.51,
+        "longitude": -14.50,
+        "altitude": -2855
+      },
+      "timestamp": "2023-05-30T12:20:00Z",
+      "containerCount": 6,
+      "recovered": true,
+      "recoveryDuration": 14,
+      "cause": "Container lashing failure"
+    }
+  ]
+}
