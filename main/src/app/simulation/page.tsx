@@ -7,7 +7,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Globe, { SAMPLE_CONTAINERS, SAMPLE_SHIPS } from '@/components/Globe';
-import type { ContainerData } from '@/components/Globe';
+import type { ContainerData, HighlightedPoint } from '@/components/Globe';
+
+// Incident location marker (Kelvin Seamounts area)
+const INCIDENT_POINT: HighlightedPoint = {
+  lat: 37.5,
+  lon: -14.5,
+  label: 'Incident Location',
+  color: '#DF6C42',
+};
 import ContainerDataPanel from '@/components/simulation/ContainerDataPanel';
 import CustomCursor from '@/components/CustomCursor';
 import { setCurrentStep, getSelectedContainer, setSelectedContainer as saveContainer } from '@/lib/mission-state';
@@ -176,6 +184,7 @@ export default function SimulationPage() {
                     onContainerClick={handleContainerClick}
                     autoRotate={!selectedContainer}
                     showCurrents
+                    highlightedPoint={INCIDENT_POINT}
                   />
                 </>
               ) : (
