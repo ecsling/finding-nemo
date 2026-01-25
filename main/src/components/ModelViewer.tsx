@@ -1263,9 +1263,9 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         const center = new THREE.Vector3();
         box.getCenter(center);
 
-        // Scale to fit (Target size ~4 units)
+        // Scale to fit (Target size ~10 units for larger cargo ship)
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 4 / (maxDim || 1);
+        const scale = 10 / (maxDim || 1);
         flatGroup.scale.set(scale, scale, scale);
 
         // Center the model at origin and position just above seabed (like it sunk and is resting)
