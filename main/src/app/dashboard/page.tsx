@@ -140,7 +140,7 @@ export default function DashboardPage() {
       <div className="flex-1 relative">
         <ModelViewer />
         
-        {/* Cargo Ship Video Window - Collapses after loading */}
+        {/* Cargo Ship Video Window - Positioned above model selector */}
         <AnimatePresence>
           {showVideo && (
             <motion.div
@@ -153,7 +153,7 @@ export default function DashboardPage() {
                 transition: { duration: 0.6, ease: "easeInOut" }
               }}
               transition={{ delay: 0.5, duration: 0.5 }}
-              className="absolute bottom-24 left-6 z-40 w-[420px] bg-black/95 backdrop-blur-md border-2 border-cyan-400/40 rounded-lg shadow-2xl overflow-hidden"
+              className="absolute bottom-[140px] left-6 z-40 w-[320px] bg-black/95 backdrop-blur-md border-2 border-cyan-400/40 rounded-lg shadow-2xl overflow-hidden"
             >
               {/* Video Header */}
               <div className="bg-gradient-to-r from-cyan-500/20 to-blue-600/20 border-b border-cyan-400/30 px-4 py-2 flex items-center justify-between">
