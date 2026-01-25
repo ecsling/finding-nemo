@@ -48,7 +48,7 @@ export default function SuccessStories() {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.3 }}
-      className="fixed bottom-24 left-6 z-40 w-80 bg-black/90 backdrop-blur-md border-2 border-green-500/40 rounded-lg shadow-2xl overflow-hidden"
+      className="fixed bottom-6 left-6 z-40 w-80 bg-black/90 backdrop-blur-md border-2 border-green-500/40 rounded-lg shadow-2xl overflow-hidden"
     >
       {/* Header */}
       <div className="bg-gradient-to-r from-green-500/20 to-emerald-600/20 border-b border-green-500/30 px-4 py-2 flex items-center justify-between">
