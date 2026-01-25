@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -2343,21 +2343,31 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         {!showOnboarding && (
         <div className="absolute left-6 bottom-6 w-80 z-10 pointer-events-none">
           <div className="pointer-events-auto">
-            <div className="bg-[#0a2540]/95 border-2 border-[#00d9ff] backdrop-blur-md p-3 flex gap-3 items-center shadow-2xl rounded-lg" style={{ boxShadow: '0 0 25px rgba(0, 217, 255, 0.4)' }}>
+            <div 
+              className="p-3 flex gap-3 items-center rounded-lg"
+              style={{
+                backgroundColor: '#E6E3D6',
+                border: '1px solid #B8B6A4',
+                boxShadow: 'none',
+                outline: 'none'
+              }}
+            >
               {/* Foreground Model Selector - Now full width */}
               <div className="flex-1 relative" ref={bottomDropdownRef}>
-                <label className="text-sm text-[#00d9ff] uppercase tracking-[0.15em] mb-2 block px-2 font-bold" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>
+                <label className="text-sm text-[#1D1E15] uppercase tracking-[0.15em] mb-2 block px-2 font-bold">
                   Load Dive Model
                 </label>
                 <button
                   onClick={() => setIsBottomDropdownOpen(!isBottomDropdownOpen)}
-                  className="w-full bg-[#0a2540] border-2 border-[#4080bf] text-white text-base font-mono px-5 py-3 rounded-lg outline-none focus:border-[#00d9ff] transition-all flex items-center justify-between hover:bg-[#0d2847] hover:border-[#00d9ff] group"
-                  style={{ 
-                    boxShadow: '0 0 15px rgba(64, 128, 191, 0.3)',
-                    textShadow: '0 0 5px rgba(255, 255, 255, 0.3)'
+                  className="w-full text-[#1D1E15] text-base font-mono px-5 py-3 rounded-lg transition-all flex items-center justify-between hover:bg-[#E5E6DA]/50 group"
+                  style={{
+                    backgroundColor: '#E6E3D6',
+                    border: '1px solid #B8B6A4',
+                    boxShadow: 'none',
+                    outline: 'none'
                   }}
                 >
-                  <span className={currentDemoModelId ? "text-white" : "text-white/60"}>
+                  <span className={currentDemoModelId ? "text-[#1D1E15]" : "text-[#1D1E15]/60"}>
                     {currentDemoModelId
                       ? DEMO_MODELS.find(m => m.id === currentDemoModelId)?.name
                       : "Select Mission Model"}
@@ -2369,7 +2379,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className={`transition-transform duration-200 ${isBottomDropdownOpen ? "rotate-180" : ""} text-[#00d9ff]`}
+                    className={`transition-transform duration-200 ${isBottomDropdownOpen ? "rotate-180" : ""} text-[#1D1E15]`}
                   >
                     <path d="M6 9l6 6 6-6"/>
                   </svg>
@@ -2377,11 +2387,14 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
                 {isBottomDropdownOpen && (
                   <div 
-                    className="mission-dropdown absolute bottom-full left-0 right-0 mb-2 bg-[#0a2540] border-2 border-[#4080bf] rounded-lg shadow-xl overflow-hidden z-50 max-h-[40vh] overflow-y-auto" 
+                    className="mission-dropdown absolute bottom-full left-0 right-0 mb-2 rounded-lg overflow-hidden z-50 max-h-[40vh] overflow-y-auto" 
                     style={{ 
-                      boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)',
+                      backgroundColor: '#E6E3D6',
+                      border: '1px solid #B8B6A4',
+                      boxShadow: 'none',
+                      outline: 'none',
                       scrollbarWidth: 'thin',
-                      scrollbarColor: 'rgba(0, 217, 255, 0.5) rgba(10, 37, 64, 0.8)'
+                      scrollbarColor: 'rgba(29, 30, 21, 0.3) rgba(230, 227, 214, 0.8)'
                     }}
                   >
                     {DEMO_MODELS.filter(m => m.id !== "kelvin-seamounts" && m.id !== "san-pedro-preserve").map((model) => (
@@ -2391,8 +2404,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                           handleDemoSelect({ target: { value: model.id } } as any);
                           setIsBottomDropdownOpen(false);
                         }}
-                        className="w-full text-left px-5 py-3.5 text-base font-mono text-white hover:bg-[#00d9ff] hover:text-black transition-all border-b border-[#4080bf]/20 last:border-0 font-semibold"
-                        style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}
+                        className="w-full text-left px-5 py-3.5 text-base font-mono text-[#1D1E15] hover:bg-[#E5E6DA] transition-all border-b border-[#d0d0c8]/30 last:border-0 font-semibold"
                       >
                         {model.name}
                       </button>
