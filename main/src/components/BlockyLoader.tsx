@@ -62,44 +62,7 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
       <div className="relative z-10 w-full max-w-md px-8 space-y-8">
         {/* Depth Descent Animation */}
         <div className="flex flex-col items-center space-y-4">
-          <div className="relative w-48 h-48 flex items-center justify-center">
-            {/* Outer pulse ring */}
-            <motion.div
-              className="absolute inset-0 border-2 rounded-full"
-              style={{
-                borderColor: '#B8B6A4',
-                boxShadow: 'none'
-              }}
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.6, 0.3, 0.6],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-            
-            {/* Middle pulse ring */}
-            <motion.div
-              className="absolute inset-0 border-2 rounded-full"
-              style={{
-                borderColor: '#B8B6A4',
-                boxShadow: 'none'
-              }}
-              animate={{
-                scale: [1, 1.1, 1],
-                opacity: [0.8, 0.5, 0.8],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.3
-              }}
-            />
-
+          <div className="relative flex items-center justify-center">
             {/* Depth indicator */}
             <div className="relative z-10 text-center">
               <div className="text-4xl font-bold mb-1" style={{ 
