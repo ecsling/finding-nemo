@@ -743,16 +743,45 @@ function ProbabilityFieldMesh({
 }
 
 function SeaFloorTerrain({ seaFloorY, radiusUnits, showDepthBands, showDepthRisk, assetMaxDepth }: { seaFloorY: number; radiusUnits: number; showDepthBands: boolean; showDepthRisk: boolean; assetMaxDepth: number }) {
-  // Simple clean seabed - no flickering
+  // Load the seabed GLB model
+  const { scene: seabedScene } = useGLTF('/assets/kelvin_seamounts_atlantico_norte.glb');
+  const seabedModel = useMemo(() => {
+    const cloned = seabedScene.clone();
+    // Make materials darker and more subtle
+    cloned.traverse((child: any) => {
+      if (child.isMesh) {
+        child.receiveShadow = true;
+        if (child.material) {
+          child.material = child.material.clone();
+          child.material.color.multiplyScalar(0.4); // Darker
+          child.material.roughness = 0.95;
+          child.material.metalness = 0.05;
+        }
+      }
+    });
+    return cloned;
+  }, [seabedScene]);
+
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, seaFloorY, 0]} receiveShadow>
-      <planeGeometry args={[radiusUnits * 3, radiusUnits * 3]} />
-      <meshStandardMaterial 
-        color="#1a3d4a" 
-        roughness={0.95} 
-        metalness={0}
+    <group>
+      {/* HUGE seabed GLB model for diorama effect */}
+      <primitive 
+        object={seabedModel} 
+        scale={800} 
+        position={[0, seaFloorY - 100, 0]} 
+        rotation={[0, Math.PI / 4, 0]}
       />
-    </mesh>
+      
+      {/* Backup flat plane to ensure coverage */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, seaFloorY - 50, 0]} receiveShadow>
+        <planeGeometry args={[radiusUnits * 4, radiusUnits * 4]} />
+        <meshStandardMaterial 
+          color="#0d1f28" 
+          roughness={0.95} 
+          metalness={0}
+        />
+      </mesh>
+    </group>
   );
 }
 
@@ -1023,7 +1052,7 @@ function WaterStreamLines({ position, currentDirection }: { position: [number, n
 // Water current particles around container
 function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { position: [number, number, number]; currentDirection: number; currentSpeed: number }) {
   const particlesRef = useRef<THREE.Points>(null);
-  const particleCount = 500; // MORE particles
+  const particleCount = 1500; // MORE particles for full wrap-around effect
   
   const particles = useMemo(() => {
     const positions = new Float32Array(particleCount * 3);
@@ -1032,19 +1061,19 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
     const dirRad = degreesToRadians(currentDirection);
     
     for (let i = 0; i < particleCount; i++) {
-      // Spread particles in flowing streams around container
+      // Wrap particles COMPLETELY around the entire container - 360° coverage
       const angle = Math.random() * Math.PI * 2;
-      const radius = 30 + Math.random() * 80;
-      const height = (Math.random() - 0.5) * 60;
+      const radius = 20 + Math.random() * 100; // Closer to container, wider spread
+      const height = (Math.random() - 0.5) * 80; // Full height coverage of container
       
       positions[i * 3] = Math.cos(angle) * radius;
       positions[i * 3 + 1] = height;
       positions[i * 3 + 2] = Math.sin(angle) * radius;
       
-      // Stronger velocity for visibility
-      velocities[i * 3] = Math.sin(dirRad) * currentSpeed * 4;
-      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.3;
-      velocities[i * 3 + 2] = Math.cos(dirRad) * currentSpeed * 4;
+      // Dynamic flow velocity - creates motion effect
+      velocities[i * 3] = Math.sin(dirRad) * currentSpeed * 5;
+      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
+      velocities[i * 3 + 2] = Math.cos(dirRad) * currentSpeed * 5;
     }
     
     return { positions, velocities };
@@ -1085,10 +1114,10 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
   return (
     <points ref={particlesRef} position={position} geometry={geometry}>
       <pointsMaterial
-        size={1.5}
+        size={5}
         color="#00E5FF"
         transparent
-        opacity={0.6}
+        opacity={0.7}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
       />
@@ -1098,3 +1127,4 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
 
 // Preload GLB models
 useGLTF.preload('/assets/shipping_container.glb');
+useGLTF.preload('/assets/kelvin_seamounts_atlantico_norte.glb');
