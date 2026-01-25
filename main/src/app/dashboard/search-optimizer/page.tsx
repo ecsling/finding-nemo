@@ -10,6 +10,7 @@ import React, { useState, useCallback, useEffect, useMemo, useRef, Suspense, laz
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { Home } from 'lucide-react';
 import { setCurrentStep } from '@/lib/mission-state';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
@@ -246,8 +247,8 @@ export default function SearchOptimizerPage() {
 
       <nav className="px-0 h-20 flex justify-between items-center border-b border-[#1D1E15]/10 relative z-10 bg-[#E5E6DA]/80 backdrop-blur-sm">
         <div className="flex items-center h-full flex-1">
-          <Link href="/" className="w-[134px] h-full flex items-center justify-center shrink-0 border-r border-[#1D1E15]/10 hover:bg-[#1D1E15]/5 transition-colors">
-            <div className="w-6 h-6 border-2 border-[#1D1E15]/40 rounded-sm" />
+          <Link href="/" className="w-[134px] h-full flex items-center justify-center shrink-0 border-r border-[#1D1E15]/10 hover:bg-[#1D1E15]/5 bg-transparent transition-colors">
+            <Home className="h-5 w-5 text-[#1D1E15]" />
           </Link>
           <div className="px-6 text-base font-bold uppercase tracking-[0.15em]">Search Optimizer</div>
           <div className="flex-1 px-8"><MissionProgress currentStep={3} /></div>

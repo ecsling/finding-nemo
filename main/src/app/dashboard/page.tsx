@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Home } from 'lucide-react';
 import { setCurrentStep } from '@/lib/mission-state';
 import MouseTrail from '@/components/MouseTrail';
 
@@ -108,11 +109,9 @@ export default function DashboardPage() {
       {/* Header with Integrated Mission Progress */}
       <nav className="border-b border-[#1D1E15]/10 px-0 h-20 flex justify-between items-center z-50 relative bg-[#E5E6DA]/80 backdrop-blur-sm">
         <div className="flex items-center h-full flex-1">
-          {/* Logo Box */}
-          <Link href="/" className="w-[134px] h-full flex items-center justify-center shrink-0 border-r border-[#1D1E15]/10 hover:bg-[#1D1E15]/5 group transition-colors">
-             <div className="w-10 h-10 flex items-center justify-center">
-               <div className="w-6 h-6 border-2 border-[#1D1E15]/40 rounded-sm group-hover:border-[#1D1E15] transition-colors"></div>
-             </div>
+          {/* Home Button */}
+          <Link href="/" className="w-[134px] h-full flex items-center justify-center shrink-0 border-r border-[#1D1E15]/10 hover:bg-[#1D1E15]/5 bg-transparent transition-colors">
+            <Home className="h-5 w-5 text-[#1D1E15]" />
           </Link>
 
           <div className="px-6 text-base font-bold uppercase tracking-[0.15em] text-[#1D1E15]">

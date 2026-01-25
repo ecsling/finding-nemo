@@ -3,19 +3,18 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft } from "lucide-react";
+import { Home } from "lucide-react";
 
 export default function EditorPage() {
   return (
     <div className="relative h-screen w-screen bg-[#E5E6DA] text-[#1D1E15] font-mono">
-      {/* Header with back button */}
+      {/* Header with home button */}
       <div className="absolute top-6 left-6 z-20">
         <Link
           href="/"
-          className="group inline-flex items-center gap-2 rounded-full bg-[#1D1E15] px-4 py-2 text-sm font-medium text-[#E5E6DA] hover:bg-[#1D1E15]/80 transition-all duration-300 hover:scale-105 active:scale-95"
+          className="group inline-flex items-center justify-center rounded-full bg-transparent p-3 text-[#1D1E15] hover:bg-[#1D1E15]/10 transition-all duration-300 hover:scale-110 active:scale-95"
         >
-          <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
-          <span>Back to Home</span>
+          <Home className="h-5 w-5" />
         </Link>
       </div>
 

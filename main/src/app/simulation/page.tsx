@@ -6,6 +6,7 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Home } from 'lucide-react';
 import Globe, { SAMPLE_CONTAINERS, SAMPLE_SHIPS } from '@/components/Globe';
 import type { ContainerData } from '@/components/Globe';
 import ContainerDataPanel from '@/components/simulation/ContainerDataPanel';
@@ -159,7 +160,7 @@ export default function SimulationPage() {
         <div className="flex items-center h-full flex-1">
           <Link
             href="/"
-            className="w-[134px] h-full flex items-center justify-center shrink-0 transition-colors"
+            className="w-[134px] h-full flex items-center justify-center shrink-0 transition-colors bg-transparent"
             style={{
               borderRight: '1px solid rgba(29, 30, 21, 0.08)',
             }}
@@ -170,14 +171,7 @@ export default function SimulationPage() {
               e.currentTarget.style.backgroundColor = 'transparent';
             }}
           >
-            <div className="w-10 h-10 flex items-center justify-center">
-              <div
-                className="w-6 h-6 rounded-sm"
-                style={{
-                  border: '2px solid rgba(29, 30, 21, 0.2)',
-                }}
-              ></div>
-            </div>
+            <Home className="h-5 w-5" style={{ color: '#1D1E15' }} />
           </Link>
 
           <div

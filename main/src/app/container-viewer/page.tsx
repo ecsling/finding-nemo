@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { Home } from "lucide-react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -149,14 +149,13 @@ export default function ContainerViewerPage() {
 
   return (
     <div className="relative h-screen w-screen bg-background text-foreground flex">
-      {/* Header with back button */}
+      {/* Header with home button */}
       <div className="absolute top-6 left-6 z-20">
         <Link
-          href="/world-view"
-          className="group inline-flex items-center gap-2 rounded-full bg-card/80 backdrop-blur-sm px-4 py-2 text-sm font-medium text-foreground border border-border hover:bg-card transition-all duration-300 hover:scale-105 active:scale-95"
+          href="/"
+          className="group inline-flex items-center justify-center rounded-full bg-transparent p-3 text-foreground hover:bg-foreground/10 transition-all duration-300 hover:scale-110 active:scale-95"
         >
-          <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
-          <span>Back to World View</span>
+          <Home className="h-5 w-5" />
         </Link>
       </div>
 

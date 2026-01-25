@@ -50,14 +50,6 @@ export default function MissionNavigation({
         isStep1 ? 'right-6 left-auto' : 'left-1/2 -translate-x-1/2 right-auto'
       }`}
     >
-      {/* Home Button */}
-      <Link
-        href="/"
-        className="p-3 bg-[#E5E6DA] backdrop-blur-md border border-[#1D1E15]/20 text-[#1D1E15]/60 hover:text-[#1D1E15] hover:border-[#1D1E15]/40 transition-all rounded-lg"
-      >
-        <Home size={20} />
-      </Link>
-
       {/* Navigation Container */}
       <motion.div
         initial={{ y: 100, opacity: 0 }}
