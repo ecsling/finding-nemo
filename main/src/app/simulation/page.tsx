@@ -38,9 +38,8 @@ function ContainerDetection() {
 
   // Simulate detection with mock bounding boxes
   const mockDetect = () => [
-    { x: 60, y: 40, width: 120, height: 60, label: 'Container' },
-    { x: 220, y: 100, width: 100, height: 50, label: 'Container' },
-  ];
+  { x: 40, y: 50, width: 250, height: 250, label: 'Container' },
+];
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
