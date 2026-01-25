@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { CTASection } from '@/components/ui/hero-dithering-card';
 import MouseTrail from '@/components/MouseTrail';
 
@@ -8,6 +9,30 @@ export default function Home() {
   return (
     <div className="relative h-screen w-screen bg-[#E5E6DA] text-[#1D1E15] font-mono flex flex-col overflow-hidden">
       <MouseTrail />
+      
+      {/* Pencil button in top right */}
+      <Link
+        href="/editor"
+        className="absolute top-6 right-6 z-50 group"
+      >
+        <button className="p-2 rounded-full bg-transparent text-[#1D1E15] hover:bg-[#1D1E15]/10 transition-all duration-300 hover:scale-110 active:scale-95">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+            <path d="m15 5 4 4" />
+          </svg>
+        </button>
+      </Link>
+      
       <CTASection />
       
       {/* Company Logos Footer */}
