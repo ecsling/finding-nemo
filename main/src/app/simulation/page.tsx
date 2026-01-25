@@ -7,15 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Globe, { SAMPLE_CONTAINERS, SAMPLE_SHIPS } from '@/components/Globe';
-import type { ContainerData, HighlightedPoint } from '@/components/Globe';
-
-// Incident location marker (Kelvin Seamounts area)
-const INCIDENT_POINT: HighlightedPoint = {
-  lat: 37.5,
-  lon: -14.5,
-  label: 'Incident Location',
-  color: '#DF6C42',
-};
+import type { ContainerData } from '@/components/Globe';
 import ContainerDataPanel from '@/components/simulation/ContainerDataPanel';
 import CustomCursor from '@/components/CustomCursor';
 import { setCurrentStep, getSelectedContainer, setSelectedContainer as saveContainer } from '@/lib/mission-state';
@@ -29,6 +21,86 @@ const MissionProgress = dynamic(() => import('@/components/mission/MissionProgre
 const MissionNavigation = dynamic(() => import('@/components/mission/MissionNavigation'), { ssr: false });
 
 type ViewMode = 'globe' | 'underwater';
+
+// --- ContainerDetection component ---
+interface BoundingBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  label: string;
+}
+
+function ContainerDetection() {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [boxes, setBoxes] = useState<BoundingBox[]>([]);
+  const [message, setMessage] = useState<string>('');
+
+  // Simulate detection with mock bounding boxes
+  const mockDetect = () => [
+    { x: 60, y: 40, width: 120, height: 60, label: 'Container' },
+    { x: 220, y: 100, width: 100, height: 50, label: 'Container' },
+  ];
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImageUrl(url);
+      setBoxes(mockDetect());
+      setMessage('Successful! This item is a missing item, rescue team has been notified.');
+    }
+  };
+
+  return (
+    <div>
+      <label className="px-4 py-2 text-xs uppercase font-bold border border-[#00d9ff] text-[#00d9ff] bg-transparent hover:bg-[#00d9ff]/10 transition-all cursor-pointer">
+        Upload Image
+        <input type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+      </label>
+      {message && (
+        <div className="mt-4 text-green-500 font-bold">{message}</div>
+      )}
+      {imageUrl && (
+        <div style={{ position: 'relative', display: 'inline-block', marginTop: 20 }}>
+          <img src={imageUrl} alt="Detected" style={{ maxWidth: 400, border: '1px solid #ccc' }} />
+          {boxes.map((box, idx) => (
+            <div
+              key={idx}
+              style={{
+                position: 'absolute',
+                left: box.x,
+                top: box.y,
+                width: box.width,
+                height: box.height,
+                border: '2px solid #00d9ff',
+                boxSizing: 'border-box',
+                pointerEvents: 'none',
+              }}
+            >
+              <span
+                style={{
+                  background: '#00d9ff',
+                  color: '#fff',
+                  fontSize: 12,
+                  fontWeight: 'bold',
+                  position: 'absolute',
+                  top: -20,
+                  left: 0,
+                  padding: '2px 6px',
+                  borderRadius: 4,
+                }}
+              >
+                {box.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+// --- End ContainerDetection component ---
 
 export default function SimulationPage() {
   const searchParams = useSearchParams();
@@ -72,24 +144,27 @@ export default function SimulationPage() {
   };
 
   return (
-    <div 
-      className="min-h-screen text-white font-mono relative overflow-hidden"
-      style={viewMode === 'globe' ? { background: '#E5E6DA' } : { background: '#000000' }}
-    >
+    <div className="min-h-screen bg-black text-white font-mono relative overflow-hidden">
       {/* Custom Cursor */}
       <CustomCursor mode={cursorMode} />
 
       {/* Navigation Header with Integrated Mission Progress */}
       <nav
+<<<<<<< HEAD
         className="fixed top-0 left-0 right-0 z-50 px-0 h-20 flex justify-between items-center backdrop-blur-sm"
         style={{
           backgroundColor: 'rgba(220, 218, 200, 0.95)',
           borderBottom: '1px solid rgba(29, 30, 21, 0.08)',
         }}
+=======
+        className="fixed top-0 left-0 right-0 z-50 px-0 h-20 flex justify-between items-center border-b border-[#00d9ff]/30 backdrop-blur-md"
+        style={{ backgroundColor: 'rgba(5, 15, 26, 0.9)' }}
+>>>>>>> e57607284e839193794f283805a4cac07e27820e
       >
         <div className="flex items-center h-full flex-1">
           <Link
             href="/"
+<<<<<<< HEAD
             className="w-[134px] h-full flex items-center justify-center shrink-0 transition-colors"
             style={{
               borderRight: '1px solid rgba(29, 30, 21, 0.08)',
@@ -117,6 +192,16 @@ export default function SimulationPage() {
               color: '#1D1E15',
             }}
           >
+=======
+            className="w-[134px] h-full flex items-center justify-center shrink-0 border-r border-[#1e3a5f] hover:bg-[#0d2847] transition-colors"
+          >
+            <div className="w-10 h-10 flex items-center justify-center">
+              <div className="w-6 h-6 border border-[#1e3a5f] rounded-sm"></div>
+            </div>
+          </Link>
+
+          <div className="px-6 text-base font-bold uppercase tracking-[0.15em] text-white" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
+>>>>>>> e57607284e839193794f283805a4cac07e27820e
             {viewMode === 'globe' ? 'Global Tracker' : 'Recovery Mission'}
           </div>
 
@@ -129,6 +214,7 @@ export default function SimulationPage() {
         <div className="flex items-center gap-6 px-6">
           {/* View Mode Toggle */}
           {viewMode === 'underwater' && (
+<<<<<<< HEAD
             <button
               onClick={handleBackToGlobe}
               className="px-4 py-2 text-xs uppercase font-bold transition-all"
@@ -154,6 +240,20 @@ export default function SimulationPage() {
               color: 'rgba(29, 30, 21, 0.7)',
             }}
           >
+=======
+            <>
+              <button
+                onClick={handleBackToGlobe}
+                className="px-4 py-2 text-xs uppercase font-bold border border-[#00d9ff] text-[#00d9ff] hover:bg-[#00d9ff]/10 transition-all"
+              >
+                ← Back to Globe
+              </button>
+            </>
+          )}
+
+          {/* Stats */}
+          <div className="flex items-center gap-4 text-[10px] uppercase text-white/60">
+>>>>>>> e57607284e839193794f283805a4cac07e27820e
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#DF6C42] rounded-full animate-pulse" />
               <span>{SAMPLE_CONTAINERS.filter((c) => c.status === 'floating').length} Drifting</span>
@@ -164,6 +264,7 @@ export default function SimulationPage() {
             </div>
           </div>
 
+<<<<<<< HEAD
           <div
             className="text-[10px] uppercase"
             style={{
@@ -178,6 +279,10 @@ export default function SimulationPage() {
             >
               Active
             </span>
+=======
+          <div className="text-[10px] uppercase text-white/40">
+            System Status: <span className="text-[#00d9ff]">Active</span>
+>>>>>>> e57607284e839193794f283805a4cac07e27820e
           </div>
         </div>
       </nav>
@@ -194,19 +299,7 @@ export default function SimulationPage() {
         )}
 
         {/* 3D Canvas */}
-        <div 
-          className="absolute inset-0"
-          style={
-            viewMode === 'globe'
-              ? {
-                  background: 'linear-gradient(to bottom, #E5E6DA 0%, #D8D6C4 50%, #D0CEBC 100%)',
-                  backgroundImage: 'radial-gradient(ellipse at center 45%, rgba(126, 200, 227, 0.12) 0%, rgba(126, 200, 227, 0.06) 30%, rgba(126, 200, 227, 0.02) 50%, transparent 70%)',
-                }
-              : {
-                  background: 'linear-gradient(to bottom, #000000, #0a1f35)',
-                }
-          }
-        >
+        <div className="absolute inset-0 bg-gradient-to-b from-black to-[#e0e7ef]">
           <Suspense
             fallback={
               <div className="flex items-center justify-center h-full">
@@ -248,7 +341,6 @@ export default function SimulationPage() {
                     onContainerClick={handleContainerClick}
                     autoRotate={!selectedContainer}
                     showCurrents
-                    highlightedPoint={INCIDENT_POINT}
                   />
                 </>
               ) : (
@@ -279,41 +371,39 @@ export default function SimulationPage() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="fixed right-6 top-24 backdrop-blur-md p-4 z-40"
-            style={{
-              backgroundColor: '#B8B6A4',
-              border: '1px solid rgba(29, 30, 21, 0.15)',
-            }}
+            className="fixed right-6 top-24 bg-black/90 backdrop-blur-md border border-[#00d9ff]/30 p-4 z-40"
+            style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.2)' }}
           >
-            <div className="text-[10px] text-[#1D1E15]/70 uppercase tracking-widest font-mono mb-4">
+            <div className="text-[10px] text-white/60 uppercase tracking-widest font-mono mb-4">
               Map Legend
             </div>
             <div className="space-y-3 text-xs">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-[#DF6C42] rounded-full" />
-                <span className="text-[#1D1E15]/90">Floating Container</span>
+                <span className="text-white/80">Floating Container</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-red-500 rounded-full" />
-                <span className="text-[#1D1E15]/90">Sunken Container</span>
+                <span className="text-white/80">Sunken Container</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-1 bg-[#00d9ff]" />
-                <span className="text-[#1D1E15]/90">Ship Route</span>
+                <span className="text-white/80">Ship Route</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-1 bg-[#9B59B6]" />
-                <span className="text-[#1D1E15]/90">Drift Trail</span>
+                <span className="text-white/80">Drift Trail</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-1 bg-[#00ff88]" />
-                <span className="text-[#1D1E15]/90">Ocean Current</span>
+                <span className="text-white/80">Ocean Current</span>
               </div>
             </div>
           </motion.div>
         )}
 
         {/* Controls Help */}
+<<<<<<< HEAD
         <div
           className="fixed bottom-6 right-6 z-40 backdrop-blur-sm p-3 text-[9px] font-mono"
           style={{
@@ -333,10 +423,18 @@ export default function SimulationPage() {
           >
             Click container for details
           </div>
+=======
+        <div className="fixed bottom-6 right-6 z-40 bg-black/80 backdrop-blur-sm border border-[#00d9ff]/20 p-3 text-[9px] text-white/60 font-mono">
+          <div>Left Click + Drag: Rotate</div>
+          <div>Right Click + Drag: Pan</div>
+          <div>Scroll: Zoom</div>
+          <div className="mt-2 text-[#00d9ff]">Click container for details</div>
+>>>>>>> e57607284e839193794f283805a4cac07e27820e
         </div>
 
-        {/* Underwater Mode Data */}
+        {/* Underwater Mode Data & Detection */}
         {viewMode === 'underwater' && (
+<<<<<<< HEAD
           <AnimatePresence>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -366,10 +464,33 @@ export default function SimulationPage() {
                     </div>
                     <div className="text-sm text-[#1D1E15] font-bold">
                       {selectedContainer?.serialNumber || 'MAEU-123456-7'}
+=======
+          <>
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="fixed bottom-6 left-6 bg-black/90 backdrop-blur-md border border-[#00d9ff]/30 p-6 z-40 max-w-md"
+                style={{ boxShadow: '0 0 30px rgba(0, 217, 255, 0.3)' }}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#00d9ff]/20 border border-[#00d9ff] flex items-center justify-center text-[#00d9ff] font-bold">
+                      3D
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-white/60 uppercase tracking-wider">
+                        Underwater View
+                      </div>
+                      <div className="text-sm text-white font-bold">
+                        {selectedContainer?.serialNumber || 'MAEU-123456-7'}
+                      </div>
+>>>>>>> e57607284e839193794f283805a4cac07e27820e
                     </div>
                   </div>
-                </div>
 
+<<<<<<< HEAD
                 <div className="grid grid-cols-3 gap-3 text-xs">
                   <div
                     className="p-2"
@@ -405,10 +526,34 @@ export default function SimulationPage() {
 
                 <div className="text-[9px] text-[#1D1E15]/70 font-mono">
                   Location: Kelvin Seamounts, North Atlantic
+=======
+                  <div className="grid grid-cols-3 gap-3 text-xs">
+                    <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
+                      <div className="text-[9px] text-white/40">DEPTH</div>
+                      <div className="text-sm text-white font-mono">2,850m</div>
+                    </div>
+                    <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
+                      <div className="text-[9px] text-white/40">TEMP</div>
+                      <div className="text-sm text-white font-mono">4°C</div>
+                    </div>
+                    <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
+                      <div className="text-[9px] text-white/40">PRESSURE</div>
+                      <div className="text-sm text-white font-mono">285 bar</div>
+                    </div>
+                  </div>
+
+                  <div className="text-[9px] text-white/60 font-mono">
+                    Location: Kelvin Seamounts, North Atlantic
+                  </div>
+>>>>>>> e57607284e839193794f283805a4cac07e27820e
                 </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+              </motion.div>
+            </AnimatePresence>
+            {/* Detection component at top right */}
+            <div className="fixed top-24 right-8 z-50">
+              <ContainerDetection />
+            </div>
+          </>
         )}
       </div>
 
@@ -429,5 +574,6 @@ export default function SimulationPage() {
         />
       )}
     </div>
+
   );
-}
+} 
