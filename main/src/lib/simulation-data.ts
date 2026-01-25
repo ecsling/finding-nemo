@@ -58,16 +58,31 @@ export const TRADE_ROUTES = [
     name: 'Trans-Pacific',
     trafficDensity: 'High',
     averageSpeed: 20,
+    points: [
+      { lat: 35.0, lng: -120.0 },
+      { lat: 30.0, lng: -150.0 },
+      { lat: 25.0, lng: 180.0 },
+    ],
   },
   {
     name: 'Trans-Atlantic',
     trafficDensity: 'High',
     averageSpeed: 22,
+    points: [
+      { lat: 40.0, lng: -70.0 },
+      { lat: 45.0, lng: -40.0 },
+      { lat: 50.0, lng: -10.0 },
+    ],
   },
   {
     name: 'Suez Canal Route',
     trafficDensity: 'Very High',
     averageSpeed: 18,
+    points: [
+      { lat: 30.0, lng: 32.0 },
+      { lat: 20.0, lng: 40.0 },
+      { lat: 10.0, lng: 50.0 },
+    ],
   },
 ];
 
