@@ -149,21 +149,15 @@ export default function SimulationPage() {
 
       {/* Navigation Header with Integrated Mission Progress */}
       <nav
-<<<<<<< HEAD
         className="fixed top-0 left-0 right-0 z-50 px-0 h-20 flex justify-between items-center backdrop-blur-sm"
         style={{
           backgroundColor: 'rgba(220, 218, 200, 0.95)',
           borderBottom: '1px solid rgba(29, 30, 21, 0.08)',
         }}
-=======
-        className="fixed top-0 left-0 right-0 z-50 px-0 h-20 flex justify-between items-center border-b border-[#00d9ff]/30 backdrop-blur-md"
-        style={{ backgroundColor: 'rgba(5, 15, 26, 0.9)' }}
->>>>>>> e57607284e839193794f283805a4cac07e27820e
       >
         <div className="flex items-center h-full flex-1">
           <Link
             href="/"
-<<<<<<< HEAD
             className="w-[134px] h-full flex items-center justify-center shrink-0 transition-colors"
             style={{
               borderRight: '1px solid rgba(29, 30, 21, 0.08)',
@@ -191,16 +185,6 @@ export default function SimulationPage() {
               color: '#1D1E15',
             }}
           >
-=======
-            className="w-[134px] h-full flex items-center justify-center shrink-0 border-r border-[#1e3a5f] hover:bg-[#0d2847] transition-colors"
-          >
-            <div className="w-10 h-10 flex items-center justify-center">
-              <div className="w-6 h-6 border border-[#1e3a5f] rounded-sm"></div>
-            </div>
-          </Link>
-
-          <div className="px-6 text-base font-bold uppercase tracking-[0.15em] text-white" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
->>>>>>> e57607284e839193794f283805a4cac07e27820e
             {viewMode === 'globe' ? 'Global Tracker' : 'Recovery Mission'}
           </div>
 
@@ -213,7 +197,6 @@ export default function SimulationPage() {
         <div className="flex items-center gap-6 px-6">
           {/* View Mode Toggle */}
           {viewMode === 'underwater' && (
-<<<<<<< HEAD
             <button
               onClick={handleBackToGlobe}
               className="px-4 py-2 text-xs uppercase font-bold transition-all"
@@ -239,20 +222,6 @@ export default function SimulationPage() {
               color: 'rgba(29, 30, 21, 0.7)',
             }}
           >
-=======
-            <>
-              <button
-                onClick={handleBackToGlobe}
-                className="px-4 py-2 text-xs uppercase font-bold border border-[#00d9ff] text-[#00d9ff] hover:bg-[#00d9ff]/10 transition-all"
-              >
-                ← Back to Globe
-              </button>
-            </>
-          )}
-
-          {/* Stats */}
-          <div className="flex items-center gap-4 text-[10px] uppercase text-white/60">
->>>>>>> e57607284e839193794f283805a4cac07e27820e
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#DF6C42] rounded-full animate-pulse" />
               <span>{SAMPLE_CONTAINERS.filter((c) => c.status === 'floating').length} Drifting</span>
@@ -263,7 +232,6 @@ export default function SimulationPage() {
             </div>
           </div>
 
-<<<<<<< HEAD
           <div
             className="text-[10px] uppercase"
             style={{
@@ -278,10 +246,6 @@ export default function SimulationPage() {
             >
               Active
             </span>
-=======
-          <div className="text-[10px] uppercase text-white/40">
-            System Status: <span className="text-[#00d9ff]">Active</span>
->>>>>>> e57607284e839193794f283805a4cac07e27820e
           </div>
         </div>
       </nav>
@@ -402,7 +366,6 @@ export default function SimulationPage() {
         )}
 
         {/* Controls Help */}
-<<<<<<< HEAD
         <div
           className="fixed bottom-6 right-6 z-40 backdrop-blur-sm p-3 text-[9px] font-mono"
           style={{
@@ -422,18 +385,10 @@ export default function SimulationPage() {
           >
             Click container for details
           </div>
-=======
-        <div className="fixed bottom-6 right-6 z-40 bg-black/80 backdrop-blur-sm border border-[#00d9ff]/20 p-3 text-[9px] text-white/60 font-mono">
-          <div>Left Click + Drag: Rotate</div>
-          <div>Right Click + Drag: Pan</div>
-          <div>Scroll: Zoom</div>
-          <div className="mt-2 text-[#00d9ff]">Click container for details</div>
->>>>>>> e57607284e839193794f283805a4cac07e27820e
         </div>
 
         {/* Underwater Mode Data & Detection */}
         {viewMode === 'underwater' && (
-<<<<<<< HEAD
           <AnimatePresence>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -463,33 +418,9 @@ export default function SimulationPage() {
                     </div>
                     <div className="text-sm text-[#1D1E15] font-bold">
                       {selectedContainer?.serialNumber || 'MAEU-123456-7'}
-=======
-          <>
-            <AnimatePresence>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                className="fixed bottom-6 left-6 bg-black/90 backdrop-blur-md border border-[#00d9ff]/30 p-6 z-40 max-w-md"
-                style={{ boxShadow: '0 0 30px rgba(0, 217, 255, 0.3)' }}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#00d9ff]/20 border border-[#00d9ff] flex items-center justify-center text-[#00d9ff] font-bold">
-                      3D
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-white/60 uppercase tracking-wider">
-                        Underwater View
-                      </div>
-                      <div className="text-sm text-white font-bold">
-                        {selectedContainer?.serialNumber || 'MAEU-123456-7'}
-                      </div>
->>>>>>> e57607284e839193794f283805a4cac07e27820e
                     </div>
                   </div>
 
-<<<<<<< HEAD
                 <div className="grid grid-cols-3 gap-3 text-xs">
                   <div
                     className="p-2"
@@ -525,26 +456,6 @@ export default function SimulationPage() {
 
                 <div className="text-[9px] text-[#1D1E15]/70 font-mono">
                   Location: Kelvin Seamounts, North Atlantic
-=======
-                  <div className="grid grid-cols-3 gap-3 text-xs">
-                    <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                      <div className="text-[9px] text-white/40">DEPTH</div>
-                      <div className="text-sm text-white font-mono">2,850m</div>
-                    </div>
-                    <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                      <div className="text-[9px] text-white/40">TEMP</div>
-                      <div className="text-sm text-white font-mono">4°C</div>
-                    </div>
-                    <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                      <div className="text-[9px] text-white/40">PRESSURE</div>
-                      <div className="text-sm text-white font-mono">285 bar</div>
-                    </div>
-                  </div>
-
-                  <div className="text-[9px] text-white/60 font-mono">
-                    Location: Kelvin Seamounts, North Atlantic
-                  </div>
->>>>>>> e57607284e839193794f283805a4cac07e27820e
                 </div>
               </motion.div>
             </AnimatePresence>
