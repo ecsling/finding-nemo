@@ -38,7 +38,7 @@ function ContainerDetection() {
 
   // Simulate detection with mock bounding boxes
   const mockDetect = () => [
-  { x: 100, y: 50, width: 250, height: 250, label: 'Container' },
+  { x: 0, y: 0, width: 190, height: 180, label: 'Container' },
 ];
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
