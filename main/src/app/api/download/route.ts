@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const apiKey = process.env.SKETCHFAB_API_KEY || '589b...'; 
+  const apiKey = process.env.SKETCHFAB_API_KEY;
 
   if (!apiKey) {
     return NextResponse.json(
@@ -31,10 +31,10 @@ export async function GET(request: NextRequest) {
       `https://api.sketchfab.com/v3/models/${uid}/files`,
     ];
 
-    console.log('🔍 Trying download endpoints for UID:', uid);
+    console.log('Trying download endpoints for UID:', uid);
 
     for (const endpoint of endpoints) {
-      console.log('📡 Trying:', endpoint);
+      console.log('Trying:', endpoint);
       
       const response = await fetch(endpoint, {
         headers: {
@@ -43,11 +43,11 @@ export async function GET(request: NextRequest) {
         },
       });
 
-      console.log('📊 Response status:', response.status);
+      console.log('Response status:', response.status);
 
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Success for', endpoint, ':', JSON.stringify(data, null, 2));
+        console.log('Success for', endpoint, ':', JSON.stringify(data, null, 2));
         return NextResponse.json({
           success: true,
           endpoint: endpoint,
@@ -55,12 +55,12 @@ export async function GET(request: NextRequest) {
         });
       } else {
         const errorText = await response.text();
-        console.log('❌ Failed for', endpoint, ':', errorText);
+        console.log('Failed for', endpoint, ':', errorText);
       }
     }
 
     // If all endpoints fail, try the model details again to see if we missed something
-    console.log('🔍 Re-checking model details for download URLs...');
+    console.log('Re-checking model details for download URLs...');
     const modelResponse = await fetch(`https://api.sketchfab.com/v3/models/${uid}`, {
       headers: {
         'Authorization': `Token ${apiKey}`,
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
         }
       });
 
-      console.log('🔗 Found potential URLs:', allUrls);
+      console.log('Found potential URLs:', allUrls);
 
       return NextResponse.json({
         success: false,
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('❌ Download API error:', error);
+    console.error('Download API error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch download URLs', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

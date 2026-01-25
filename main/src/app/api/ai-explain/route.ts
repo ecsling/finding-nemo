@@ -5,6 +5,19 @@ export async function POST(request: NextRequest) {
     const { meshAnalysis, modelType, meshImage, searchQuery } =
       await request.json();
 
+    if (
+      !meshAnalysis ||
+      typeof meshAnalysis.name !== "string" ||
+      !meshAnalysis.position ||
+      !meshAnalysis.size ||
+      !meshAnalysis.centerPoint
+    ) {
+      return NextResponse.json(
+        { error: "Invalid or missing mesh analysis data" },
+        { status: 400 }
+      );
+    }
+
     console.log("AI Explain Request (OpenRouter / Gemini):", {
       hasMeshAnalysis: !!meshAnalysis,
       meshName: meshAnalysis?.name,
@@ -280,11 +293,18 @@ Provide your analysis in this JSON format:
       );
     }
 
+    const rawConfidence = Number(parsedAnalysis.confidence);
+    let confidence = Number.isFinite(rawConfidence) ? rawConfidence : 0;
+    if (confidence > 0 && confidence <= 1) {
+      confidence *= 100;
+    }
+    confidence = Math.max(0, Math.min(100, confidence));
+
     return NextResponse.json({
       name: parsedAnalysis.name || "Unknown Part",
       description: parsedAnalysis.description || "No description available",
       category: parsedAnalysis.category || "unknown",
-      confidence: parsedAnalysis.confidence || 0.5,
+      confidence,
       reasoning: parsedAnalysis.reasoning || "AI analysis completed",
       annotatedImage: annotatedImageBase64,
     });

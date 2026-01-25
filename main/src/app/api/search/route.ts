@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const SKETCHFAB_API_URL = 'https://api.sketchfab.com/v3/search';
-const SKETCHFAB_API_KEY = process.env.SKETCHFAB_API_KEY;
 
 interface SketchfabModel {
   uid: string;
@@ -50,15 +49,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Query parameter is required' }, { status: 400 });
   }
 
-  // Use locally scoped key if environment variable fails
-  const API_KEY = process.env.SKETCHFAB_API_KEY || '589b...'; // Fallback or debug key
-
-  if (!API_KEY) {
+  const apiKey = process.env.SKETCHFAB_API_KEY;
+  if (!apiKey) {
     console.error('SKETCHFAB_API_KEY is missing in environment variables');
     return NextResponse.json({ error: 'Sketchfab API key is not configured' }, { status: 500 });
   }
-
-  console.log('API Key configured:', API_KEY.substring(0, 4) + '...');
 
   try {
     const searchUrl = new URL(SKETCHFAB_API_URL);
@@ -77,7 +72,7 @@ export async function GET(request: NextRequest) {
 
     const response = await fetch(searchUrl.toString(), {
       headers: {
-        'Authorization': `Token ${API_KEY}`,
+        'Authorization': `Token ${apiKey}`,
         'Content-Type': 'application/json',
       },
     });

@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import type { CostBreakdown, SearchMetrics } from '@/models/SearchOptimization';
+import type { CostBreakdown } from '@/models/SearchOptimization';
 import { SEARCH_CONSTANTS } from '@/models/SearchOptimization';
 
 interface AnalyticsRequest {
@@ -69,10 +69,10 @@ function calculateEnvironmentalImpact(fuelLiters: number): {
   carbonFootprint: number;
   equivalentTrees: number;
 } {
-  // Diesel emissions: ~2.68 kg CO₂ per liter
+  // Diesel emissions: ~2.68 kg CO2 per liter
   const carbonFootprint = fuelLiters * 2.68;
 
-  // Average tree absorbs ~21 kg CO₂ per year
+  // Average tree absorbs ~21 kg CO2 per year
   const equivalentTrees = Math.ceil(carbonFootprint / 21);
 
   return {
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
 
     // Calculate operational metrics
     const crewSize = Math.ceil(body.searchDurationDays * 1.5); // 1.5 crew per day
-    const diveHours = body.searchAreaKm2 * 4; // 4 hours per km²
+    const diveHours = body.searchAreaKm2 * 4; // 4 hours per km^2
     const surfaceHours = body.searchDurationDays * 24 - diveHours;
 
     const response = {
