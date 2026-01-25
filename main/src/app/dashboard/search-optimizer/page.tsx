@@ -103,12 +103,8 @@ export default function SearchOptimizerPage() {
   const [showDepthBands, setShowDepthBands] = useState(true);
   const [showDepthRisk, setShowDepthRisk] = useState(true);
   const [showProbabilityField, setShowProbabilityField] = useState(true);
-  const [driftHoursView, setDriftHoursView] = useState(48);
-  const [driftPlaying, setDriftPlaying] = useState(false);
-  const [assetProfile, setAssetProfile] = useState<'shallow' | 'mid' | 'deep'>('mid');
-  const [sweptCells, setSweptCells] = useState<Record<string, boolean>>({});
-  const [showSceneDetails, setShowSceneDetails] = useState(false);
-  const [activeTab, setActiveTab] = useState<'coverage' | 'drift' | 'route'>('coverage');
+  const [driftHoursView] = useState(48);
+  const [assetProfile] = useState<'shallow' | 'mid' | 'deep'>('mid');
 
   // Simulation state
   const [simulationPhase, setSimulationPhase] = useState<SimulationPhase>('idle');
@@ -119,22 +115,6 @@ export default function SearchOptimizerPage() {
   useEffect(() => {
     setCurrentStep(3);
   }, []);
-
-  useEffect(() => {
-    if (incidentSnapshot?.estimatedTimeInWater) {
-      setDriftHoursView(Math.min(incidentSnapshot.estimatedTimeInWater, DRIFT_MAX_HOURS));
-    }
-  }, [incidentSnapshot]);
-
-  useEffect(() => {
-    if (!driftPlaying) return;
-
-    const interval = setInterval(() => {
-      setDriftHoursView((prev) => (prev >= DRIFT_MAX_HOURS ? 0 : prev + 1));
-    }, 250);
-
-    return () => clearInterval(interval);
-  }, [driftPlaying]);
 
   // Start simulation when data is ready
   const startSimulation = useCallback(() => {
@@ -148,8 +128,6 @@ export default function SearchOptimizerPage() {
     setLoading(true);
     setError(null);
     setIncidentSnapshot(incident);
-    setSweptCells({});
-    setDriftPlaying(false);
     setSimulationPhase('idle');
 
     try {
@@ -185,9 +163,6 @@ export default function SearchOptimizerPage() {
     }
   }, [startSimulation]);
 
-  const handleToggleCell = useCallback((cellId: string) => {
-    setSweptCells((prev) => ({ ...prev, [cellId]: !prev[cellId] }));
-  }, []);
 
   const resetSimulation = useCallback(() => {
     setSimulationPhase('idle');
@@ -216,9 +191,6 @@ export default function SearchOptimizerPage() {
     return { cellSize, cells, total: GRID_SIZE * GRID_SIZE };
   }, [sceneRadiusUnits]);
 
-  const sweptCount = Object.values(sweptCells).filter(Boolean).length;
-  const coveragePercent = gridConfig.total > 0 ? (sweptCount / gridConfig.total) * 100 : 0;
-  const etaHours = Math.max(gridConfig.total - sweptCount, 0) * CELL_SWEEP_HOURS;
   const assetMaxDepth = assetProfile === 'shallow' ? 1200 : assetProfile === 'mid' ? 2500 : 4500;
 
   const routeDistanceKm = useMemo(() => {
@@ -268,35 +240,6 @@ export default function SearchOptimizerPage() {
           <div className="p-6 space-y-6">
             <IncidentInputForm onSubmit={handleIncidentSubmit} loading={loading} />
 
-            {showVisualization && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                <ZoneLegend showProbabilities />
-              </motion.div>
-            )}
-
-            {/* Probability Legend */}
-            {showVisualization && showProbabilityField && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="bg-white/80 backdrop-blur-sm border border-[#1D1E15]/10 p-4 rounded-xl"
-              >
-                <div className="text-[10px] uppercase text-[#1D1E15]/50 mb-3">Probability Distribution</div>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="flex-1 h-3 rounded-full overflow-hidden" style={{
-                    background: 'linear-gradient(to right, rgba(59,130,246,0.1), rgba(239,68,68,0.8))'
-                  }} />
-                </div>
-                <div className="flex justify-between text-[9px] text-[#1D1E15]/60">
-                  <span>Low</span>
-                  <span>High</span>
-                </div>
-                <div className="text-[9px] text-[#1D1E15]/40 mt-2">
-                  Anisotropic Gaussian distribution based on current direction and drift uncertainty
-                </div>
-              </motion.div>
-            )}
 
             <AnimatePresence>
               {error && (
@@ -328,14 +271,19 @@ export default function SearchOptimizerPage() {
             {/* Empty State */}
             {!showVisualization && !loading && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center max-w-md px-6">
-                  <div className="w-20 h-20 mx-auto mb-6 border-2 border-white/30 rounded-2xl flex items-center justify-center">
-                    <svg className="w-10 h-10 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <div className="text-center max-w-lg px-6">
+                  <div className="w-24 h-24 mx-auto mb-6 border-2 border-white/30 rounded-2xl flex items-center justify-center">
+                    <svg className="w-12 h-12 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-semibold text-white mb-2 uppercase tracking-wide">Ready to Optimize</h2>
-                  <p className="text-sm text-white/80 leading-relaxed">Enter incident details on the left to generate probability-weighted search zones and simulate container descent.</p>
+                  <h2 className="text-3xl font-semibold text-white mb-3 uppercase tracking-wide">3D Search Planner</h2>
+                  <p className="text-base text-white/90 leading-relaxed mb-4">Enter incident details on the left to launch an interactive 3D simulation.</p>
+                  <div className="text-sm text-white/70 leading-relaxed space-y-1">
+                    <div>• Watch container descent animation</div>
+                    <div>• See drift patterns and probability zones</div>
+                    <div>• Plan optimal search routes</div>
+                  </div>
                 </div>
               </div>
             )}
@@ -344,32 +292,31 @@ export default function SearchOptimizerPage() {
             {showVisualization && !loading && (
               <Canvas style={{ position: 'absolute', inset: 0 }}>
                 <color attach="background" args={['#5a9dc2']} />
-                <fog attach="fog" args={['#5a9dc2', 800, 3200]} />
-                <PerspectiveCamera makeDefault position={[0, 500, 1000]} />
-                <OrbitControls enablePan enableZoom enableRotate maxPolarAngle={Math.PI / 2.2} minDistance={100} maxDistance={3000} target={[0, seaFloorY + 5, 0]} />
-                <ambientLight intensity={0.9} />
-                <hemisphereLight args={['#ffffff', '#5a9dc2', 0.6]} />
-                <directionalLight position={[200, 300, 200]} intensity={1.1} castShadow />
+                <fog attach="fog" args={['#5a9dc2', 1000, 3500]} />
+                {/* HARDCODED CLOSE camera looking directly at container */}
+                <PerspectiveCamera makeDefault position={[250, 100, 250]} fov={60} />
+                <OrbitControls 
+                  enablePan 
+                  enableZoom 
+                  enableRotate 
+                  target={[0, 0, 0]} 
+                  enableDamping
+                  dampingFactor={0.05}
+                />
+                {/* SUPER BRIGHT lighting to see the container */}
+                <ambientLight intensity={3} />
+                <directionalLight position={[500, 800, 400]} intensity={3} />
+                <directionalLight position={[-500, 500, -400]} intensity={2} />
+                <hemisphereLight args={['#ffffff', '#5a9dc2', 2]} />
 
-                {/* Sea Floor with Terrain */}
+                {/* Simple ocean floor */}
                 <SeaFloorTerrain
                   seaFloorY={seaFloorY}
-                  radiusUnits={sceneRadiusUnits * 1.4}
-                  showDepthBands={showDepthBands}
-                  showDepthRisk={showDepthRisk}
+                  radiusUnits={sceneRadiusUnits * 1.2}
+                  showDepthBands={false}
+                  showDepthRisk={false}
                   assetMaxDepth={assetMaxDepth}
                 />
-
-                {/* Probability Field Visualization */}
-                {showProbabilityField && (
-                  <ProbabilityFieldMesh
-                    seaFloorY={seaFloorY}
-                    radiusUnits={sceneRadiusUnits}
-                    incident={incidentSnapshot}
-                    seededRandom={seededRandom}
-                    searchMode={searchMode}
-                  />
-                )}
 
                 {/* Probability Heatmap (zone markers) */}
                 <ProbabilityHeatmap
@@ -387,8 +334,6 @@ export default function SearchOptimizerPage() {
                     cells={gridConfig.cells}
                     cellSize={gridConfig.cellSize}
                     seaFloorY={seaFloorY + 1.5}
-                    sweptCells={sweptCells}
-                    onToggleCell={handleToggleCell}
                   />
                 )}
 
@@ -405,15 +350,7 @@ export default function SearchOptimizerPage() {
                   seededRandom={seededRandom}
                 />
 
-                {/* Drift Track */}
-                {showDriftTrack && (
-                  <DriftTrack
-                    incident={incidentSnapshot}
-                    referencePoint={referencePoint}
-                    driftHours={driftHoursView}
-                    surfaceY={0}
-                  />
-                )}
+                {/* Removed drift track - cleaner visualization */}
 
                 {/* Asset Route */}
                 {showAssetRoute && comparisonData && (
@@ -425,8 +362,8 @@ export default function SearchOptimizerPage() {
                   />
                 )}
 
-                {/* Grid Helper */}
-                <gridHelper args={[sceneRadiusUnits * 3, 40, '#ffffff40', '#ffffff20']} position={[0, seaFloorY + 2, 0]} />
+                {/* Simple grid for reference */}
+                <gridHelper args={[sceneRadiusUnits * 2, 20, '#ffffff', '#ffffff']} position={[0, seaFloorY + 5, 0]} material-opacity={0.15} material-transparent />
               </Canvas>
             )}
 
@@ -439,17 +376,17 @@ export default function SearchOptimizerPage() {
                     <HeatmapToggle mode={searchMode} onModeChange={setSearchMode} />
                   </div>
 
-                  {/* Simulation Progress */}
+                  {/* Simulation Progress - Compact */}
                   {isSimulationRunning && simulationPhase !== 'settled' && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="bg-white/90 backdrop-blur-sm border border-[#1D1E15]/10 px-4 py-2 rounded-xl shadow-lg"
+                      className="bg-white/80 backdrop-blur-sm border border-[#1D1E15]/10 px-2 py-1 rounded-lg shadow"
                     >
-                      <div className="text-[10px] uppercase text-[#1D1E15]/50 mb-1">
-                        {simulationPhase === 'descending' ? 'Container Descent' : 'Drift Simulation'}
+                      <div className="text-[8px] uppercase text-[#1D1E15]/50 mb-0.5">
+                        {simulationPhase === 'descending' ? 'Descent' : 'Drifting'}
                       </div>
-                      <div className="w-32 h-1.5 bg-[#1D1E15]/10 rounded-full overflow-hidden">
+                      <div className="w-24 h-1 bg-[#1D1E15]/10 rounded-full overflow-hidden">
                         <motion.div
                           className="h-full bg-[#DF6C42] rounded-full"
                           initial={{ width: 0 }}
@@ -464,200 +401,151 @@ export default function SearchOptimizerPage() {
                   </div>
                 </div>
 
-                {/* Bottom HUD */}
-                <div className="absolute bottom-4 left-4 right-4 z-10 flex gap-4">
-                  {/* Main HUD Panel */}
-                  <div className="flex-1 bg-white/90 backdrop-blur-sm border border-[#1D1E15]/10 rounded-xl shadow-lg overflow-hidden">
-                    {/* Tab Navigation */}
-                    <div className="flex border-b border-[#1D1E15]/10">
-                      {[
-                        { id: 'coverage', label: 'Coverage', icon: '◫' },
-                        { id: 'drift', label: 'Drift', icon: '↝' },
-                        { id: 'route', label: 'Route', icon: '⊙' },
-                      ].map((tab) => (
-                        <button
-                          key={tab.id}
-                          onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                          className={`flex-1 px-4 py-2.5 text-[10px] uppercase tracking-wider transition-colors ${
-                            activeTab === tab.id
-                              ? 'bg-[#1D1E15] text-[#E5E6DA]'
-                              : 'text-[#1D1E15]/60 hover:bg-[#1D1E15]/5'
-                          }`}
-                        >
-                          <span className="mr-1.5">{tab.icon}</span>
-                          {tab.label}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Tab Content */}
-                    <div className="p-4">
-                      <AnimatePresence mode="wait">
-                        {activeTab === 'coverage' && (
-                          <motion.div
-                            key="coverage"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            className="space-y-3"
-                          >
-                            <div className="grid grid-cols-4 gap-3 text-center">
-                              {[
-                                ['Cells Swept', `${sweptCount}/${gridConfig.total}`],
-                                ['Coverage', `${coveragePercent.toFixed(0)}%`],
-                                ['ETA Remaining', `${etaHours.toFixed(1)}h`],
-                                ['Asset Profile', assetProfile.toUpperCase()],
-                              ].map(([l, v]) => (
-                                <div key={l} className="bg-[#1D1E15]/5 px-2 py-2 rounded-lg">
-                                  <div className="text-[9px] text-[#1D1E15]/50 uppercase">{l}</div>
-                                  <div className="text-sm font-semibold text-[#1D1E15]">{v}</div>
-                                </div>
-                              ))}
-                            </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => setSweptCells({})}
-                                className="flex-1 border border-[#1D1E15]/20 py-2 text-[10px] uppercase rounded-full hover:bg-[#1D1E15]/5 transition-colors"
-                              >
-                                Reset Grid
-                              </button>
-                              <select
-                                value={assetProfile}
-                                onChange={(e) => setAssetProfile(e.target.value as typeof assetProfile)}
-                                className="bg-white border border-[#1D1E15]/20 px-3 py-2 text-[10px] uppercase rounded-full"
-                              >
-                                <option value="shallow">Shallow</option>
-                                <option value="mid">Mid-Depth</option>
-                                <option value="deep">Deep</option>
-                              </select>
-                            </div>
-                          </motion.div>
-                        )}
-
-                        {activeTab === 'drift' && (
-                          <motion.div
-                            key="drift"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            className="space-y-3"
-                          >
-                            <div className="grid grid-cols-3 gap-3 text-center">
-                              {[
-                                ['Time Elapsed', `${driftHoursView.toFixed(0)}h`],
-                                ['Current Speed', `${incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.speed?.toFixed(2) || '---'} m/s`],
-                                ['Direction', `${incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.direction?.toFixed(0) || '---'}°`],
-                              ].map(([l, v]) => (
-                                <div key={l} className="bg-[#1D1E15]/5 px-2 py-2 rounded-lg">
-                                  <div className="text-[9px] text-[#1D1E15]/50 uppercase">{l}</div>
-                                  <div className="text-sm font-semibold text-[#1D1E15]">{v}</div>
-                                </div>
-                              ))}
-                            </div>
-                            <div className="space-y-2">
-                              <input
-                                type="range"
-                                min={0}
-                                max={DRIFT_MAX_HOURS}
-                                value={driftHoursView}
-                                onChange={(e) => setDriftHoursView(Number(e.target.value))}
-                                className="w-full accent-[#1D1E15]"
-                              />
-                              <div className="flex justify-between text-[9px] text-[#1D1E15]/40">
-                                <span>0h</span>
-                                <span>{DRIFT_MAX_HOURS}h</span>
-                              </div>
-                            </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => setDriftPlaying((p) => !p)}
-                                className={`flex-1 py-2 text-[10px] uppercase rounded-full transition-colors ${
-                                  driftPlaying
-                                    ? 'bg-[#DF6C42] text-white'
-                                    : 'border border-[#1D1E15]/20 hover:bg-[#1D1E15]/5'
-                                }`}
-                              >
-                                {driftPlaying ? '⏸ Pause' : '▶ Play'} Drift
-                              </button>
-                              <button
-                                onClick={resetSimulation}
-                                className="flex-1 border border-[#1D1E15]/20 py-2 text-[10px] uppercase rounded-full hover:bg-[#1D1E15]/5 transition-colors"
-                              >
-                                ↺ Replay
-                              </button>
-                            </div>
-                          </motion.div>
-                        )}
-
-                        {activeTab === 'route' && (
-                          <motion.div
-                            key="route"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            className="space-y-3"
-                          >
-                            <div className="grid grid-cols-3 gap-3 text-center">
-                              {[
-                                ['Total Distance', `${routeDistanceKm.toFixed(1)} km`],
-                                ['Zones', `${activeZones.length}`],
-                                ['Mode', searchMode.toUpperCase()],
-                              ].map(([l, v]) => (
-                                <div key={l} className="bg-[#1D1E15]/5 px-2 py-2 rounded-lg">
-                                  <div className="text-[9px] text-[#1D1E15]/50 uppercase">{l}</div>
-                                  <div className="text-sm font-semibold text-[#1D1E15]">{v}</div>
-                                </div>
-                              ))}
-                            </div>
-                            <div className="text-[10px] text-[#1D1E15]/60 leading-relaxed">
-                              {searchMode === 'optimized'
-                                ? 'Route optimized by probability weighting. High-probability zones searched first.'
-                                : 'Traditional grid-based search pattern. Systematic coverage without probability optimization.'}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                {/* Simplified HUD */}
+                <div className="absolute bottom-4 left-4 right-4 z-10 flex gap-3">
+                  {/* Main stats */}
+                  <div className="flex-1 bg-white/90 backdrop-blur-sm border border-[#1D1E15]/10 px-4 py-3 rounded-xl shadow-lg">
+                    <div className="flex items-center justify-between gap-6">
+                      <div className="text-center">
+                        <div className="text-[9px] text-[#1D1E15]/50 uppercase">Status</div>
+                        <div className="text-sm font-semibold text-[#1D1E15]">{simulationPhase === 'settled' ? 'Simulation Complete' : 'Running...'}</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-[9px] text-[#1D1E15]/50 uppercase">Search Area</div>
+                        <div className="text-sm font-semibold text-[#1D1E15]">{comparisonData?.optimized.metrics.totalArea.toFixed(0) || '0'} km²</div>
+                      </div>
+                      <button
+                        onClick={resetSimulation}
+                        className="border border-[#1D1E15]/20 px-4 py-2 text-[10px] uppercase rounded-full hover:bg-[#1D1E15]/5 transition-colors"
+                      >
+                        ↺ Replay
+                      </button>
                     </div>
                   </div>
 
-                  {/* Toggle Buttons */}
-                  <div className="bg-white/90 backdrop-blur-sm border border-[#1D1E15]/10 p-3 rounded-xl shadow-lg">
-                    <div className="grid grid-cols-2 gap-2">
+                  {/* View toggles - Compact */}
+                  <div className="bg-white/80 backdrop-blur-sm border border-[#1D1E15]/10 px-2 py-1.5 rounded-lg shadow">
+                    <div className="flex gap-1.5">
                       {[
                         ['Grid', showGridPlanner, setShowGridPlanner],
-                        ['Drift', showDriftTrack, setShowDriftTrack],
                         ['Route', showAssetRoute, setShowAssetRoute],
-                        ['Prob', showProbabilityField, setShowProbabilityField],
-                        ['Depth', showDepthBands, setShowDepthBands],
-                        ['Risk', showDepthRisk, setShowDepthRisk],
                       ].map(([l, e, s]) => (
-                        <TogglePill
+                        <button
                           key={l as string}
-                          label={l as string}
-                          enabled={e as boolean}
-                          onToggle={() => (s as React.Dispatch<React.SetStateAction<boolean>>)((p) => !p)}
-                        />
+                          onClick={() => (s as React.Dispatch<React.SetStateAction<boolean>>)((p) => !p)}
+                          className={`px-2 py-0.5 text-[8px] uppercase rounded transition-colors ${
+                            e
+                              ? 'bg-[#1D1E15] text-[#E5E6DA]'
+                              : 'border border-[#1D1E15]/20 text-[#1D1E15]/50 hover:bg-[#1D1E15]/5'
+                          }`}
+                        >
+                          {l as string}
+                        </button>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Camera Controls Hint */}
-                <div className="absolute bottom-4 right-4 z-10 bg-white/80 backdrop-blur-sm border border-[#1D1E15]/10 p-2.5 text-[9px] text-[#1D1E15]/50 rounded-lg hidden lg:block">
-                  <div>Drag: Rotate</div>
-                  <div>Right-drag: Pan</div>
-                  <div>Scroll: Zoom</div>
+                {/* Minimal controls hint */}
+                <div className="absolute top-3 right-3 z-10 bg-white/70 backdrop-blur-sm border border-[#1D1E15]/10 px-2 py-1 text-[8px] text-[#1D1E15]/40 rounded">
+                  <div>Drag • Scroll</div>
+                </div>
+                
+                {/* Live Simulation Feed - Compact */}
+                <div className="absolute left-3 top-20 z-20 w-52 max-h-[300px] overflow-y-auto bg-black/70 backdrop-blur-sm border border-cyan-400/20 rounded">
+                  <div className="p-2">
+                    <div className="flex items-center gap-1.5 mb-2 pb-1.5 border-b border-cyan-400/20">
+                      <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></div>
+                      <span className="text-cyan-400 text-[9px] font-mono uppercase tracking-wide">Live Feed</span>
+                    </div>
+                    
+                    <div className="space-y-1 text-[9px] font-mono leading-tight">
+                      <div className="text-gray-300">
+                        <span className="text-cyan-400">[00:00]</span> Container lost overboard
+                      </div>
+                      <div className="text-gray-300">
+                        <span className="text-cyan-400">[00:01]</span> GPS: {incidentSnapshot?.gpsCoordinates?.latitude.toFixed(2)}°N, {incidentSnapshot?.gpsCoordinates?.longitude.toFixed(2)}°E
+                      </div>
+                      <div className="text-gray-300">
+                        <span className="text-cyan-400">[00:02]</span> Serial: {incidentSnapshot?.containerSerial}
+                      </div>
+                      <div className="text-gray-300">
+                        <span className="text-cyan-400">[00:05]</span> Target Depth: {Math.abs(incidentSnapshot?.gpsCoordinates?.altitude || 0)}m
+                      </div>
+                      {simulationPhase !== 'idle' && (
+                        <>
+                          <div className="text-yellow-400">
+                            <span className="text-cyan-400">[00:15]</span> ⬇ Container descending through water column
+                          </div>
+                          <div className="text-gray-300">
+                            <span className="text-cyan-400">[02:30]</span> ✓ Seafloor contact detected
+                          </div>
+                          <div className="text-gray-300">
+                            <span className="text-cyan-400">[02:31]</span> Ocean Current: {incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.speed || 0.42} m/s @ {incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.direction || 85}°
+                          </div>
+                        </>
+                      )}
+                      {simulationPhase === 'drifting' && (
+                        <>
+                          <div className="text-yellow-400 animate-pulse">
+                            <span className="text-cyan-400">[02:35]</span> ⚠ Container drifting in current
+                          </div>
+                          <div className="text-gray-300">
+                            <span className="text-cyan-400">[02:40]</span> Water flow visible around cargo
+                          </div>
+                          <div className="text-gray-300">
+                            <span className="text-cyan-400">[04:00]</span> Est. drift: ~{((incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.speed || 0.42) * (incidentSnapshot?.estimatedTimeInWater || 72) * 3.6).toFixed(0)}m from drop point
+                          </div>
+                        </>
+                      )}
+                      {simulationPhase === 'settled' && (
+                        <>
+                          <div className="text-green-400">
+                            <span className="text-cyan-400">[{incidentSnapshot?.estimatedTimeInWater || 72}:00]</span> ✓ Container settled on seafloor
+                          </div>
+                          <div className="text-gray-300">
+                            <span className="text-cyan-400">[{incidentSnapshot?.estimatedTimeInWater || 72}:05]</span> Total drift: ~{((incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.speed || 0.42) * (incidentSnapshot?.estimatedTimeInWater || 72) * 3.6).toFixed(0)}m
+                          </div>
+                          <div className="text-gray-300">
+                            <span className="text-cyan-400">[{incidentSnapshot?.estimatedTimeInWater || 72}:15]</span> Final position locked
+                          </div>
+                          <div className="text-green-400 font-semibold">
+                            <span className="text-cyan-400">[{incidentSnapshot?.estimatedTimeInWater || 72}:30]</span> ✓ Ready for search operations
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    
+                    {/* Environment stats - Compact */}
+                    <div className="mt-2 pt-2 border-t border-cyan-400/20">
+                      <div className="text-[8px] text-cyan-400/70 uppercase tracking-wide mb-1">Env</div>
+                      <div className="grid grid-cols-2 gap-1 text-[8px]">
+                        <div><span className="text-gray-500">Temp:</span> <span className="text-white ml-1">4°C</span></div>
+                        <div><span className="text-gray-500">Vis:</span> <span className="text-white ml-1">3m</span></div>
+                        <div><span className="text-gray-500">Size:</span> <span className="text-white ml-1">40ft</span></div>
+                        <div><span className="text-gray-500">Wt:</span> <span className="text-white ml-1">30t</span></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </>
             )}
           </div>
 
-          {/* Comparison Panel */}
+          {/* Compact key metrics */}
           {showVisualization && comparisonData && !loading && (
-            <div className="border-t border-[#1D1E15]/10 overflow-y-auto bg-[#E5E6DA]/60" style={{ maxHeight: '40vh' }}>
-              <div className="p-6 space-y-6">
-                <PlanningBrief incident={incidentSnapshot} comparison={comparisonData} activeMode={searchMode} />
-                <SearchComparison comparison={comparisonData} />
+            <div className="border-t border-[#1D1E15]/10 bg-[#E5E6DA]/60 p-2">
+              <div className="flex gap-3 justify-center">
+                {[
+                  ['Area', `${(activeZones.length * 25).toFixed(0)}km²`],
+                  ['Chance', `${Math.round((comparisonData.optimized.metrics.successProbability || 0.26) * 100)}%`],
+                  ['Duration', `${comparisonData.optimized.metrics.estimatedDuration.toFixed(0)}d`],
+                ].map(([label, value]) => (
+                  <div key={label} className="bg-white/70 border border-[#1D1E15]/10 px-3 py-1.5 rounded">
+                    <div className="text-[8px] text-[#1D1E15]/40 uppercase">{label}</div>
+                    <div className="text-sm font-bold text-[#1D1E15]">{value}</div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -695,7 +583,7 @@ function ContainerSimulation({
   const timeRef = useRef(0);
   const driftOffsetRef = useRef({ x: 0, z: 0 });
 
-  // Load container GLB model
+  // Load shipping container GLB model
   const { scene: containerModel } = useGLTF('/assets/shipping_container.glb');
 
   const anchor = useMemo(() =>
@@ -716,25 +604,18 @@ function ContainerSimulation({
   }, [seededRandom]);
 
   useFrame((state, delta) => {
-    if (!containerRef.current || !anchor) return;
+    if (!containerRef.current) return;
 
     const container = containerRef.current;
+
+    // HARDCODED: Keep container at origin, visible
+    container.position.set(0, 0, 0);
+    container.rotation.set(0, 0.5, 0);
 
     if (simulationPhase === 'descending') {
       timeRef.current += delta;
       const progress = Math.min(timeRef.current / DESCENT_DURATION, 1);
       onProgress(progress);
-
-      // Ease-out descent with slight tumble
-      const easedProgress = 1 - Math.pow(1 - progress, 3);
-      const y = THREE.MathUtils.lerp(50, seaFloorY + 15, easedProgress);
-
-      // Add tumbling rotation during descent
-      const tumbleX = Math.sin(timeRef.current * 2) * (1 - progress) * 0.3;
-      const tumbleZ = Math.cos(timeRef.current * 1.5) * (1 - progress) * 0.2;
-
-      container.position.set(anchor.x, y, anchor.z);
-      container.rotation.set(tumbleX, timeRef.current * 0.5, tumbleZ);
 
       if (progress >= 1) {
         onPhaseChange('drifting');
@@ -745,45 +626,52 @@ function ContainerSimulation({
       const driftProgress = Math.min(timeRef.current / 3, 1);
       onProgress(driftProgress);
 
-      // Add drift offset with noise
-      const noiseIndex = Math.floor(timeRef.current * 10) % driftNoise.length;
-      const noise = driftNoise[noiseIndex];
-
-      const currentDir = incident?.environmentalConditions?.oceanCurrents?.[0]?.direction || 0;
-      const currentSpeed = incident?.environmentalConditions?.oceanCurrents?.[0]?.speed || 0.5;
-
-      const dirRad = degreesToRadians(currentDir);
-      driftOffsetRef.current.x += Math.sin(dirRad) * currentSpeed * delta * 2 + noise.x * delta * 0.5;
-      driftOffsetRef.current.z += Math.cos(dirRad) * currentSpeed * delta * 2 + noise.z * delta * 0.5;
-
-      container.position.set(
-        anchor.x + driftOffsetRef.current.x,
-        seaFloorY + 15 + Math.sin(timeRef.current * 0.5) * 2,
-        anchor.z + driftOffsetRef.current.z
-      );
-
-      // Gentle settling rotation
-      container.rotation.x = Math.sin(timeRef.current * 0.3) * 0.1;
-      container.rotation.z = Math.cos(timeRef.current * 0.4) * 0.08;
-
       if (driftProgress >= 1) {
         onPhaseChange('settled');
       }
-    } else if (simulationPhase === 'settled') {
-      // Settled on sea floor with gentle sway
-      container.position.y = seaFloorY + 15 + Math.sin(state.clock.elapsedTime * 0.2) * 0.5;
-      container.rotation.x = Math.sin(state.clock.elapsedTime * 0.1) * 0.02;
-      container.rotation.z = Math.cos(state.clock.elapsedTime * 0.15) * 0.015;
     }
   });
 
   if (!incident || !anchor) return null;
 
   return (
-    <group ref={containerRef} position={[anchor.x, 50, anchor.z]}>
-      <primitive object={containerModel.clone()} scale={12} />
-      {/* Glow effect */}
-      <pointLight color="#DF6C42" intensity={2} distance={100} />
+    <group ref={containerRef} position={[0, 0, 0]}>
+      {/* GLB SHIPPING CONTAINER - Production Quality */}
+      <primitive 
+        object={containerModel} 
+        scale={40}
+        rotation={[0, Math.PI / 6, 0]}
+        castShadow 
+        receiveShadow 
+      />
+      
+      {/* Container lighting */}
+      <pointLight position={[0, 50, 0]} color="#FFFFFF" intensity={8} distance={200} decay={2} />
+      <spotLight
+        position={[100, 100, 100]}
+        angle={0.4}
+        penumbra={0.5}
+        intensity={12}
+        castShadow
+        color="#FFFFFF"
+        target-position={[0, 0, 0]}
+      />
+      
+      {/* ENHANCED Water current particles - MORE VISIBLE */}
+      <WaterCurrentParticles 
+        position={[0, 0, 0]} 
+        currentDirection={85}
+        currentSpeed={0.42}
+      />
+      
+      {/* ENHANCED Water stream lines - MORE VISIBLE */}
+      <WaterStreamLines
+        position={[0, 0, 0]}
+        currentDirection={85}
+      />
+      
+      {/* Floating debris particles */}
+      <FloatingDebris position={[0, 20, 0]} />
     </group>
   );
 }
@@ -859,59 +747,55 @@ function ProbabilityFieldMesh({
       <meshBasicMaterial
         vertexColors
         transparent
-        opacity={0.5}
+        opacity={0.35}
         side={THREE.DoubleSide}
         depthWrite={false}
+        blending={THREE.AdditiveBlending}
       />
     </mesh>
   );
 }
 
 function SeaFloorTerrain({ seaFloorY, radiusUnits, showDepthBands, showDepthRisk, assetMaxDepth }: { seaFloorY: number; radiusUnits: number; showDepthBands: boolean; showDepthRisk: boolean; assetMaxDepth: number }) {
-  const geometry = useMemo(() => {
-    const plane = new THREE.PlaneGeometry(radiusUnits * 2, radiusUnits * 2, 120, 120);
-    const pos = plane.attributes.position as THREE.BufferAttribute;
-    const colors = new Float32Array(pos.count * 3);
-    const shallow = new THREE.Color('#7ec8e3'), deep = new THREE.Color('#2d6d96'), risk = new THREE.Color('#c45a3a');
-    const amp = 320, baseD = Math.abs(seaFloorY * SCENE_SCALE);
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), y = pos.getY(i);
-      const h = (Math.sin(x * 0.008) * 0.6 + Math.cos(y * 0.009) * 0.5 + Math.sin((x + y) * 0.006) * 0.4) * amp / SCENE_SCALE;
-      pos.setZ(i, h);
-      const d = Math.abs((seaFloorY + h) * SCENE_SCALE), n = Math.min(d / Math.max(baseD + amp, 1), 1);
-      const c = deep.clone().lerp(shallow, (1 - n) * (showDepthBands ? 1 : 0.25));
-      if (showDepthRisk && d > assetMaxDepth) c.lerp(risk, 0.65);
-      colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
-    }
-    plane.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    plane.computeVertexNormals();
-    return plane;
-  }, [radiusUnits, seaFloorY, showDepthRisk, assetMaxDepth, showDepthBands]);
-
+  // Simple clean seabed - no flickering
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, seaFloorY, 0]} geometry={geometry}>
-      <meshStandardMaterial vertexColors color="#2d6d96" emissive="#1a4a6e" emissiveIntensity={0.2} roughness={0.85} metalness={0.2} />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, seaFloorY, 0]} receiveShadow>
+      <planeGeometry args={[radiusUnits * 3, radiusUnits * 3]} />
+      <meshStandardMaterial 
+        color="#1a3d4a" 
+        roughness={0.95} 
+        metalness={0}
+      />
     </mesh>
   );
 }
 
-function SearchGrid({ cells, cellSize, seaFloorY, sweptCells, onToggleCell }: { cells: { id: string; x: number; z: number }[]; cellSize: number; seaFloorY: number; sweptCells: Record<string, boolean>; onToggleCell: (id: string) => void }) {
+function SearchGrid({ cells, cellSize, seaFloorY }: { cells: { id: string; x: number; z: number }[]; cellSize: number; seaFloorY: number }) {
   return (
     <group>
       {cells.map((c) => (
         <mesh
           key={c.id}
-          position={[c.x, seaFloorY, c.z]}
+          position={[c.x, seaFloorY + 0.5, c.z]}
           rotation={[-Math.PI / 2, 0, 0]}
-          onPointerDown={(e) => { e.stopPropagation(); onToggleCell(c.id); }}
         >
-          <planeGeometry args={[cellSize * 0.98, cellSize * 0.98]} />
+          <planeGeometry args={[cellSize * 0.96, cellSize * 0.96]} />
           <meshBasicMaterial
-            color={sweptCells[c.id] ? '#4ade80' : '#ffffff'}
+            color="#ffffff"
             transparent
-            opacity={sweptCells[c.id] ? 0.4 : 0.1}
+            opacity={0.08}
             side={THREE.DoubleSide}
           />
+          {/* Border lines */}
+          <lineSegments>
+            <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(cellSize * 0.96, cellSize * 0.96)]} />
+            <lineBasicMaterial 
+              attach="material" 
+              color="#ffffff" 
+              transparent 
+              opacity={0.2} 
+            />
+          </lineSegments>
         </mesh>
       ))}
     </group>
@@ -925,17 +809,12 @@ function DriftTrack({ incident, referencePoint, driftHours, surfaceY }: { incide
 
   if (!geo || !pts.length) return null;
 
-  const last = gpsToCartesian(pts[pts.length - 1], referencePoint, SCENE_SCALE);
-
   return (
     <group>
+      {/* Clean drift path */}
       <line geometry={geo}>
-        <lineBasicMaterial color="#ffffff" transparent opacity={0.9} />
+        <lineBasicMaterial color="#00d9ff" transparent opacity={0.6} linewidth={2} />
       </line>
-      <mesh position={[last.x, surfaceY + 8, last.z]}>
-        <sphereGeometry args={[6, 12, 12]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.7} />
-      </mesh>
     </group>
   );
 }
@@ -954,19 +833,28 @@ function AssetRoute({ comparison, referencePoint, surfaceY, searchMode }: { comp
 
   if (!geo) return null;
 
-  const routeColor = searchMode === 'optimized' ? '#DF6C42' : '#6b7280';
+  const routeColor = searchMode === 'optimized' ? '#DF6C42' : '#888888';
 
   return (
     <group>
+      {/* Simple route line */}
       <line geometry={geo}>
-        <lineBasicMaterial color={routeColor} transparent opacity={0.7} />
+        <lineBasicMaterial color={routeColor} transparent opacity={0.7} linewidth={2} />
       </line>
+      {/* Clean waypoint markers */}
       {pts.map((p, i) => {
         const c = gpsToCartesian(p, referencePoint, SCENE_SCALE);
+        const isFirst = i === 0;
+        const isLast = i === pts.length - 1;
+        
         return (
           <mesh key={i} position={[c.x, surfaceY + 2, c.z]}>
-            <sphereGeometry args={[6, 12, 12]} />
-            <meshStandardMaterial color={routeColor} emissive={routeColor} emissiveIntensity={0.4} />
+            <sphereGeometry args={[6, 16, 16]} />
+            <meshStandardMaterial 
+              color={isFirst ? '#4ade80' : isLast ? '#ef4444' : routeColor} 
+              emissive={isFirst ? '#4ade80' : isLast ? '#ef4444' : routeColor} 
+              emissiveIntensity={0.5} 
+            />
           </mesh>
         );
       })}
@@ -1139,5 +1027,162 @@ function formatCurrency(v: number) {
   return v >= 1e6 ? `$${(v / 1e6).toFixed(2)}M` : v >= 1e3 ? `$${(v / 1e3).toFixed(0)}K` : `$${v.toFixed(0)}`;
 }
 
-// Preload GLB model
+// Water stream lines showing current flow
+function WaterStreamLines({ position, currentDirection }: { position: [number, number, number]; currentDirection: number }) {
+  const streamCount = 16; // MORE stream lines
+  const dirRad = degreesToRadians(currentDirection);
+  
+  return (
+    <group position={position}>
+      {Array.from({ length: streamCount }).map((_, i) => {
+        const angle = (i / streamCount) * Math.PI * 2;
+        const radius = 35 + (i % 3) * 15;
+        const startX = Math.cos(angle) * radius;
+        const startZ = Math.sin(angle) * radius;
+        const endX = startX + Math.sin(dirRad) * 120; // LONGER lines
+        const endZ = startZ + Math.cos(dirRad) * 120;
+        
+        const points = [
+          new THREE.Vector3(startX, (i % 4 - 2) * 12, startZ),
+          new THREE.Vector3(endX, (i % 4 - 2) * 12, endZ),
+        ];
+        
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        
+        return (
+          <line key={i} geometry={geometry}>
+            <lineBasicMaterial 
+              color="#00E5FF" // Brighter cyan
+              transparent 
+              opacity={0.6} // MORE VISIBLE
+              linewidth={3} // THICKER
+            />
+          </line>
+        );
+      })}
+    </group>
+  );
+}
+
+// Floating debris for realism
+function FloatingDebris({ position }: { position: [number, number, number] }) {
+  const debrisRef = useRef<THREE.Group>(null);
+  const debrisCount = 30;
+  
+  useFrame((state) => {
+    if (!debrisRef.current) return;
+    
+    debrisRef.current.children.forEach((debris, i) => {
+      // Slow floating motion
+      debris.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.5 + i) * 15;
+      debris.rotation.x = state.clock.elapsedTime * 0.2 + i;
+      debris.rotation.y = state.clock.elapsedTime * 0.15 + i * 0.5;
+    });
+  });
+  
+  return (
+    <group ref={debrisRef} position={position}>
+      {Array.from({ length: debrisCount }).map((_, i) => {
+        const angle = (i / debrisCount) * Math.PI * 2;
+        const radius = 40 + Math.random() * 60;
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+        const size = 1 + Math.random() * 2;
+        
+        return (
+          <mesh key={i} position={[x, 0, z]}>
+            <boxGeometry args={[size, size * 0.5, size * 0.3]} />
+            <meshStandardMaterial 
+              color="#8B4513" 
+              transparent
+              opacity={0.4}
+              metalness={0.2}
+              roughness={0.8}
+            />
+          </mesh>
+        );
+      })}
+    </group>
+  );
+}
+
+// Water current particles around container
+function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { position: [number, number, number]; currentDirection: number; currentSpeed: number }) {
+  const particlesRef = useRef<THREE.Points>(null);
+  const particleCount = 500; // MORE particles
+  
+  const particles = useMemo(() => {
+    const positions = new Float32Array(particleCount * 3);
+    const velocities = new Float32Array(particleCount * 3);
+    
+    const dirRad = degreesToRadians(currentDirection);
+    
+    for (let i = 0; i < particleCount; i++) {
+      // Spread particles in flowing streams around container
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 30 + Math.random() * 80;
+      const height = (Math.random() - 0.5) * 60;
+      
+      positions[i * 3] = Math.cos(angle) * radius;
+      positions[i * 3 + 1] = height;
+      positions[i * 3 + 2] = Math.sin(angle) * radius;
+      
+      // Stronger velocity for visibility
+      velocities[i * 3] = Math.sin(dirRad) * currentSpeed * 4;
+      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.3;
+      velocities[i * 3 + 2] = Math.cos(dirRad) * currentSpeed * 4;
+    }
+    
+    return { positions, velocities };
+  }, [currentDirection, currentSpeed]);
+  
+  useFrame((state, delta) => {
+    if (!particlesRef.current) return;
+    
+    const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
+    const { velocities } = particles;
+    
+    for (let i = 0; i < particleCount; i++) {
+      // Update particle positions based on velocity
+      positions[i * 3] += velocities[i * 3] * delta * 15;
+      positions[i * 3 + 1] += velocities[i * 3 + 1] * delta * 15;
+      positions[i * 3 + 2] += velocities[i * 3 + 2] * delta * 15;
+      
+      // Reset particles that drift too far
+      const distSq = positions[i * 3] ** 2 + positions[i * 3 + 2] ** 2;
+      if (distSq > 15000) {
+        const angle = Math.random() * Math.PI * 2;
+        const radius = 30 + Math.random() * 40;
+        positions[i * 3] = Math.cos(angle) * radius;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
+        positions[i * 3 + 2] = Math.sin(angle) * radius;
+      }
+    }
+    
+    particlesRef.current.geometry.attributes.position.needsUpdate = true;
+  });
+  
+  return (
+    <points ref={particlesRef} position={position}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={particleCount}
+          array={particles.positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={3} // BIGGER particles
+        color="#00E5FF" // Brighter cyan
+        transparent
+        opacity={0.8} // MORE VISIBLE
+        sizeAttenuation
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+}
+
+// Preload GLB models
 useGLTF.preload('/assets/shipping_container.glb');
