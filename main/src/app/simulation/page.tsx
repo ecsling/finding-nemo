@@ -82,37 +82,20 @@ export default function SimulationPage() {
       {/* Navigation Header with Integrated Mission Progress */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 px-0 h-20 flex justify-between items-center backdrop-blur-sm"
-        style={
-          viewMode === 'globe'
-            ? {
-                backgroundColor: 'rgba(220, 218, 200, 0.95)',
-                borderBottom: '1px solid rgba(29, 30, 21, 0.08)',
-              }
-            : {
-                backgroundColor: 'rgba(5, 15, 26, 0.9)',
-                borderBottom: '1px solid rgba(0, 217, 255, 0.3)',
-              }
-        }
+        style={{
+          backgroundColor: 'rgba(220, 218, 200, 0.95)',
+          borderBottom: '1px solid rgba(29, 30, 21, 0.08)',
+        }}
       >
         <div className="flex items-center h-full flex-1">
           <Link
             href="/"
             className="w-[134px] h-full flex items-center justify-center shrink-0 transition-colors"
-            style={
-              viewMode === 'globe'
-                ? {
-                    borderRight: '1px solid rgba(29, 30, 21, 0.08)',
-                  }
-                : {
-                    borderRight: '1px solid rgba(30, 58, 95, 1)',
-                  }
-            }
+            style={{
+              borderRight: '1px solid rgba(29, 30, 21, 0.08)',
+            }}
             onMouseEnter={(e) => {
-              if (viewMode === 'globe') {
-                e.currentTarget.style.backgroundColor = 'rgba(29, 30, 21, 0.05)';
-              } else {
-                e.currentTarget.style.backgroundColor = 'rgba(13, 40, 71, 1)';
-              }
+              e.currentTarget.style.backgroundColor = 'rgba(29, 30, 21, 0.05)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = 'transparent';
@@ -121,31 +104,18 @@ export default function SimulationPage() {
             <div className="w-10 h-10 flex items-center justify-center">
               <div
                 className="w-6 h-6 rounded-sm"
-                style={
-                  viewMode === 'globe'
-                    ? {
-                        border: '2px solid rgba(29, 30, 21, 0.2)',
-                      }
-                    : {
-                        border: '1px solid rgba(30, 58, 95, 1)',
-                      }
-                }
+                style={{
+                  border: '2px solid rgba(29, 30, 21, 0.2)',
+                }}
               ></div>
             </div>
           </Link>
 
           <div
             className="px-6 text-base font-bold uppercase tracking-[0.15em]"
-            style={
-              viewMode === 'globe'
-                ? {
-                    color: '#1D1E15',
-                  }
-                : {
-                    color: '#ffffff',
-                    textShadow: '0 0 5px rgba(255, 255, 255, 0.3)',
-                  }
-            }
+            style={{
+              color: '#1D1E15',
+            }}
           >
             {viewMode === 'globe' ? 'Global Tracker' : 'Recovery Mission'}
           </div>
@@ -161,7 +131,17 @@ export default function SimulationPage() {
           {viewMode === 'underwater' && (
             <button
               onClick={handleBackToGlobe}
-              className="px-4 py-2 text-xs uppercase font-bold border border-[#00d9ff] text-[#00d9ff] hover:bg-[#00d9ff]/10 transition-all"
+              className="px-4 py-2 text-xs uppercase font-bold transition-all"
+              style={{
+                border: '1px solid rgba(29, 30, 21, 0.2)',
+                color: 'rgba(29, 30, 21, 0.8)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(29, 30, 21, 0.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
             >
               ← Back to Globe
             </button>
@@ -170,15 +150,9 @@ export default function SimulationPage() {
           {/* Stats */}
           <div
             className="flex items-center gap-4 text-[10px] uppercase"
-            style={
-              viewMode === 'globe'
-                ? {
-                    color: 'rgba(29, 30, 21, 0.7)',
-                  }
-                : {
-                    color: 'rgba(255, 255, 255, 0.6)',
-                  }
-            }
+            style={{
+              color: 'rgba(29, 30, 21, 0.7)',
+            }}
           >
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#DF6C42] rounded-full animate-pulse" />
@@ -192,27 +166,15 @@ export default function SimulationPage() {
 
           <div
             className="text-[10px] uppercase"
-            style={
-              viewMode === 'globe'
-                ? {
-                    color: 'rgba(29, 30, 21, 0.5)',
-                  }
-                : {
-                    color: 'rgba(255, 255, 255, 0.4)',
-                  }
-            }
+            style={{
+              color: 'rgba(29, 30, 21, 0.5)',
+            }}
           >
             System Status:{' '}
             <span
-              style={
-                viewMode === 'globe'
-                  ? {
-                      color: '#1D1E15',
-                    }
-                  : {
-                      color: '#00d9ff',
-                    }
-              }
+              style={{
+                color: '#1D1E15',
+              }}
             >
               Active
             </span>
@@ -354,34 +316,20 @@ export default function SimulationPage() {
         {/* Controls Help */}
         <div
           className="fixed bottom-6 right-6 z-40 backdrop-blur-sm p-3 text-[9px] font-mono"
-          style={
-            viewMode === 'globe'
-              ? {
-                  backgroundColor: '#B8B6A4',
-                  border: '1px solid rgba(29, 30, 21, 0.15)',
-                  color: 'rgba(29, 30, 21, 0.7)',
-                }
-              : {
-                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                  border: '1px solid rgba(0, 217, 255, 0.2)',
-                  color: 'rgba(255, 255, 255, 0.6)',
-                }
-          }
+          style={{
+            backgroundColor: '#B8B6A4',
+            border: '1px solid rgba(29, 30, 21, 0.15)',
+            color: 'rgba(29, 30, 21, 0.7)',
+          }}
         >
           <div>Left Click + Drag: Rotate</div>
           <div>Right Click + Drag: Pan</div>
           <div>Scroll: Zoom</div>
           <div
             className="mt-2"
-            style={
-              viewMode === 'globe'
-                ? {
-                    color: 'rgba(29, 30, 21, 0.85)',
-                  }
-                : {
-                    color: '#00d9ff',
-                  }
-            }
+            style={{
+              color: 'rgba(29, 30, 21, 0.85)',
+            }}
           >
             Click container for details
           </div>
@@ -394,40 +342,68 @@ export default function SimulationPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="fixed bottom-6 left-6 bg-black/90 backdrop-blur-md border border-[#00d9ff]/30 p-6 z-40 max-w-md"
-              style={{ boxShadow: '0 0 30px rgba(0, 217, 255, 0.3)' }}
+              className="fixed bottom-6 left-6 backdrop-blur-md p-6 z-40 max-w-md"
+              style={{
+                backgroundColor: '#B8B6A4',
+                border: '1px solid rgba(29, 30, 21, 0.15)',
+              }}
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#00d9ff]/20 border border-[#00d9ff] flex items-center justify-center text-[#00d9ff] font-bold">
+                  <div
+                    className="w-10 h-10 flex items-center justify-center font-bold"
+                    style={{
+                      backgroundColor: 'rgba(29, 30, 21, 0.05)',
+                      border: '1px solid rgba(29, 30, 21, 0.2)',
+                      color: 'rgba(29, 30, 21, 0.8)',
+                    }}
+                  >
                     3D
                   </div>
                   <div>
-                    <div className="text-[10px] text-white/60 uppercase tracking-wider">
+                    <div className="text-[10px] text-[#1D1E15]/70 uppercase tracking-wider">
                       Underwater View
                     </div>
-                    <div className="text-sm text-white font-bold">
+                    <div className="text-sm text-[#1D1E15] font-bold">
                       {selectedContainer?.serialNumber || 'MAEU-123456-7'}
                     </div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-3 text-xs">
-                  <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                    <div className="text-[9px] text-white/40">DEPTH</div>
-                    <div className="text-sm text-white font-mono">2,850m</div>
+                  <div
+                    className="p-2"
+                    style={{
+                      backgroundColor: 'rgba(29, 30, 21, 0.05)',
+                      border: '1px solid rgba(29, 30, 21, 0.1)',
+                    }}
+                  >
+                    <div className="text-[9px] text-[#1D1E15]/50">DEPTH</div>
+                    <div className="text-sm text-[#1D1E15] font-mono">2,850m</div>
                   </div>
-                  <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                    <div className="text-[9px] text-white/40">TEMP</div>
-                    <div className="text-sm text-white font-mono">4°C</div>
+                  <div
+                    className="p-2"
+                    style={{
+                      backgroundColor: 'rgba(29, 30, 21, 0.05)',
+                      border: '1px solid rgba(29, 30, 21, 0.1)',
+                    }}
+                  >
+                    <div className="text-[9px] text-[#1D1E15]/50">TEMP</div>
+                    <div className="text-sm text-[#1D1E15] font-mono">4°C</div>
                   </div>
-                  <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                    <div className="text-[9px] text-white/40">PRESSURE</div>
-                    <div className="text-sm text-white font-mono">285 bar</div>
+                  <div
+                    className="p-2"
+                    style={{
+                      backgroundColor: 'rgba(29, 30, 21, 0.05)',
+                      border: '1px solid rgba(29, 30, 21, 0.1)',
+                    }}
+                  >
+                    <div className="text-[9px] text-[#1D1E15]/50">PRESSURE</div>
+                    <div className="text-sm text-[#1D1E15] font-mono">285 bar</div>
                   </div>
                 </div>
 
-                <div className="text-[9px] text-white/60 font-mono">
+                <div className="text-[9px] text-[#1D1E15]/70 font-mono">
                   Location: Kelvin Seamounts, North Atlantic
                 </div>
               </div>
