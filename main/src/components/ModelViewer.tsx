@@ -340,13 +340,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
 
   const handleResetView = () => {
     if (cameraRef.current && controlsRef.current) {
-      controlsRef.current.target.set(0, -1, 0); // Reset to ship position
-      controlsRef.current.reset();
-      cameraStateRef.current.camR = 15;
-      cameraStateRef.current.camAz = Math.PI / 4;
-      cameraStateRef.current.camEl = -0.15; // Looking up from deep below
-      cameraStateRef.current.camAzT = Math.PI / 4;
-      cameraStateRef.current.camElT = -0.15;
+      // Reset camera to bird's-eye view above terrain
+      positionCameraAboveTerrain();
     }
   };
 
@@ -735,24 +730,24 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
       0.05,
       2000
     );
-    // Initialize camera at deep diver level (much lower, looking up at ship wreck)
+    // Initialize camera above terrain for bird's-eye view
     const DEFAULT_AZ = Math.PI / 4;
-    const DEFAULT_EL = -0.15; // Looking up from below
-    const DEFAULT_R = 15; // Slightly further back for better view
+    const DEFAULT_EL = Math.PI / 3; // Looking down at ~60 degrees
+    const DEFAULT_R = 20; // Higher up for better overview
     cameraStateRef.current.camR = DEFAULT_R;
     cameraStateRef.current.camAz = DEFAULT_AZ;
     cameraStateRef.current.camEl = DEFAULT_EL;
     cameraStateRef.current.camAzT = DEFAULT_AZ;
     cameraStateRef.current.camElT = DEFAULT_EL;
     
-    const shipHeight = -1; // Ship just above seabed
-    const diverHeight = shipHeight - 4; // Diver is 4 units below ship (much lower)
+    // Position camera above origin, looking down
+    const cameraHeight = 15; // Start high above terrain
     camera.position.set(
       DEFAULT_R * Math.cos(DEFAULT_EL) * Math.sin(DEFAULT_AZ),
-      diverHeight, // Much lower - deep diver perspective
+      cameraHeight,
       DEFAULT_R * Math.cos(DEFAULT_EL) * Math.cos(DEFAULT_AZ)
     );
-    camera.lookAt(0, shipHeight, 0); // Look up at ship from below
+    camera.lookAt(0, 0, 0); // Look down at origin (will be adjusted when model loads)
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({
@@ -772,7 +767,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.maxDistance = 100;
-    controls.target.set(0, -1, 0); // Focus on ship position (just above seabed)
+    controls.target.set(0, 0, 0); // Focus on origin (will be adjusted when model loads)
     controlsRef.current = controls;
 
     // Lighting - Cyberpunk dramatic lighting with neon blue accents
@@ -1086,6 +1081,77 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
     return { holo, solid };
   };
 
+  // Position camera for cinematic ROV-operator view: closer, offset, ~25–35° down
+  const positionCameraAboveTerrain = () => {
+    if (!cameraRef.current || !sceneRef.current) return;
+
+    // Collect all objects to compute bounding box
+    const objectsToCheck: THREE.Object3D[] = [];
+    
+    // Add foreground objects (main model)
+    generatedObjectsRef.current.forEach((obj) => {
+      objectsToCheck.push(obj);
+    });
+    
+    // Add background landscape if it exists
+    if (backgroundLandscapeRef.current) {
+      objectsToCheck.push(backgroundLandscapeRef.current);
+    }
+
+    if (objectsToCheck.length === 0) return;
+
+    // Compute combined bounding box
+    const boundingBox = new THREE.Box3();
+    objectsToCheck.forEach((obj) => {
+      const box = new THREE.Box3().setFromObject(obj);
+      boundingBox.union(box);
+    });
+
+    const center = new THREE.Vector3();
+    boundingBox.getCenter(center);
+    
+    const size = new THREE.Vector3();
+    boundingBox.getSize(size);
+    
+    const maxHeight = boundingBox.max.y;
+    const maxDim = Math.max(size.x, size.z);
+
+    // Close reconnaissance view: additional ~36% reduction for detailed view
+    const baseDistance = maxDim * 0.16;
+    // Angle down ~30° (25–35° range): immersive, not top-down
+    const angleDownRad = (30 * Math.PI) / 180;
+    const tanAngle = Math.tan(angleDownRad);
+
+    // Offset on XZ so we're not directly overhead (ROV approaching from one side)
+    const azimuth = 0.6;
+    const xOffset = Math.cos(azimuth) * baseDistance;
+    const zOffset = Math.sin(azimuth) * baseDistance;
+
+    // Height: above terrain, with look-down ~30°
+    const verticalSpan = baseDistance * tanAngle;
+    const cameraY = Math.max(maxHeight + size.y * 0.15, center.y + verticalSpan);
+
+    cameraRef.current.position.set(center.x + xOffset, cameraY, center.z + zOffset);
+    cameraRef.current.lookAt(center);
+    
+    // Update camera state refs for consistency
+    const distance = cameraRef.current.position.distanceTo(center);
+    cameraStateRef.current.camR = distance;
+    
+    // Calculate azimuth and elevation for the new position
+    const direction = new THREE.Vector3().subVectors(center, cameraRef.current.position).normalize();
+    cameraStateRef.current.camEl = Math.asin(direction.y);
+    cameraStateRef.current.camAz = Math.atan2(direction.x, direction.z);
+    cameraStateRef.current.camAzT = cameraStateRef.current.camAz;
+    cameraStateRef.current.camElT = cameraStateRef.current.camEl;
+    
+    // Update OrbitControls target to center
+    if (controlsRef.current) {
+      controlsRef.current.target.copy(center);
+      controlsRef.current.update();
+    }
+  };
+
   const loadModelFromUrl = (url: string, isBlob: boolean = false) => {
     if (!sceneRef.current) return;
 
@@ -1234,6 +1300,11 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           URL.revokeObjectURL(url);
         }
 
+        // Position camera above terrain for bird's-eye view
+        setTimeout(() => {
+          positionCameraAboveTerrain();
+        }, 100); // Small delay to ensure all transforms are updated
+
         setModelReady(true);
       },
       (progress) => {
@@ -1313,6 +1384,11 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         landscapeGroup.add(landscape);
         sceneRef.current!.add(landscapeGroup);
         backgroundLandscapeRef.current = landscapeGroup;
+        
+        // Reposition camera above terrain if model is already loaded
+        setTimeout(() => {
+          positionCameraAboveTerrain();
+        }, 100);
         
         console.log("Background landscape loaded:", model.name);
       },

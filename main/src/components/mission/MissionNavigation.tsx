@@ -42,8 +42,14 @@ export default function MissionNavigation({
     }
   };
 
+  const isStep1 = currentStep === 1;
+
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4">
+    <div
+      className={`fixed bottom-6 z-50 flex items-center gap-4 ${
+        isStep1 ? 'right-6 left-auto' : 'left-1/2 -translate-x-1/2 right-auto'
+      }`}
+    >
       {/* Home Button */}
       <Link
         href="/"
