@@ -22,6 +22,86 @@ const MissionNavigation = dynamic(() => import('@/components/mission/MissionNavi
 
 type ViewMode = 'globe' | 'underwater';
 
+// --- ContainerDetection component ---
+interface BoundingBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  label: string;
+}
+
+function ContainerDetection() {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [boxes, setBoxes] = useState<BoundingBox[]>([]);
+  const [message, setMessage] = useState<string>('');
+
+  // Simulate detection with mock bounding boxes
+  const mockDetect = () => [
+    { x: 60, y: 40, width: 120, height: 60, label: 'Container' },
+    { x: 220, y: 100, width: 100, height: 50, label: 'Container' },
+  ];
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImageUrl(url);
+      setBoxes(mockDetect());
+      setMessage('Successful! This item is a missing item, rescue team has been notified.');
+    }
+  };
+
+  return (
+    <div>
+      <label className="px-4 py-2 text-xs uppercase font-bold border border-[#00d9ff] text-[#00d9ff] bg-transparent hover:bg-[#00d9ff]/10 transition-all cursor-pointer">
+        Upload Image
+        <input type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+      </label>
+      {message && (
+        <div className="mt-4 text-green-500 font-bold">{message}</div>
+      )}
+      {imageUrl && (
+        <div style={{ position: 'relative', display: 'inline-block', marginTop: 20 }}>
+          <img src={imageUrl} alt="Detected" style={{ maxWidth: 400, border: '1px solid #ccc' }} />
+          {boxes.map((box, idx) => (
+            <div
+              key={idx}
+              style={{
+                position: 'absolute',
+                left: box.x,
+                top: box.y,
+                width: box.width,
+                height: box.height,
+                border: '2px solid #00d9ff',
+                boxSizing: 'border-box',
+                pointerEvents: 'none',
+              }}
+            >
+              <span
+                style={{
+                  background: '#00d9ff',
+                  color: '#fff',
+                  fontSize: 12,
+                  fontWeight: 'bold',
+                  position: 'absolute',
+                  top: -20,
+                  left: 0,
+                  padding: '2px 6px',
+                  borderRadius: 4,
+                }}
+              >
+                {box.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+// --- End ContainerDetection component ---
+
 export default function SimulationPage() {
   const searchParams = useSearchParams();
   const modeParam = searchParams?.get('mode') as ViewMode | null;
@@ -96,12 +176,14 @@ export default function SimulationPage() {
         <div className="flex items-center gap-6 px-6">
           {/* View Mode Toggle */}
           {viewMode === 'underwater' && (
-            <button
-              onClick={handleBackToGlobe}
-              className="px-4 py-2 text-xs uppercase font-bold border border-[#00d9ff] text-[#00d9ff] hover:bg-[#00d9ff]/10 transition-all"
-            >
-              ← Back to Globe
-            </button>
+            <>
+              <button
+                onClick={handleBackToGlobe}
+                className="px-4 py-2 text-xs uppercase font-bold border border-[#00d9ff] text-[#00d9ff] hover:bg-[#00d9ff]/10 transition-all"
+              >
+                ← Back to Globe
+              </button>
+            </>
           )}
 
           {/* Stats */}
@@ -134,7 +216,7 @@ export default function SimulationPage() {
         )}
 
         {/* 3D Canvas */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black to-[#0a1f35]">
+        <div className="absolute inset-0 bg-gradient-to-b from-black to-[#e0e7ef]">
           <Suspense
             fallback={
               <div className="flex items-center justify-center h-full">
@@ -245,52 +327,58 @@ export default function SimulationPage() {
           <div className="mt-2 text-[#00d9ff]">Click container for details</div>
         </div>
 
-        {/* Underwater Mode Data */}
+        {/* Underwater Mode Data & Detection */}
         {viewMode === 'underwater' && (
-          <AnimatePresence>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="fixed bottom-6 left-6 bg-black/90 backdrop-blur-md border border-[#00d9ff]/30 p-6 z-40 max-w-md"
-              style={{ boxShadow: '0 0 30px rgba(0, 217, 255, 0.3)' }}
-            >
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#00d9ff]/20 border border-[#00d9ff] flex items-center justify-center text-[#00d9ff] font-bold">
-                    3D
-                  </div>
-                  <div>
-                    <div className="text-[10px] text-white/60 uppercase tracking-wider">
-                      Underwater View
+          <>
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="fixed bottom-6 left-6 bg-black/90 backdrop-blur-md border border-[#00d9ff]/30 p-6 z-40 max-w-md"
+                style={{ boxShadow: '0 0 30px rgba(0, 217, 255, 0.3)' }}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#00d9ff]/20 border border-[#00d9ff] flex items-center justify-center text-[#00d9ff] font-bold">
+                      3D
                     </div>
-                    <div className="text-sm text-white font-bold">
-                      {selectedContainer?.serialNumber || 'MAEU-123456-7'}
+                    <div>
+                      <div className="text-[10px] text-white/60 uppercase tracking-wider">
+                        Underwater View
+                      </div>
+                      <div className="text-sm text-white font-bold">
+                        {selectedContainer?.serialNumber || 'MAEU-123456-7'}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-3 gap-3 text-xs">
-                  <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                    <div className="text-[9px] text-white/40">DEPTH</div>
-                    <div className="text-sm text-white font-mono">2,850m</div>
+                  <div className="grid grid-cols-3 gap-3 text-xs">
+                    <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
+                      <div className="text-[9px] text-white/40">DEPTH</div>
+                      <div className="text-sm text-white font-mono">2,850m</div>
+                    </div>
+                    <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
+                      <div className="text-[9px] text-white/40">TEMP</div>
+                      <div className="text-sm text-white font-mono">4°C</div>
+                    </div>
+                    <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
+                      <div className="text-[9px] text-white/40">PRESSURE</div>
+                      <div className="text-sm text-white font-mono">285 bar</div>
+                    </div>
                   </div>
-                  <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                    <div className="text-[9px] text-white/40">TEMP</div>
-                    <div className="text-sm text-white font-mono">4°C</div>
-                  </div>
-                  <div className="bg-[#00d9ff]/5 p-2 border border-[#00d9ff]/20">
-                    <div className="text-[9px] text-white/40">PRESSURE</div>
-                    <div className="text-sm text-white font-mono">285 bar</div>
-                  </div>
-                </div>
 
-                <div className="text-[9px] text-white/60 font-mono">
-                  Location: Kelvin Seamounts, North Atlantic
+                  <div className="text-[9px] text-white/60 font-mono">
+                    Location: Kelvin Seamounts, North Atlantic
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+              </motion.div>
+            </AnimatePresence>
+            {/* Detection component at top right */}
+            <div className="fixed top-24 right-8 z-50">
+              <ContainerDetection />
+            </div>
+          </>
         )}
       </div>
 
@@ -311,5 +399,6 @@ export default function SimulationPage() {
         />
       )}
     </div>
+
   );
-}
+} 
