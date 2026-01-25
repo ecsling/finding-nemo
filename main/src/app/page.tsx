@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 import { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { startNewMission } from '@/lib/mission-state';
 
 const CubeViewer = dynamic(() => import('@/components/CubeViewer'), { ssr: false });
 const Dithering = lazy(() => 
@@ -13,6 +15,7 @@ const Dithering = lazy(() =>
 );
 
 export default function Home() {
+  const router = useRouter();
   const [showMobileModal, setShowMobileModal] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHeroHovered, setIsHeroHovered] = useState(false);
@@ -46,6 +49,11 @@ export default function Home() {
       e?.preventDefault();
       setShowMobileModal(true);
     }
+  };
+
+  const handleStartMission = () => {
+    startNewMission();
+    router.push('/dashboard');
   };
 
   // Animation variants
@@ -316,16 +324,16 @@ export default function Home() {
                      transition={{ duration: 0.5, delay: 0.3 }}
                      className="flex items-center gap-4"
                    >
-                     <Link
-                       href="/simulation"
+                     <button
+                       onClick={handleStartMission}
                        className="inline-flex items-center gap-2 rounded-full bg-[#DF6C42] px-8 py-4 text-base font-semibold text-black transition-all hover:bg-[#DF6C42]/90 hover:scale-105"
                        style={{
                          boxShadow: '0 0 30px rgba(223, 108, 66, 0.4)'
                        }}
                      >
-                       Launch Simulation
+                       Start Mission
                        <ArrowRight className="h-5 w-5" />
-                     </Link>
+                     </button>
                      <Link
                        href="/dashboard/search-optimizer"
                        className="inline-flex items-center gap-2 rounded-full border-2 border-[#00d9ff] bg-transparent px-8 py-4 text-base font-semibold text-[#00d9ff] transition-all hover:bg-[#00d9ff]/10 hover:scale-105"

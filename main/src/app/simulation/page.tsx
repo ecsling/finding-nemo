@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import Globe, { SAMPLE_CONTAINERS, SAMPLE_SHIPS } from '@/components/Globe';
 import type { ContainerData } from '@/components/Globe';
 import ContainerDataPanel from '@/components/simulation/ContainerDataPanel';
 import CustomCursor from '@/components/CustomCursor';
+import { setCurrentStep, getSelectedContainer, setSelectedContainer as saveContainer } from '@/lib/mission-state';
 
 // Dynamically import 3D components to avoid SSR issues
 const Canvas = dynamic(
@@ -26,27 +28,50 @@ const UnderwaterScene = dynamic(
   () => import('@/components/simulation/UnderwaterScene'),
   { ssr: false }
 );
+const MissionProgress = dynamic(() => import('@/components/mission/MissionProgress'), { ssr: false });
+const MissionNavigation = dynamic(() => import('@/components/mission/MissionNavigation'), { ssr: false });
 
 type ViewMode = 'globe' | 'underwater';
 
 export default function SimulationPage() {
-  const [viewMode, setViewMode] = useState<ViewMode>('globe');
+  const searchParams = useSearchParams();
+  const modeParam = searchParams?.get('mode') as ViewMode | null;
+
+  const [viewMode, setViewMode] = useState<ViewMode>(modeParam || 'globe');
   const [selectedContainer, setSelectedContainer] = useState<ContainerData | null>(null);
   const [cursorMode, setCursorMode] = useState<'default' | 'container' | 'ship' | 'ocean'>(
     'default'
   );
 
+  // Load saved container and set step based on mode
+  useEffect(() => {
+    const saved = getSelectedContainer();
+    if (saved) {
+      setSelectedContainer(saved);
+    }
+
+    // Set mission step based on mode
+    if (viewMode === 'globe') {
+      setCurrentStep(2);
+    } else if (viewMode === 'underwater') {
+      setCurrentStep(4);
+    }
+  }, [viewMode]);
+
   const handleContainerClick = (container: ContainerData) => {
     setSelectedContainer(container);
+    saveContainer(container); // Persist to mission state
   };
 
   const handleDiveClick = () => {
     setViewMode('underwater');
+    setCurrentStep(4);
   };
 
   const handleBackToGlobe = () => {
     setViewMode('globe');
     setSelectedContainer(null);
+    setCurrentStep(2);
   };
 
   return (
@@ -101,8 +126,13 @@ export default function SimulationPage() {
         </div>
       </nav>
 
+      {/* Mission Progress */}
+      <div className="fixed top-16 left-0 right-0 z-40 bg-black/50 backdrop-blur-sm py-4 border-b border-[#1e3a5f]">
+        <MissionProgress currentStep={viewMode === 'globe' ? 2 : 4} />
+      </div>
+
       {/* Main Content */}
-      <div className="relative min-h-screen pt-16">
+      <div className="relative min-h-screen pt-32">
         {/* Container Data Panel */}
         {viewMode === 'globe' && (
           <ContainerDataPanel
@@ -272,6 +302,23 @@ export default function SimulationPage() {
           </AnimatePresence>
         )}
       </div>
+
+      {/* Mission Navigation */}
+      {viewMode === 'globe' ? (
+        <MissionNavigation
+          currentStep={2}
+          totalSteps={4}
+          previousRoute="/dashboard"
+          nextRoute="/dashboard/search-optimizer"
+          nextLabel="Plan Search"
+        />
+      ) : (
+        <MissionNavigation
+          currentStep={4}
+          totalSteps={4}
+          previousRoute="/dashboard/search-optimizer"
+        />
+      )}
     </div>
   );
 }

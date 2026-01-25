@@ -5,10 +5,11 @@
  * Main interface for probability-weighted container recovery search planning
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { setCurrentStep } from '@/lib/mission-state';
 
 import type {
   IncidentInput,
@@ -27,6 +28,8 @@ const OrbitControls = dynamic(() => import('@react-three/drei').then(mod => ({ d
 const PerspectiveCamera = dynamic(() => import('@react-three/drei').then(mod => ({ default: mod.PerspectiveCamera })), { ssr: false });
 const ProbabilityHeatmap = dynamic(() => import('@/components/ProbabilityHeatmap').then(mod => ({ default: mod.default })), { ssr: false });
 const HeatmapToggle = dynamic(() => import('@/components/ProbabilityHeatmap').then(mod => ({ default: mod.HeatmapToggle })), { ssr: false });
+const MissionProgress = dynamic(() => import('@/components/mission/MissionProgress'), { ssr: false });
+const MissionNavigation = dynamic(() => import('@/components/mission/MissionNavigation'), { ssr: false });
 
 export default function SearchOptimizerPage() {
   // State
@@ -35,6 +38,11 @@ export default function SearchOptimizerPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showVisualization, setShowVisualization] = useState(false);
+
+  // Set mission step
+  useEffect(() => {
+    setCurrentStep(3);
+  }, []);
 
   // Handle incident form submission
   const handleIncidentSubmit = useCallback(async (incident: IncidentInput) => {
@@ -108,6 +116,11 @@ export default function SearchOptimizerPage() {
           </div>
         </div>
       </nav>
+
+      {/* Mission Progress */}
+      <div className="relative z-40 bg-black/50 backdrop-blur-sm py-4 border-b border-[#1e3a5f]">
+        <MissionProgress currentStep={3} />
+      </div>
 
       {/* Main Content */}
       <main className="grid grid-cols-1 lg:grid-cols-12 gap-0 min-h-[calc(100vh-4rem)]">
@@ -277,6 +290,15 @@ export default function SearchOptimizerPage() {
           )}
         </div>
       </main>
+
+      {/* Mission Navigation */}
+      <MissionNavigation
+        currentStep={3}
+        totalSteps={4}
+        previousRoute="/simulation?mode=globe"
+        nextRoute="/simulation?mode=underwater"
+        nextLabel="Launch Dive Mission"
+      />
     </div>
   );
 }
