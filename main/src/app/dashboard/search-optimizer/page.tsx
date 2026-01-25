@@ -413,33 +413,24 @@ export default function SearchOptimizerPage() {
                       </button>
                     </div>
                   </div>
-
-                  {/* View toggles - Compact */}
-                  <div className="bg-white/80 backdrop-blur-sm border border-[#1D1E15]/10 px-2 py-1.5 rounded-lg shadow">
-                    <div className="flex gap-1.5">
-                      {[
-                        ['Grid', showGridPlanner, setShowGridPlanner],
-                        ['Route', showAssetRoute, setShowAssetRoute],
-                      ].map(([l, e, s]) => (
-                        <button
-                          key={l as string}
-                          onClick={() => (s as React.Dispatch<React.SetStateAction<boolean>>)((p) => !p)}
-                          className={`px-2 py-0.5 text-[8px] uppercase rounded transition-colors ${
-                            e
-                              ? 'bg-[#1D1E15] text-[#E5E6DA]'
-                              : 'border border-[#1D1E15]/20 text-[#1D1E15]/50 hover:bg-[#1D1E15]/5'
-                          }`}
-                        >
-                          {l as string}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
                 </div>
 
                 {/* Minimal controls hint */}
                 <div className="absolute top-3 right-3 z-10 bg-white/70 backdrop-blur-sm border border-[#1D1E15]/10 px-2 py-1 text-[8px] text-[#1D1E15]/40 rounded">
                   <div>Drag • Scroll</div>
+                </div>
+
+                {/* Mini Globe in Top Right */}
+                <div className="absolute top-16 right-3 z-10 w-40 h-40 bg-black/80 backdrop-blur-sm border border-cyan-400/30 rounded-lg overflow-hidden shadow-lg">
+                  <Canvas>
+                    <PerspectiveCamera makeDefault position={[0, 0, 3.5]} />
+                    <ambientLight intensity={0.4} />
+                    <directionalLight position={[5, 5, 5]} intensity={0.8} />
+                    <MiniGlobe targetLat={38.7} targetLon={-28.5} />
+                  </Canvas>
+                  <div className="absolute bottom-1 left-1 right-1 text-center text-[7px] text-cyan-400 font-mono bg-black/60 rounded px-1 py-0.5">
+                    Kelvin Seamounts
+                  </div>
                 </div>
                 
                 {/* Live Simulation Feed - Compact */}
@@ -1049,7 +1040,7 @@ function WaterStreamLines({ position, currentDirection }: { position: [number, n
   );
 }
 
-// Water current particles around container
+// Water current particles around container with vector field motion
 function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { position: [number, number, number]; currentDirection: number; currentSpeed: number }) {
   const particlesRef = useRef<THREE.Points>(null);
   const particleCount = 1500; // MORE particles for full wrap-around effect
@@ -1057,6 +1048,7 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
   const particles = useMemo(() => {
     const positions = new Float32Array(particleCount * 3);
     const velocities = new Float32Array(particleCount * 3);
+    const randomOffsets = new Float32Array(particleCount * 3); // For random turbulence
     
     const dirRad = degreesToRadians(currentDirection);
     
@@ -1070,35 +1062,53 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
       positions[i * 3 + 1] = height;
       positions[i * 3 + 2] = Math.sin(angle) * radius;
       
-      // Dynamic flow velocity - creates motion effect
+      // Base directional velocity vector
       velocities[i * 3] = Math.sin(dirRad) * currentSpeed * 5;
       velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
       velocities[i * 3 + 2] = Math.cos(dirRad) * currentSpeed * 5;
+      
+      // Random turbulence offsets for each particle
+      randomOffsets[i * 3] = (Math.random() - 0.5) * 2;
+      randomOffsets[i * 3 + 1] = (Math.random() - 0.5) * 1.5;
+      randomOffsets[i * 3 + 2] = (Math.random() - 0.5) * 2;
     }
     
-    return { positions, velocities };
+    return { positions, velocities, randomOffsets };
   }, [currentDirection, currentSpeed]);
   
   useFrame((state, delta) => {
     if (!particlesRef.current) return;
     
     const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
-    const { velocities } = particles;
+    const { velocities, randomOffsets } = particles;
+    const time = state.clock.elapsedTime;
     
     for (let i = 0; i < particleCount; i++) {
-      // Update particle positions based on velocity
-      positions[i * 3] += velocities[i * 3] * delta * 15;
-      positions[i * 3 + 1] += velocities[i * 3 + 1] * delta * 15;
-      positions[i * 3 + 2] += velocities[i * 3 + 2] * delta * 15;
+      const idx = i * 3;
+      
+      // Sine wave motion (like singing/flowing) + random turbulence
+      const waveX = Math.sin(time * 2 + i * 0.1) * 2;
+      const waveY = Math.cos(time * 1.5 + i * 0.15) * 1.5;
+      const waveZ = Math.sin(time * 1.8 + i * 0.12) * 2;
+      
+      // Random turbulence that changes over time
+      const turbX = Math.sin(time * 0.8 + randomOffsets[idx]) * randomOffsets[idx];
+      const turbY = Math.cos(time * 0.6 + randomOffsets[idx + 1]) * randomOffsets[idx + 1];
+      const turbZ = Math.sin(time * 0.7 + randomOffsets[idx + 2]) * randomOffsets[idx + 2];
+      
+      // Update with directional velocity + waves + turbulence
+      positions[idx] += (velocities[idx] + waveX + turbX) * delta * 15;
+      positions[idx + 1] += (velocities[idx + 1] + waveY + turbY) * delta * 15;
+      positions[idx + 2] += (velocities[idx + 2] + waveZ + turbZ) * delta * 15;
       
       // Reset particles that drift too far
-      const distSq = positions[i * 3] ** 2 + positions[i * 3 + 2] ** 2;
+      const distSq = positions[idx] ** 2 + positions[idx + 2] ** 2;
       if (distSq > 15000) {
         const angle = Math.random() * Math.PI * 2;
-        const radius = 30 + Math.random() * 40;
-        positions[i * 3] = Math.cos(angle) * radius;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
-        positions[i * 3 + 2] = Math.sin(angle) * radius;
+        const radius = 30 + Math.random() * 70;
+        positions[idx] = Math.cos(angle) * radius;
+        positions[idx + 1] = (Math.random() - 0.5) * 80;
+        positions[idx + 2] = Math.sin(angle) * radius;
       }
     }
     
@@ -1122,6 +1132,76 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
         blending={THREE.AdditiveBlending}
       />
     </points>
+  );
+}
+
+// Mini globe component for location visualization
+function MiniGlobe({ targetLat, targetLon }: { targetLat: number; targetLon: number }) {
+  const globeRef = useRef<THREE.Mesh>(null);
+  const markerRef = useRef<THREE.Mesh>(null);
+  
+  useFrame((state) => {
+    if (globeRef.current) {
+      globeRef.current.rotation.y = state.clock.elapsedTime * 0.2;
+    }
+  });
+  
+  // Convert lat/lon to 3D position on sphere
+  const lat = targetLat * (Math.PI / 180);
+  const lon = targetLon * (Math.PI / 180);
+  const radius = 1;
+  
+  const markerPos: [number, number, number] = [
+    radius * Math.cos(lat) * Math.cos(lon),
+    radius * Math.sin(lat),
+    radius * Math.cos(lat) * Math.sin(lon)
+  ];
+  
+  return (
+    <group>
+      {/* Globe sphere */}
+      <mesh ref={globeRef}>
+        <sphereGeometry args={[1, 32, 32]} />
+        <meshStandardMaterial 
+          color="#1a3d4a" 
+          roughness={0.8} 
+          metalness={0.2}
+          wireframe={false}
+        />
+      </mesh>
+      
+      {/* Wireframe overlay */}
+      <mesh>
+        <sphereGeometry args={[1.01, 16, 16]} />
+        <meshBasicMaterial 
+          color="#00d9ff" 
+          wireframe={true} 
+          transparent 
+          opacity={0.3}
+        />
+      </mesh>
+      
+      {/* Location marker */}
+      <mesh ref={markerRef} position={markerPos}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial 
+          color="#ff4444" 
+          emissive="#ff4444"
+          emissiveIntensity={2}
+        />
+      </mesh>
+      
+      {/* Pulsing ring around marker */}
+      <mesh position={markerPos}>
+        <ringGeometry args={[0.1, 0.15, 16]} />
+        <meshBasicMaterial 
+          color="#ff4444" 
+          transparent 
+          opacity={0.5} 
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </group>
   );
 }
 
