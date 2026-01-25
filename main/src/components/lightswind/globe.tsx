@@ -69,7 +69,7 @@ const Globe: React.FC<GlobeProps> = ({
   const isDragging = useRef(false);
   const lastMouseX = useRef(0);
   const lastMouseY = useRef(0);
-  const autoRotateSpeed = 0.0002; // Define auto-rotation speed
+  const autoRotateSpeed = 0.0000; // Define auto-rotation speed 0.0002
 
   useEffect(() => {
     const canvas = canvasRef.current;

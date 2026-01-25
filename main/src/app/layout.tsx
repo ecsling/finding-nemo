@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mesh — Coordination Layer for GeoSpatial Data",
-  description: "Fast, verifiable, and trust-minimized 3D model processing",
+  title: "Finding Nemo",
+  description: "Marine Intelligence, made easy.",
   openGraph: {
     images: ["/hero.png"],
   },
