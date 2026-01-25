@@ -23,6 +23,8 @@ export const ASSET_CONFIG = {
     searchSpeed: 1.5,
     sensors: ['Synthetic aperture sonar', 'Deep-tow camera'],
   },
+  fuelBurnRate: 0.1,
+  costPerHour: 5000,
 };
 
 export const WEATHER_CONDITIONS = {
