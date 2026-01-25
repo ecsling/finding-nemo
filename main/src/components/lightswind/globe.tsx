@@ -64,12 +64,12 @@ const Globe: React.FC<GlobeProps> = ({
   const globeRef = useRef<any>(null); // To store the cobe globe instance
 
   // Refs for interactive rotation and dragging state
-  const phiRef = useRef(0);
-  const thetaRef = useRef(theta); // Initialize thetaRef with prop theta
+  const phiRef = useRef(5.35);
+  const thetaRef = useRef(-.1); // Initialize thetaRef with prop theta
   const isDragging = useRef(false);
   const lastMouseX = useRef(0);
   const lastMouseY = useRef(0);
-  const autoRotateSpeed = 0.003; // Define auto-rotation speed
+  const autoRotateSpeed = 0.0002; // Define auto-rotation speed
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -229,24 +229,25 @@ const Globe: React.FC<GlobeProps> = ({
         className
       )}
       style={{
-        width: "auto",
-        height: "auto", // Container takes full viewport height
+        width: "100%",
+        height: "100%", // Container takes full viewport height
         display: "flex", // Ensure flexbox properties are active for centering
         alignItems: "center",
         justifyContent: "center",
-        overflow: "hidden", // Prevent scrollbars if content overflows
+        overflow: "visible", // Allow globe to extend beyond viewport
       }}
     >
       <canvas
         ref={canvasRef}
         style={{
-          width: "20rem", // Canvas takes full width of its parent (which is constrained)
-          height: "20rem", // Canvas takes full height of its parent (which is constrained)
-          maxWidth: "auto", // Limit max width to viewport height to ensure square aspect in landscape
-          maxHeight: "auto", // Limit max height to viewport width to ensure square aspect in portrait
+          width: "140vh", // Extra large globe that extends beyond viewport
+          height: "140vh", // Extra large globe that extends beyond viewport
+          maxWidth: "none", // Allow it to overflow
+          maxHeight: "none", // Allow it to overflow
           aspectRatio: "1", // Force a 1:1 aspect ratio for the canvas element
           display: "block", // Ensure canvas behaves as a block element
           cursor: "grab", // Default cursor
+          transform: "translateY(8%)", // Move down slightly
         }}
       />
     </div>
