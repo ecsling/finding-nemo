@@ -26,9 +26,15 @@ export const ASSET_CONFIG = {
   },
   fuelBurnRate: 0.1,
   costPerHour: 5000,
+  cruiseSpeed: 12,
 };
 
 export const WEATHER_CONDITIONS = {
+  temperature: 4,
+  windSpeed: 15,
+  visibility: 'good',
+  iceCoverage: 0,
+  waveHeight: 1.5,
   calm: {
     waveHeight: 0.5,
     windSpeed: 5,
