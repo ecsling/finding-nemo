@@ -204,11 +204,23 @@ export default function Home() {
         
         <div className="flex items-center gap-4 px-6">
           <Link
-            href="/dashboard"
-            className="px-8 py-3 bg-[#DF6C42] text-[#0a1929] text-lg uppercase font-bold hover:bg-[#0d2847] transition-colors"
-            onClick={handleLaunchDemoClick}
+            href="/simulation"
+            className="px-6 py-3 bg-[#DF6C42] text-black text-sm uppercase font-bold hover:bg-[#DF6C42]/80 transition-colors rounded-full"
+            style={{
+              boxShadow: '0 0 20px rgba(223, 108, 66, 0.4)'
+            }}
           >
-            Launch Search Demo
+            Live Tracker
+          </Link>
+          <Link
+            href="/dashboard/search-optimizer"
+            className="px-6 py-3 bg-[#00d9ff] text-black text-sm uppercase font-bold hover:bg-[#00d9ff]/80 transition-colors rounded-full"
+            onClick={handleLaunchDemoClick}
+            style={{
+              boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)'
+            }}
+          >
+            Search Optimizer
           </Link>
         </div>
       </nav>
@@ -232,153 +244,124 @@ export default function Home() {
          {/* Main Hero Content */}
         <div className="col-span-12 lg:col-span-10 lg:col-start-2 flex flex-col">
           
-           {/* Hero Section */}
-           <motion.div 
-             ref={heroRef}
-             className="flex flex-col justify-center items-center gap-4 lg:gap-6 relative px-4"
-             style={{ minHeight: '100vh' }}
-             initial="hidden"
-             animate="visible"
-             variants={staggerContainer}
-           >
-             {/* Particle Layer - Background */}
-             <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
-               {Array.from({ length: 30 }).map((_, i) => (
-                 <motion.div
-                   key={i}
-                   className="absolute w-1 h-1 bg-[#e0f2ff] rounded-full"
-                   style={{
-                     left: `${(i * 37) % 100}%`,
-                     top: `${(i * 23) % 100}%`,
-                     opacity: 0.15 + (i % 3) * 0.05
-                   }}
-                   animate={{
-                     x: [0, 20, -15, 10, 0],
-                     y: [0, 30, 20, -10, 0],
-                     opacity: [0.15, 0.25, 0.2, 0.3, 0.15]
-                   }}
-                   transition={{
-                     duration: 8 + (i % 4) * 2,
-                     repeat: Infinity,
-                     ease: "easeInOut",
-                     delay: i * 0.2
-                   }}
-                 />
-               ))}
-             </div>
-
-             {/* Mission HUD Panel */}
-             <motion.div 
-               className="absolute left-1/2 top-1/2 pointer-events-none z-[4]"
-               style={{
-                 width: '85%',
-                 height: '320px',
-                 transform: `translate(calc(-50% + ${mousePosition.x}px), calc(-50% + ${mousePosition.y}px))`,
-                 transition: 'transform 0.1s ease-out'
-               }}
+           {/* Hero Section - Modern CTA Style */}
+           <section className="py-12 w-full flex justify-center items-center px-4 md:px-6" style={{ minHeight: '100vh' }}>
+             <div 
+               className="w-full max-w-7xl relative" 
+               onMouseEnter={() => setIsHeroHovered(true)}
+               onMouseLeave={() => setIsHeroHovered(false)}
              >
-               <div 
-                 className="w-full h-full"
+               <div className="relative overflow-hidden rounded-[48px] border-2 border-[#00d9ff]/30 bg-black/80 backdrop-blur-xl shadow-2xl min-h-[600px] md:min-h-[700px] flex items-center justify-center p-8 md:p-16"
                  style={{
-                   backgroundColor: 'rgba(223, 108, 66, 0.95)',
-                   border: '2px solid rgba(255,255,255,0.6)',
-                   borderRadius: '6px'
-                 }}
-               />
-             </motion.div>
-
-             <motion.div
-               className="relative z-[5] mb-4"
-               variants={staggerItem}
-             >
-               <div className="w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center relative mx-auto">
-                 <div className="absolute inset-0 border-2 border-[#00d9ff] animate-pulse" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 30px rgba(0, 217, 255, 0.6)' }}></div>
-                 <div className="w-10 h-10 lg:w-12 lg:h-12 bg-black border-2 border-[#00d9ff] relative z-10" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 20px rgba(0, 217, 255, 0.8)' }}></div>
-               </div>
-             </motion.div>
-
-             <motion.div 
-               className="inline-flex items-center gap-2 px-4 py-1.5 border-2 border-[#00d9ff] text-[9px] lg:text-[11px] uppercase tracking-[0.2em] w-fit relative z-[5] mb-6 bg-black/50"
-               variants={staggerItem}
-               style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.4)' }}
-             >
-               <div className="w-2 h-2 bg-[#00ff00] animate-pulse" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 10px rgba(0, 255, 0, 0.8)' }}></div>
-               <span className="text-white font-bold" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>SYSTEM ACTIVE</span>
-             </motion.div>
-             
-             <motion.h2 
-               className="text-4xl lg:text-6xl font-sans font-bold leading-none tracking-tight text-white relative z-[5] text-center mb-6"
-               variants={staggerItem}
-               style={{ textShadow: '0 0 20px rgba(0, 217, 255, 0.6), 0 0 40px rgba(0, 217, 255, 0.3)' }}
-             >
-               OCEANCACHE
-             </motion.h2>
-             
-             <motion.p 
-               className="text-sm lg:text-base text-white/80 max-w-lg lg:max-w-2xl leading-relaxed relative z-[5] text-center font-bold tracking-wide mb-3"
-               variants={staggerItem}
-               style={{ textShadow: '0 0 10px rgba(255, 255, 255, 0.3)' }}
-             >
-               DEEP SEA RECOVERY SYSTEM // 3D VISUALIZATION PLATFORM
-             </motion.p>
-             
-             <motion.p 
-               className="text-xs lg:text-sm text-[#00d9ff]/80 max-w-lg lg:max-w-xl leading-relaxed relative z-[5] text-center"
-               variants={staggerItem}
-             >
-               Precision underwater navigation at 2,850 meters. Real-time container verification with AI-assisted analysis.
-             </motion.p>
-             
-             {/* Mobile 3D Visualization Box */}
-             <motion.div 
-               className="lg:hidden h-64 border border-[#1e3a5f] relative overflow-hidden shrink-0 my-4 z-[2]"
-               style={{ backgroundColor: 'transparent' }}
-               variants={staggerItem}
-             >
-               <div className="absolute inset-0 flex items-center justify-center">
-                   <CubeViewer />
-               </div>
-             </motion.div>
-             
-             <motion.div 
-               className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 relative z-[5]"
-               variants={staggerItem}
-             >
-              <button 
-                className="w-full sm:w-auto px-8 py-3 border-2 border-[#00d9ff] text-[11px] uppercase font-bold hover:bg-[#00d9ff] hover:text-black transition-all cursor-pointer tracking-[0.15em] group relative overflow-hidden"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.querySelector('#process');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                }}
-                style={{ 
-                  boxShadow: '0 0 15px rgba(0, 217, 255, 0.3)',
-                  textShadow: '0 0 10px rgba(0, 217, 255, 0.6)'
-                }}
-              >
-                 <span className="relative z-10">HOW IT WORKS</span>
-                 <div className="absolute inset-0 bg-[#00d9ff] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
-               </button>
-               <button
-                 className="w-full sm:w-auto px-8 py-3 bg-[#00d9ff] text-black text-[11px] uppercase font-bold hover:bg-white transition-all cursor-pointer tracking-[0.15em] relative group"
-                 onClick={(e) => {
-                   e.preventDefault();
-                   const element = document.querySelector('#map-viewer');
-                   if (element) {
-                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                   }
-                 }}
-                 style={{ 
-                   clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)',
-                   boxShadow: '0 0 25px rgba(0, 217, 255, 0.6)'
+                   boxShadow: '0 0 40px rgba(0, 217, 255, 0.2), inset 0 0 40px rgba(0, 217, 255, 0.05)',
+                   borderRadius: '48px'
                  }}
                >
-                 <span className="relative z-10 font-black">LAUNCH DIVE →</span>
-               </button>
-            </motion.div>
-          </motion.div>
+                 {/* Shader Background */}
+                 <div className="absolute inset-0 opacity-30 pointer-events-none">
+                   <Suspense fallback={null}>
+                     <Dithering
+                       colorFront="#00d9ff"
+                       colorBack="#000000"
+                       shape="warp"
+                       speed={isHeroHovered ? 3 : 1}
+                     />
+                   </Suspense>
+                 </div>
+
+                 {/* Content */}
+                 <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto space-y-8">
+                   {/* Status Badge */}
+                   <motion.div
+                     initial={{ opacity: 0, y: 20 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.5 }}
+                     className="inline-flex items-center gap-2 rounded-full border-2 border-[#00d9ff]/30 bg-[#00d9ff]/10 px-6 py-2 text-sm font-medium backdrop-blur-sm"
+                   >
+                     <div className="h-2 w-2 rounded-full bg-[#00d9ff] animate-pulse" />
+                     <span className="text-[#00d9ff]">3D Visualization Active</span>
+                   </motion.div>
+
+                   {/* Main Headline */}
+                   <motion.h1
+                     initial={{ opacity: 0, y: 20 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.5, delay: 0.1 }}
+                     className="text-5xl md:text-7xl font-bold tracking-tight text-white"
+                     style={{
+                       fontFamily: 'var(--font-geist-sans)',
+                       lineHeight: '1.1'
+                     }}
+                   >
+                     Explore the deep,{' '}
+                     <span className="text-[#00d9ff]">
+                       recover with precision.
+                     </span>
+                   </motion.h1>
+
+                   {/* Description */}
+                   <motion.p
+                     initial={{ opacity: 0, y: 20 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.5, delay: 0.2 }}
+                     className="text-lg md:text-xl text-white/70 max-w-2xl leading-relaxed"
+                   >
+                     Navigate 2,850 meters below the surface. Interact with sunken cargo in real-time 3D. Verify container contents with AI-powered analysis. Built for the next generation of underwater recovery operations.
+                   </motion.p>
+
+                   {/* CTA Button */}
+                   <motion.div
+                     initial={{ opacity: 0, y: 20 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.5, delay: 0.3 }}
+                     className="flex items-center gap-4"
+                   >
+                     <Link
+                       href="/simulation"
+                       className="inline-flex items-center gap-2 rounded-full bg-[#DF6C42] px-8 py-4 text-base font-semibold text-black transition-all hover:bg-[#DF6C42]/90 hover:scale-105"
+                       style={{
+                         boxShadow: '0 0 30px rgba(223, 108, 66, 0.4)'
+                       }}
+                     >
+                       Launch Simulation
+                       <ArrowRight className="h-5 w-5" />
+                     </Link>
+                     <Link
+                       href="/dashboard/search-optimizer"
+                       className="inline-flex items-center gap-2 rounded-full border-2 border-[#00d9ff] bg-transparent px-8 py-4 text-base font-semibold text-[#00d9ff] transition-all hover:bg-[#00d9ff]/10 hover:scale-105"
+                       style={{
+                         boxShadow: '0 0 20px rgba(0, 217, 255, 0.3)'
+                       }}
+                     >
+                       Search Optimizer
+                       <ArrowRight className="h-5 w-5" />
+                     </Link>
+                   </motion.div>
+
+                   {/* Stats Row */}
+                   <motion.div
+                     initial={{ opacity: 0, y: 20 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.5, delay: 0.4 }}
+                     className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 w-full max-w-3xl"
+                   >
+                     <div className="flex flex-col items-center space-y-2">
+                       <div className="text-3xl font-bold text-[#00d9ff]">2,850m</div>
+                       <div className="text-sm text-white/60 uppercase tracking-wider">Operating Depth</div>
+                     </div>
+                     <div className="flex flex-col items-center space-y-2">
+                       <div className="text-3xl font-bold text-[#00d9ff]">285 bar</div>
+                       <div className="text-sm text-white/60 uppercase tracking-wider">Pressure</div>
+                     </div>
+                     <div className="flex flex-col items-center space-y-2">
+                       <div className="text-3xl font-bold text-[#00d9ff]">Real-Time</div>
+                       <div className="text-sm text-white/60 uppercase tracking-wider">AI Analysis</div>
+                     </div>
+                   </motion.div>
+                 </div>
+               </div>
+             </div>
+           </section>
         </div>
 
         {/* Right Visualization Column - Moved to separate section */}
@@ -936,10 +919,9 @@ export default function Home() {
               </motion.div>
 
               {/* 3D Visualization Container */}
-              <motion.div 
+              <motion.div
                 className="border border-[#1e3a5f] mb-6 relative overflow-hidden"
-                style={{ backgroundColor: 'transparent' }}
-                style={{ height: '60vh', minHeight: '400px' }}
+                style={{ backgroundColor: 'transparent', height: '60vh', minHeight: '400px' }}
                 variants={fadeInUp}
               >
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -1142,7 +1124,7 @@ export default function Home() {
               </div>
               
               <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase opacity-50">
-                <div>© 2025 Deep Sea Container Search. Built by <a href="https://www.linkedin.com/in/fenilshah05/" target="_blank" rel="noopener noreferrer" className="hover:text-[#DF6C42] transition-colors">Fenil Shah</a>, <a href="https://www.linkedin.com/in/devp19/" target="_blank" rel="noopener noreferrer" className="hover:text-[#DF6C42] transition-colors">Dev Patel</a>, <a href="https://www.linkedin.com/in/kushp4444/" target="_blank" rel="noopener noreferrer" className="hover:text-[#DF6C42] transition-colors">Kush Patel</a>.</div>
+                <div>© 2026 Deep Sea Container Search. Built by owen li, evan liem, elizabeth ling, herman Isayenka.</div>
                 <div className="flex items-center gap-4">
                   <span>v.2.0.4</span>
                   <span className="opacity-30">/</span>
