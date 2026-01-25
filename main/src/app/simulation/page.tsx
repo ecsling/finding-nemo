@@ -14,7 +14,6 @@ import CustomCursor from '@/components/CustomCursor';
 import { setCurrentStep, getSelectedContainer, setSelectedContainer as saveContainer } from '@/lib/mission-state';
 import dynamic from 'next/dynamic';
 import ComparisonView from '@/components/ComparisonView';
-import MouseTrail from '@/components/MouseTrail';
 
 const UnderwaterScene = dynamic(
   () => import('@/components/simulation/UnderwaterScene'),
@@ -147,8 +146,6 @@ export default function SimulationPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-mono relative overflow-hidden">
-      <MouseTrail />
-      
       {/* Custom Cursor */}
       <CustomCursor mode={cursorMode} />
 

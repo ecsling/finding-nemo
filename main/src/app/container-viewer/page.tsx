@@ -6,7 +6,6 @@ import { Home } from "lucide-react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import MouseTrail from "@/components/MouseTrail";
 
 export default function ContainerViewerPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -150,8 +149,6 @@ export default function ContainerViewerPage() {
 
   return (
     <div className="relative h-screen w-screen bg-background text-foreground flex">
-      <MouseTrail />
-      
       {/* Header with home button */}
       <div className="absolute top-6 left-6 z-20">
         <Link

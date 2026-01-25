@@ -4,12 +4,10 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Home } from "lucide-react";
-import MouseTrail from "@/components/MouseTrail";
 
 export default function EditorPage() {
   return (
     <div className="relative h-screen w-screen bg-[#E5E6DA] text-[#1D1E15] font-mono">
-      <MouseTrail />
       {/* Header with home button */}
       <div className="absolute top-6 left-6 z-20">
         <Link

@@ -28,7 +28,6 @@ import { calculateDrift, degreesToRadians, gpsToCartesian, haversineDistance } f
 import IncidentInputForm from '@/components/IncidentInputForm';
 import SearchComparison from '@/components/SearchComparison';
 import ZoneLegend, { CompactLegend } from '@/components/ZoneLegend';
-import MouseTrail from '@/components/MouseTrail';
 
 const Dithering = lazy(() =>
   import("@paper-design/shaders-react").then((mod) => ({ default: mod.Dithering }))
@@ -237,8 +236,6 @@ export default function SearchOptimizerPage() {
 
   return (
     <div className="min-h-screen bg-[#E5E6DA] text-[#1D1E15] font-mono">
-      <MouseTrail />
-
       <Suspense fallback={null}>
         <div className="fixed inset-0 z-0 pointer-events-none opacity-20 mix-blend-multiply">
           <Dithering colorBack="#00000000" colorFront="#7ec8e3" shape="warp" type="4x4" speed={0.1} className="size-full" minPixelRatio={1} />
