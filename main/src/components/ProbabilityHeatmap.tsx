@@ -17,26 +17,15 @@ interface ProbabilityHeatmapProps {
   visible: boolean;
   opacity?: number;
   animationSpeed?: number;
-}
-
-/**
- * Convert priority to color
- */
-function getPriorityColor(priority: 'high' | 'medium' | 'low', opacity: number = 0.6): string {
-  const colors = {
-    high: `rgba(255, 0, 0, ${opacity})`, // Red
-    medium: `rgba(255, 255, 0, ${opacity})`, // Yellow
-    low: `rgba(0, 0, 255, ${opacity})`, // Blue
-  };
-
-  return colors[priority];
+  seaFloorY?: number;
+  markerOffset?: number;
 }
 
 /**
  * Convert probability score to color (smooth gradient)
  */
 function probabilityToColor(score: number, opacity: number = 0.6): THREE.Color {
-  // Red (high) → Yellow (medium) → Blue (low)
+  // Red (high) -> Yellow (medium) -> Blue (low)
   if (score >= 0.7) {
     // High priority: Red to Yellow gradient
     const t = (score - 0.7) / 0.3;
@@ -59,10 +48,12 @@ function ZoneMesh({
   zone,
   referencePoint,
   opacity,
+  seaFloorY,
 }: {
   zone: ProbabilityZone;
   referencePoint: GPSCoordinate;
   opacity: number;
+  seaFloorY: number;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -73,8 +64,8 @@ function ZoneMesh({
 
   // Estimate radius from zone area
   const radius = useMemo(() => {
-    // Area = πr², so r = √(Area/π)
-    // Convert area from m² to scene units (divide by 100 since we're scaling by 10)
+    // Area = pi * r^2, so r = sqrt(Area / pi)
+    // Convert area from m^2 to scene units (divide by 100 since we're scaling by 10)
     return Math.sqrt(zone.area / Math.PI) / 10;
   }, [zone.area]);
 
@@ -106,52 +97,11 @@ function ZoneMesh({
     <mesh
       ref={meshRef}
       material={material}
-      position={[centroidCartesian.x, -5, centroidCartesian.z]}
+      position={[centroidCartesian.x, seaFloorY, centroidCartesian.z]}
       rotation={[-Math.PI / 2, 0, 0]}
     >
       <circleGeometry args={[radius, 32]} />
     </mesh>
-  );
-}
-
-/**
- * Traditional Circular Search Pattern
- */
-function TraditionalSearchCircle({
-  center,
-  radiusMeters,
-  referencePoint,
-  opacity,
-}: {
-  center: GPSCoordinate;
-  radiusMeters: number;
-  referencePoint: GPSCoordinate;
-  opacity: number;
-}) {
-  const geometry = useMemo(() => {
-    return new THREE.RingGeometry(0, radiusMeters / 10, 64); // Scale: 10m per unit
-  }, [radiusMeters]);
-
-  const material = useMemo(() => {
-    return new THREE.MeshBasicMaterial({
-      color: 0x00d9ff,
-      transparent: true,
-      opacity: opacity * 0.3,
-      side: THREE.DoubleSide,
-    });
-  }, [opacity]);
-
-  const centerCartesian = useMemo(() => {
-    return gpsToCartesian(center, referencePoint, 10);
-  }, [center, referencePoint]);
-
-  return (
-    <mesh
-      geometry={geometry}
-      material={material}
-      position={[centerCartesian.x, -10, centerCartesian.z]}
-      rotation={[-Math.PI / 2, 0, 0]}
-    />
   );
 }
 
@@ -164,17 +114,10 @@ export default function ProbabilityHeatmap({
   visible,
   opacity = 0.6,
   animationSpeed = 1,
+  seaFloorY = -5,
+  markerOffset = 12,
 }: ProbabilityHeatmapProps) {
   const groupRef = useRef<THREE.Group>(null);
-
-  // Debug: Log zones
-  React.useEffect(() => {
-    console.log('ProbabilityHeatmap zones:', zones.length);
-    if (zones.length > 0) {
-      console.log('First zone:', zones[0]);
-      console.log('Reference point:', referencePoint);
-    }
-  }, [zones, referencePoint]);
 
   // Animate opacity fade in/out
   useFrame(() => {
@@ -200,27 +143,24 @@ export default function ProbabilityHeatmap({
 
   return (
     <group ref={groupRef}>
-      {zones.map((zone, idx) => {
-        console.log(`Rendering zone ${idx}:`, zone.centroid, 'Area:', zone.area);
-        return (
-          <ZoneMesh
-            key={zone.id}
-            zone={zone}
-            referencePoint={referencePoint}
-            opacity={opacity}
-          />
-        );
-      })}
+      {zones.map((zone) => (
+        <ZoneMesh
+          key={zone.id}
+          zone={zone}
+          referencePoint={referencePoint}
+          opacity={opacity}
+          seaFloorY={seaFloorY}
+        />
+      ))}
 
       {/* Markers for zone centroids - larger and more visible */}
       {zones.map((zone) => {
         const centroidCartesian = gpsToCartesian(zone.centroid, referencePoint, 10);
-        console.log(`Marker position for ${zone.priority}:`, centroidCartesian);
 
         return (
           <mesh
             key={`marker-${zone.id}`}
-            position={[centroidCartesian.x, 10, centroidCartesian.z]}
+            position={[centroidCartesian.x, seaFloorY + markerOffset, centroidCartesian.z]}
           >
             <sphereGeometry args={[20, 16, 16]} />
             <meshStandardMaterial

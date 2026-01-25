@@ -47,13 +47,12 @@ export default function MissionProgress({ currentStep, onStepClick }: MissionPro
       {/* Step Indicator */}
       <div className="flex items-center justify-between relative">
         {/* Progress Line */}
-        <div className="absolute top-3 left-0 right-0 h-0.5 bg-[#1e3a5f]">
+        <div className="absolute top-3 left-0 right-0 h-[2px] bg-[#1D1E15]/10">
           <motion.div
-            className="h-full bg-[#00d9ff]"
+            className="h-full bg-[#1D1E15]"
             initial={{ width: 0 }}
             animate={{ width: `${((currentStep - 1) / (MISSION_STEPS.length - 1)) * 100}%` }}
             transition={{ duration: 0.5, ease: 'easeInOut' }}
-            style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.6)' }}
           />
         </div>
 
@@ -68,27 +67,22 @@ export default function MissionProgress({ currentStep, onStepClick }: MissionPro
               key={step.id}
               onClick={() => isClickable && onStepClick(step.id)}
               disabled={!isClickable}
-              className={`relative z-10 flex flex-col items-center gap-1 ${
+              className={`relative z-10 flex flex-col items-center gap-2 ${
                 isClickable ? 'cursor-pointer' : 'cursor-default'
               }`}
             >
               {/* Circle */}
               <motion.div
-                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center font-mono text-[10px] font-bold ${
+                className={`w-7 h-7 rounded-full border-2 flex items-center justify-center font-mono text-[11px] font-medium transition-colors ${
                   isActive
-                    ? 'border-[#00d9ff] bg-[#00d9ff] text-black'
+                    ? 'border-[#1D1E15] bg-[#1D1E15] text-[#E5E6DA]'
                     : isCompleted
-                    ? 'border-[#00d9ff] bg-black text-[#00d9ff]'
-                    : 'border-[#1e3a5f] bg-black text-[#1e3a5f]'
+                    ? 'border-[#1D1E15] bg-[#E5E6DA] text-[#1D1E15]'
+                    : 'border-[#1D1E15]/20 bg-[#E5E6DA] text-[#1D1E15]/30'
                 }`}
                 initial={false}
                 animate={{
                   scale: isActive ? 1.1 : 1,
-                  boxShadow: isActive
-                    ? '0 0 15px rgba(0, 217, 255, 0.8)'
-                    : isCompleted
-                    ? '0 0 8px rgba(0, 217, 255, 0.4)'
-                    : 'none',
                 }}
                 transition={{ duration: 0.3 }}
                 whileHover={isClickable ? { scale: 1.15 } : {}}
@@ -99,12 +93,12 @@ export default function MissionProgress({ currentStep, onStepClick }: MissionPro
               {/* Compact Label */}
               <div className="flex flex-col items-center">
                 <div
-                  className={`text-[9px] font-mono uppercase tracking-wider whitespace-nowrap ${
+                  className={`text-[10px] font-mono uppercase tracking-[0.15em] whitespace-nowrap transition-colors ${
                     isActive
-                      ? 'text-[#00d9ff] font-bold'
+                      ? 'text-[#1D1E15] font-semibold'
                       : isCompleted
-                      ? 'text-white/80'
-                      : 'text-white/40'
+                      ? 'text-[#1D1E15]/70'
+                      : 'text-[#1D1E15]/30'
                   }`}
                 >
                   {step.label}
@@ -114,9 +108,9 @@ export default function MissionProgress({ currentStep, onStepClick }: MissionPro
               {/* Active Pulse */}
               {isActive && (
                 <motion.div
-                  className="absolute w-6 h-6 rounded-full border-2 border-[#00d9ff] top-0"
-                  initial={{ scale: 1, opacity: 0.8 }}
-                  animate={{ scale: 1.6, opacity: 0 }}
+                  className="absolute w-7 h-7 rounded-full border-2 border-[#1D1E15]/40 top-0"
+                  initial={{ scale: 1, opacity: 0.6 }}
+                  animate={{ scale: 1.8, opacity: 0 }}
                   transition={{
                     duration: 1.5,
                     repeat: Infinity,
