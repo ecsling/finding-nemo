@@ -72,26 +72,81 @@ export default function SimulationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-mono relative overflow-hidden">
+    <div 
+      className="min-h-screen text-white font-mono relative overflow-hidden"
+      style={viewMode === 'globe' ? { background: '#E5E6DA' } : { background: '#000000' }}
+    >
       {/* Custom Cursor */}
       <CustomCursor mode={cursorMode} />
 
       {/* Navigation Header with Integrated Mission Progress */}
       <nav
-        className="fixed top-0 left-0 right-0 z-50 px-0 h-20 flex justify-between items-center border-b border-[#00d9ff]/30 backdrop-blur-md"
-        style={{ backgroundColor: 'rgba(5, 15, 26, 0.9)' }}
+        className="fixed top-0 left-0 right-0 z-50 px-0 h-20 flex justify-between items-center backdrop-blur-sm"
+        style={
+          viewMode === 'globe'
+            ? {
+                backgroundColor: 'rgba(220, 218, 200, 0.95)',
+                borderBottom: '1px solid rgba(29, 30, 21, 0.08)',
+              }
+            : {
+                backgroundColor: 'rgba(5, 15, 26, 0.9)',
+                borderBottom: '1px solid rgba(0, 217, 255, 0.3)',
+              }
+        }
       >
         <div className="flex items-center h-full flex-1">
           <Link
             href="/"
-            className="w-[134px] h-full flex items-center justify-center shrink-0 border-r border-[#1e3a5f] hover:bg-[#0d2847] transition-colors"
+            className="w-[134px] h-full flex items-center justify-center shrink-0 transition-colors"
+            style={
+              viewMode === 'globe'
+                ? {
+                    borderRight: '1px solid rgba(29, 30, 21, 0.08)',
+                  }
+                : {
+                    borderRight: '1px solid rgba(30, 58, 95, 1)',
+                  }
+            }
+            onMouseEnter={(e) => {
+              if (viewMode === 'globe') {
+                e.currentTarget.style.backgroundColor = 'rgba(29, 30, 21, 0.05)';
+              } else {
+                e.currentTarget.style.backgroundColor = 'rgba(13, 40, 71, 1)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
           >
             <div className="w-10 h-10 flex items-center justify-center">
-              <div className="w-6 h-6 border border-[#1e3a5f] rounded-sm"></div>
+              <div
+                className="w-6 h-6 rounded-sm"
+                style={
+                  viewMode === 'globe'
+                    ? {
+                        border: '2px solid rgba(29, 30, 21, 0.2)',
+                      }
+                    : {
+                        border: '1px solid rgba(30, 58, 95, 1)',
+                      }
+                }
+              ></div>
             </div>
           </Link>
 
-          <div className="px-6 text-base font-bold uppercase tracking-[0.15em] text-white" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
+          <div
+            className="px-6 text-base font-bold uppercase tracking-[0.15em]"
+            style={
+              viewMode === 'globe'
+                ? {
+                    color: '#1D1E15',
+                  }
+                : {
+                    color: '#ffffff',
+                    textShadow: '0 0 5px rgba(255, 255, 255, 0.3)',
+                  }
+            }
+          >
             {viewMode === 'globe' ? 'Global Tracker' : 'Recovery Mission'}
           </div>
 
@@ -113,7 +168,18 @@ export default function SimulationPage() {
           )}
 
           {/* Stats */}
-          <div className="flex items-center gap-4 text-[10px] uppercase text-white/60">
+          <div
+            className="flex items-center gap-4 text-[10px] uppercase"
+            style={
+              viewMode === 'globe'
+                ? {
+                    color: 'rgba(29, 30, 21, 0.7)',
+                  }
+                : {
+                    color: 'rgba(255, 255, 255, 0.6)',
+                  }
+            }
+          >
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#DF6C42] rounded-full animate-pulse" />
               <span>{SAMPLE_CONTAINERS.filter((c) => c.status === 'floating').length} Drifting</span>
@@ -124,8 +190,32 @@ export default function SimulationPage() {
             </div>
           </div>
 
-          <div className="text-[10px] uppercase text-white/40">
-            System Status: <span className="text-[#00d9ff]">Active</span>
+          <div
+            className="text-[10px] uppercase"
+            style={
+              viewMode === 'globe'
+                ? {
+                    color: 'rgba(29, 30, 21, 0.5)',
+                  }
+                : {
+                    color: 'rgba(255, 255, 255, 0.4)',
+                  }
+            }
+          >
+            System Status:{' '}
+            <span
+              style={
+                viewMode === 'globe'
+                  ? {
+                      color: '#1D1E15',
+                    }
+                  : {
+                      color: '#00d9ff',
+                    }
+              }
+            >
+              Active
+            </span>
           </div>
         </div>
       </nav>
@@ -142,7 +232,19 @@ export default function SimulationPage() {
         )}
 
         {/* 3D Canvas */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black to-[#0a1f35]">
+        <div 
+          className="absolute inset-0"
+          style={
+            viewMode === 'globe'
+              ? {
+                  background: 'linear-gradient(to bottom, #E5E6DA 0%, #D8D6C4 50%, #D0CEBC 100%)',
+                  backgroundImage: 'radial-gradient(ellipse at center 45%, rgba(126, 200, 227, 0.12) 0%, rgba(126, 200, 227, 0.06) 30%, rgba(126, 200, 227, 0.02) 50%, transparent 70%)',
+                }
+              : {
+                  background: 'linear-gradient(to bottom, #000000, #0a1f35)',
+                }
+          }
+        >
           <Suspense
             fallback={
               <div className="flex items-center justify-center h-full">
