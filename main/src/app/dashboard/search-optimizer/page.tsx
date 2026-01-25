@@ -1184,7 +1184,7 @@ function MiniGlobe({ targetLat, targetLon }: { targetLat: number; targetLon: num
       {/* Location marker */}
       <mesh ref={markerRef} position={markerPos}>
         <sphereGeometry args={[0.08, 8, 8]} />
-        <meshBasicMaterial 
+        <meshStandardMaterial 
           color="#ff4444" 
           emissive="#ff4444"
           emissiveIntensity={2}
