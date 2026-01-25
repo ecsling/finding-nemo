@@ -124,7 +124,9 @@ const Globe: React.FC<GlobeProps> = ({
         opacity: 1,
         offset: [0, 0],
         markers: [
-
+          {location: [34.771961866509855, -25.240382901852094], size: 0.05}, // portugal area - ship marker
+          {location: [8.617546198569014, -55.47475904592583], size: 0.05}, // brazil area - ship marker
+          {location: [48.036902642758065, -61.99700014054653], size: 0.05}, // quebec area - ship marker
         ],
         onRender: (state: Record<string, any>) => {
           if (!isDragging.current) {
