@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, Suspense, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -10,20 +11,8 @@ import type { ContainerData } from '@/components/Globe';
 import ContainerDataPanel from '@/components/simulation/ContainerDataPanel';
 import CustomCursor from '@/components/CustomCursor';
 import { setCurrentStep, getSelectedContainer, setSelectedContainer as saveContainer } from '@/lib/mission-state';
+import dynamic from 'next/dynamic';
 
-// Dynamically import 3D components to avoid SSR issues
-const Canvas = dynamic(
-  () => import('@react-three/fiber').then((mod) => ({ default: mod.Canvas })),
-  { ssr: false }
-);
-const OrbitControls = dynamic(
-  () => import('@react-three/drei').then((mod) => ({ default: mod.OrbitControls })),
-  { ssr: false }
-);
-const PerspectiveCamera = dynamic(
-  () => import('@react-three/drei').then((mod) => ({ default: mod.PerspectiveCamera })),
-  { ssr: false }
-);
 const UnderwaterScene = dynamic(
   () => import('@/components/simulation/UnderwaterScene'),
   { ssr: false }

@@ -1,29 +1,29 @@
 'use client';
 
-import { useRef, useMemo, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useRef, useMemo, useState, Suspense } from 'react';
+import { useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Line } from '@react-three/drei';
 
-interface ContainerData {
+export interface ContainerData {
   id: string;
   serialNumber: string;
-  position: [number, number]; // [lat, lon]
-  dropPosition: [number, number]; // [lat, lon] where it was lost
+  position: [number, number];
+  dropPosition: [number, number];
   status: 'floating' | 'sunken';
-  timeInWater: number; // hours
-  driftSpeed: number; // m/s
-  weight: number; // kg
+  timeInWater: number;
+  driftSpeed: number;
+  weight: number;
   dimensions: { length: number; width: number; height: number };
   contents: string;
   buoyancy: string;
   shipName: string;
 }
 
-interface ShipRoute {
+export interface ShipRoute {
   id: string;
   name: string;
-  points: [number, number][]; // array of [lat, lon]
+  points: [number, number][];
   color: string;
 }
 
@@ -120,8 +120,6 @@ function DriftTrail({ container }: { container: ContainerData }) {
   const points = useMemo(() => {
     const start = latLonToVector3(container.dropPosition[0], container.dropPosition[1]);
     const end = latLonToVector3(container.position[0], container.position[1]);
-
-    // Create smooth curve with multiple intermediate points
     const curve = createArcCurve(start, end, 0.15);
     return curve.getPoints(50);
   }, [container]);
@@ -141,8 +139,6 @@ function DriftTrail({ container }: { container: ContainerData }) {
 function ShipRouteArc({ ship }: { ship: ShipRoute }) {
   const points = useMemo(() => {
     const vectors = ship.points.map(([lat, lon]) => latLonToVector3(lat, lon));
-
-    // Create smooth curve through all points
     const curve = new THREE.CatmullRomCurve3(vectors);
     return curve.getPoints(100);
   }, [ship.points]);
@@ -167,17 +163,15 @@ function OceanCurrents() {
     const positions = new Float32Array(1000 * 3);
 
     for (let i = 0; i < 1000; i++) {
-      // Random points on sphere surface
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
-      const radius = 2.05; // Slightly above globe surface
-
+      const radius = 2.05;
       positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
       positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = radius * Math.cos(phi);
     }
 
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     return geometry;
   }, []);
 
@@ -201,42 +195,40 @@ function OceanCurrents() {
   );
 }
 
-// Main Globe Component
-export default function Globe({
+// Earth Sphere with Texture
+function EarthTextureSphere() {
+  const colorMap = useLoader(
+    THREE.TextureLoader,
+    "https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg"
+  );
+  return (
+    <mesh>
+      <sphereGeometry args={[2, 64, 64]} />
+      <meshStandardMaterial map={colorMap} />
+    </mesh>
+  );
+}
+
+// Main Globe Scene
+function GlobeScene({
+  containers,
+  ships,
   onContainerClick,
-  containers = [],
-  ships = [],
-  autoRotate = true,
-  showCurrents = true,
+  autoRotate,
+  showCurrents,
 }: GlobeProps) {
-  const globeRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
 
-  // Auto-rotation
   useFrame(() => {
     if (groupRef.current && autoRotate) {
       groupRef.current.rotation.y += 0.001;
     }
   });
 
-  // Earth material with ocean/land colors
-  const earthMaterial = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
-      color: '#1a5490',
-      roughness: 0.7,
-      metalness: 0.2,
-      emissive: '#0a2540',
-      emissiveIntensity: 0.2,
-    });
-  }, []);
-
   return (
     <group ref={groupRef}>
-      {/* Earth Sphere */}
-      <mesh ref={globeRef}>
-        <sphereGeometry args={[2, 64, 64]} />
-        <primitive object={earthMaterial} />
-      </mesh>
+      {/* Earth with texture */}
+      <EarthTextureSphere />
 
       {/* Atmosphere Glow */}
       <mesh scale={1.05}>
@@ -251,17 +243,17 @@ export default function Globe({
       </mesh>
 
       {/* Ship Routes */}
-      {ships.map((ship) => (
+      {ships?.map((ship) => (
         <ShipRouteArc key={ship.id} ship={ship} />
       ))}
 
       {/* Container Drift Trails */}
-      {containers.map((container) => (
+      {containers?.map((container) => (
         <DriftTrail key={`trail-${container.id}`} container={container} />
       ))}
 
       {/* Container Markers */}
-      {containers.map((container) => (
+      {containers?.map((container) => (
         <ContainerMarker
           key={container.id}
           container={container}
@@ -283,6 +275,15 @@ export default function Globe({
         />
       </mesh>
     </group>
+  );
+}
+
+export default function Globe(props: GlobeProps) {
+  // Only return a group of 3D objects, NOT a Canvas!
+  return (
+    <Suspense fallback={null}>
+      <GlobeScene {...props} />
+    </Suspense>
   );
 }
 
