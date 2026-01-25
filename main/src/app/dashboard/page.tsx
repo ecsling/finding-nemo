@@ -30,9 +30,22 @@ const IS_PRODUCTION_DEMO = process.env.NEXT_PUBLIC_PRODUCTION_DEMO === "true";
 
 export default function DashboardPage() {
   const [showBanner, setShowBanner] = useState(IS_PRODUCTION_DEMO);
+  const [showVideo, setShowVideo] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setCurrentStep(1);
+    
+    // Hide video after loading completes (3 seconds delay to let scene load)
+    const hideVideoTimer = setTimeout(() => {
+      setIsLoading(false);
+      // Give another 2 seconds before collapsing the video
+      setTimeout(() => {
+        setShowVideo(false);
+      }, 2000);
+    }, 3000);
+    
+    return () => clearTimeout(hideVideoTimer);
   }, []);
 
   return (
@@ -127,58 +140,68 @@ export default function DashboardPage() {
       <div className="flex-1 relative">
         <ModelViewer />
         
-        {/* Cargo Ship Video Window */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="absolute bottom-24 left-6 z-40 w-[420px] bg-black/95 backdrop-blur-md border-2 border-cyan-400/40 rounded-lg shadow-2xl overflow-hidden"
-        >
-          {/* Video Header */}
-          <div className="bg-gradient-to-r from-cyan-500/20 to-blue-600/20 border-b border-cyan-400/30 px-4 py-2 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-cyan-400 text-xs font-mono font-bold uppercase tracking-wider">Live Feed</span>
-            </div>
-            <span className="text-white/60 text-[10px] font-mono">Cargo Ship Camera</span>
-          </div>
-          
-          {/* Video Player */}
-          <div className="relative bg-black">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-auto"
-              style={{ maxHeight: '240px' }}
+        {/* Cargo Ship Video Window - Collapses after loading */}
+        <AnimatePresence>
+          {showVideo && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ 
+                opacity: 0, 
+                scale: 0.8, 
+                y: 40,
+                transition: { duration: 0.6, ease: "easeInOut" }
+              }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="absolute bottom-24 left-6 z-40 w-[420px] bg-black/95 backdrop-blur-md border-2 border-cyan-400/40 rounded-lg shadow-2xl overflow-hidden"
             >
-              <source src="/assets/cargo_ship.mp4" type="video/mp4" />
-              <source src="/assets/cargo_ship.webm" type="video/webm" />
-              {/* Fallback message */}
-              <div className="flex items-center justify-center h-48 text-white/60 text-xs">
-                Video not found. Place cargo_ship.mp4 in /public/assets/
+              {/* Video Header */}
+              <div className="bg-gradient-to-r from-cyan-500/20 to-blue-600/20 border-b border-cyan-400/30 px-4 py-2 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-cyan-400 text-xs font-mono font-bold uppercase tracking-wider">Live Feed</span>
+                </div>
+                <span className="text-white/60 text-[10px] font-mono">Cargo Ship Camera</span>
               </div>
-            </video>
-            
-            {/* Video Overlay Info */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-3">
-              <div className="flex items-center justify-between text-[10px] text-white/80 font-mono">
-                <span>📍 Atlantic Ocean</span>
-                <span className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                  LIVE
-                </span>
+              
+              {/* Video Player */}
+              <div className="relative bg-black">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-auto"
+                  style={{ maxHeight: '240px' }}
+                >
+                  <source src="/assets/cargo_ship.mp4" type="video/mp4" />
+                  <source src="/assets/cargo_ship.webm" type="video/webm" />
+                  {/* Fallback message */}
+                  <div className="flex items-center justify-center h-48 text-white/60 text-xs">
+                    Video not found. Place cargo_ship.mp4 in /public/assets/
+                  </div>
+                </video>
+                
+                {/* Video Overlay Info */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-3">
+                  <div className="flex items-center justify-between text-[10px] text-white/80 font-mono">
+                    <span>📍 Atlantic Ocean</span>
+                    <span className="flex items-center gap-1">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                      LIVE
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          
-          {/* Video Stats */}
-          <div className="bg-black/60 px-4 py-2 flex items-center justify-between text-[9px] text-white/60 font-mono border-t border-cyan-400/20">
-            <span>Container Incident Zone</span>
-            <span>00:15:42 UTC</span>
-          </div>
-        </motion.div>
+              
+              {/* Video Stats */}
+              <div className="bg-black/60 px-4 py-2 flex items-center justify-between text-[9px] text-white/60 font-mono border-t border-cyan-400/20">
+                <span>Container Incident Zone</span>
+                <span>00:15:42 UTC</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Mission Navigation */}
