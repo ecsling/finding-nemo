@@ -61,7 +61,7 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
 
       <div className="relative z-10 w-full max-w-2xl px-8 space-y-12">
         {/* Depth Descent Animation */}
-        <div className="flex flex-col items-center space-y-6">
+        <div className="flex flex-col items-center space-y-6 mt-24">
           <div className="relative w-64 h-64 flex items-center justify-center">
             {/* Outer pulse ring */}
             <motion.div
