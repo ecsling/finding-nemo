@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -2232,18 +2232,18 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                   {/* Compact stats grid */}
                   <div className="space-y-1.5 text-[10px]">
                     {/* Depth & Pressure */}
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-end items-center">
                       <span className="text-white/50 tracking-wider">DEPTH</span>
                       <span className="font-bold text-[#00d9ff] tracking-wider" style={{ textShadow: '0 0 8px rgba(0, 217, 255, 0.6)' }}>{depth}m</span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-end items-center">
                       <span className="text-white/50 tracking-wider">PRESSURE</span>
                       <span className="font-bold text-white tracking-wider">{pressure} bar</span>
                     </div>
                     
                     {/* Oxygen bar - compact */}
                     <div className="py-1">
-                      <div className="flex justify-between items-center mb-0.5">
+                      <div className="flex justify-end items-center mb-0.5">
                         <span className="text-white/50 tracking-wider">O₂</span>
                         <span className="font-bold text-white tracking-wider">{oxygen}%</span>
                       </div>
@@ -2263,19 +2263,19 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
                     </div>
                     
                     {/* Temperature */}
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-end items-center">
                       <span className="text-white/50 tracking-wider">TEMP</span>
                       <span className="font-bold text-white tracking-wider">{temperature}°C</span>
                     </div>
                     
                     {/* Heading */}
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-end items-center">
                       <span className="text-white/50 tracking-wider">HDG</span>
                       <span className="font-bold text-white tracking-wider">{compass}°</span>
                     </div>
                     
                     {/* Photos */}
-                    <div className="flex justify-between items-center pt-1 border-t border-[#00d9ff]/30">
+                    <div className="flex justify-end items-center pt-1 border-t border-[#00d9ff]/30">
                       <span className="text-white/50 tracking-wider">PHOTOS</span>
                       <span className="font-bold text-[#00d9ff] tracking-wider" style={{ textShadow: '0 0 8px rgba(0, 217, 255, 0.6)' }}>{photosCollected}/{maxPhotos}</span>
                     </div>
@@ -2300,96 +2300,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
         `}</style>
         
         {/* Top Controls */}
-        <div className="absolute top-0 left-0 w-full z-10 p-6 flex justify-between items-center pointer-events-none">
-          {/* Top Left - BLE Stick Controls */}
-          <div className="flex items-center gap-3 pointer-events-auto">
-            {/* OBJ Stick Controls */}
-            <div className="bg-[#0a2540]/95 border-2 border-[#00d9ff] px-4 py-2.5 flex items-center gap-2 backdrop-blur-md rounded-lg" style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)' }}>
-              <span className="text-sm font-bold text-white uppercase tracking-[0.15em]" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>OBJ</span>
-              {!objConnected ? (
-                <button
-                  onClick={handleObjConnect}
-                  className="px-4 py-2 bg-[#00d9ff] text-black text-sm font-bold hover:bg-white transition-all uppercase cursor-pointer rounded-lg"
-                  style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.4)' }}
-                >
-                  CONNECT
-                </button>
-              ) : (
-                <>
-                  <button
-                    onClick={handleObjDisconnect}
-                    className="px-4 py-2 bg-[#DF6C42] text-white text-sm rounded-lg font-bold hover:bg-[#c82333] transition-all uppercase cursor-pointer"
-                    style={{ boxShadow: '0 0 15px rgba(223, 108, 66, 0.4)' }}
-                  >
-                    Disconnect
-                  </button>
-                  <span className="text-sm text-[#00d9ff] font-mono tracking-wider font-semibold" style={{ textShadow: '0 0 5px rgba(0, 217, 255, 0.5)' }}>{objDeviceName}</span>
-                  <button
-                    onClick={handleObjZero}
-                    className="px-4 py-2 bg-black border-2 border-[#00d9ff] text-white text-sm font-bold hover:bg-[#00d9ff] hover:text-black transition-all uppercase cursor-pointer rounded-lg"
-                    style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.3)' }}
-                  >
-                    ZERO
-                  </button>
-                  <button
-                    onClick={handleResetTranslate}
-                    className="px-4 py-2 bg-black border-2 border-[#00d9ff] text-white text-sm font-bold hover:bg-[#00d9ff] hover:text-black transition-all uppercase cursor-pointer rounded-lg"
-                    style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.3)' }}
-                  >
-                    RESET
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* CAM Stick Controls */}
-            <div className="bg-[#0a2540]/95 border-2 border-[#00d9ff] px-4 py-2.5 flex items-center gap-2 backdrop-blur-md rounded-lg" style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)' }}>
-              <span className="text-sm font-bold text-white uppercase tracking-[0.15em]" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>CAM</span>
-              {!camConnected ? (
-                <button
-                  onClick={handleCamConnect}
-                  className="px-4 py-2 bg-[#00d9ff] text-black text-sm font-bold hover:bg-white transition-all uppercase cursor-pointer rounded-lg"
-                  style={{ boxShadow: '0 0 15px rgba(0, 217, 255, 0.4)' }}
-                >
-                  CONNECT
-                </button>
-              ) : (
-                <>
-                  <button
-                    onClick={handleCamDisconnect}
-                    className="px-4 py-2 bg-[#DF6C42] text-white text-sm rounded-lg font-bold hover:bg-[#c82333] transition-all uppercase cursor-pointer"
-                    style={{ boxShadow: '0 0 15px rgba(223, 108, 66, 0.4)' }}
-                  >
-                    DISCONNECT
-                  </button>
-                  <span className="text-sm text-[#00d9ff] font-mono tracking-wider font-semibold" style={{ textShadow: '0 0 5px rgba(0, 217, 255, 0.5)' }}>{camDeviceName}</span>
-                  <button
-                    onClick={handleCamZero}
-                    className="px-4 py-2 bg-black border-2 border-[#00d9ff] text-white text-sm font-bold hover:bg-[#00d9ff] hover:text-black transition-all uppercase cursor-pointer rounded-lg"
-                    style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.3)' }}
-                  >
-                    ZERO
-                  </button>
-                  <button
-                    onClick={handleResetView}
-                    className="px-4 py-2 bg-black border-2 border-[#00d9ff] text-white text-sm font-bold hover:bg-[#00d9ff] hover:text-black transition-all uppercase cursor-pointer rounded-lg"
-                    style={{ boxShadow: '0 0 10px rgba(0, 217, 255, 0.3)' }}
-                  >
-                    RESET
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* M5Stick Instruction */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-[#00d9ff]/70">←</span>
-              <span className="text-xs font-mono text-[#00d9ff]/70" style={{ textShadow: '0 0 5px rgba(0, 217, 255, 0.3)' }}>
-                Hardware controls for m5Stick provisioning
-              </span>
-            </div>
-          </div>
-
+        <div className="absolute top-0 left-0 w-full z-10 p-6 flex justify-end items-center pointer-events-none">
           <div className="flex items-center gap-3 pointer-events-auto">
             {/* Removed wireframe/solid toggle - only solid mode now */}
             <button

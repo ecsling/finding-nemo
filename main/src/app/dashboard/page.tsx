@@ -146,7 +146,7 @@ export default function DashboardPage() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ type: 'spring', duration: 0.6 }}
-            className="fixed top-32 left-1/2 -translate-x-1/2 z-50 max-w-2xl w-full mx-auto px-6"
+            className="fixed top-32 left-6 right-6 md:left-12 md:right-auto md:translate-x-0 z-50 max-w-2xl w-full mx-auto"
           >
             <div className="bg-[#DF6C42]/90 backdrop-blur-md border-2 border-[#DF6C42] p-6 relative overflow-hidden"
               style={{ boxShadow: '0 0 40px rgba(223, 108, 66, 0.6)' }}
