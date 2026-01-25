@@ -109,9 +109,37 @@ export default function SearchOptimizerPage() {
   const [simulationProgress, setSimulationProgress] = useState(0);
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
 
+  // AI Analysis state
+  const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
   // Set mission step
   useEffect(() => {
     setCurrentStep(3);
+  }, []);
+
+  // Fetch AI analysis when incident data is available
+  const fetchAIAnalysis = useCallback(async (incident: IncidentInput) => {
+    setAiLoading(true);
+    try {
+      const response = await fetch('/api/ai-analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          incident,
+          type: 'search-analysis',
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setAiAnalysis(data.analysis);
+      }
+    } catch (error) {
+      console.error('AI Analysis failed:', error);
+    } finally {
+      setAiLoading(false);
+    }
   }, []);
 
   // Start simulation when data is ready
@@ -149,6 +177,9 @@ export default function SearchOptimizerPage() {
       setComparisonData(data.comparison);
       setShowVisualization(true);
 
+      // Fetch AI analysis
+      fetchAIAnalysis(incident);
+
       // Auto-start simulation after brief delay
       setTimeout(() => {
         startSimulation();
@@ -159,7 +190,7 @@ export default function SearchOptimizerPage() {
     } finally {
       setLoading(false);
     }
-  }, [startSimulation]);
+  }, [startSimulation, fetchAIAnalysis]);
 
 
   const resetSimulation = useCallback(() => {
@@ -558,13 +589,24 @@ export default function SearchOptimizerPage() {
                         <span className="text-cyan-400">[00:10]</span> ✓ Current patterns mapped
                       </div>
                       
-                      {/* AI Insights Box */}
+                      {/* AI Insights Box - Powered by Gemini */}
                       <div className="mt-3 p-2 bg-cyan-500/10 border border-cyan-400/30 rounded">
-                        <div className="text-[8px] text-cyan-300 font-bold uppercase mb-1">AI Prediction</div>
-                        <div className="text-[9px] text-white">
-                          ⚡ 94% probability within 12km²<br/>
-                          ⏱️ 18hrs traditional vs 4.5hrs AI<br/>
-                          💰 Save $2.3M in search costs
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="text-[8px] text-cyan-300 font-bold uppercase">Gemini AI Analysis</div>
+                          {aiLoading && (
+                            <div className="w-3 h-3 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                          )}
+                        </div>
+                        <div className="text-[9px] text-white leading-relaxed">
+                          {aiAnalysis ? (
+                            <div className="whitespace-pre-wrap">{aiAnalysis}</div>
+                          ) : (
+                            <>
+                              ⚡ 94% probability within 12km²<br/>
+                              ⏱️ 18hrs traditional vs 4.5hrs AI<br/>
+                              💰 Save $2.3M in search costs
+                            </>
+                          )}
                         </div>
                       </div>
                       
