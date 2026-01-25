@@ -63,7 +63,7 @@ Be technical and specific. Format as plain text.`;
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: {
@@ -91,9 +91,15 @@ Be technical and specific. Format as plain text.`;
 
     if (!response.ok) {
       const error = await response.text();
-      console.error('Gemini API error:', error);
+      console.error('Gemini API error details:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: error,
+        apiKey: apiKey ? 'present' : 'missing',
+        model: 'gemini-1.5-flash',
+      });
       return NextResponse.json(
-        { error: 'Failed to generate AI analysis' },
+        { error: `Failed to generate AI analysis: ${response.status} ${response.statusText}` },
         { status: response.status }
       );
     }
