@@ -12,7 +12,6 @@ import ContainerDataPanel from '@/components/simulation/ContainerDataPanel';
 import CustomCursor from '@/components/CustomCursor';
 import { setCurrentStep, getSelectedContainer, setSelectedContainer as saveContainer } from '@/lib/mission-state';
 import dynamic from 'next/dynamic';
-import ImpactMetrics from '@/components/ImpactMetrics';
 import ComparisonView from '@/components/ComparisonView';
 
 const UnderwaterScene = dynamic(
@@ -392,9 +391,6 @@ export default function SimulationPage() {
         {/* Underwater Mode Data & Detection */}
         {viewMode === 'underwater' && (
           <>
-            {/* Impact Metrics Banner */}
-            <ImpactMetrics />
-            
             {/* Comparison View Toggle */}
             <ComparisonView />
             
