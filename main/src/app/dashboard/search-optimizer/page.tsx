@@ -39,7 +39,6 @@ const OrbitControls = dynamic(() => import('@react-three/drei').then(mod => ({ d
 const PerspectiveCamera = dynamic(() => import('@react-three/drei').then(mod => ({ default: mod.PerspectiveCamera })), { ssr: false });
 const Environment = dynamic(() => import('@react-three/drei').then(mod => ({ default: mod.Environment })), { ssr: false });
 const ProbabilityHeatmap = dynamic(() => import('@/components/ProbabilityHeatmap').then(mod => ({ default: mod.default })), { ssr: false });
-const HeatmapToggle = dynamic(() => import('@/components/ProbabilityHeatmap').then(mod => ({ default: mod.HeatmapToggle })), { ssr: false });
 const MissionProgress = dynamic(() => import('@/components/mission/MissionProgress'), { ssr: false });
 const MissionNavigation = dynamic(() => import('@/components/mission/MissionNavigation'), { ssr: false });
 
@@ -369,12 +368,8 @@ export default function SearchOptimizerPage() {
             {/* Overlay Controls */}
             {showVisualization && !loading && (
               <>
-                {/* Top Bar - Mode Toggle and Legend */}
+                {/* Top Bar - Simulation Progress */}
                 <div className="absolute top-4 left-4 right-4 z-10 flex items-start justify-between gap-4">
-                  <div className="bg-white/90 backdrop-blur-sm border border-[#1D1E15]/10 p-3 rounded-xl shadow-lg">
-                    <HeatmapToggle mode={searchMode} onModeChange={setSearchMode} />
-                  </div>
-
                   {/* Simulation Progress - Compact */}
                   {isSimulationRunning && simulationPhase !== 'settled' && (
                     <motion.div
@@ -395,9 +390,6 @@ export default function SearchOptimizerPage() {
                     </motion.div>
                   )}
 
-                  <div className="bg-white/90 backdrop-blur-sm border border-[#1D1E15]/10 p-3 rounded-xl shadow-lg">
-                    <CompactLegend />
-                  </div>
                 </div>
 
                 {/* Simplified HUD */}
@@ -531,23 +523,6 @@ export default function SearchOptimizerPage() {
             )}
           </div>
 
-          {/* Compact key metrics */}
-          {showVisualization && comparisonData && !loading && (
-            <div className="border-t border-[#1D1E15]/10 bg-[#E5E6DA]/60 p-2">
-              <div className="flex gap-3 justify-center">
-                {[
-                  ['Area', `${(activeZones.length * 25).toFixed(0)}km²`],
-                  ['Chance', `${Math.round((comparisonData.optimized.metrics.recoveryProbability || 0.26) * 100)}%`],
-                  ['Duration', `${comparisonData.optimized.metrics.estimatedDuration.toFixed(0)}d`],
-                ].map(([label, value]) => (
-                  <div key={label} className="bg-white/70 border border-[#1D1E15]/10 px-3 py-1.5 rounded">
-                    <div className="text-[8px] text-[#1D1E15]/40 uppercase">{label}</div>
-                    <div className="text-sm font-bold text-[#1D1E15]">{value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </main>
 
