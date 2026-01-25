@@ -6,7 +6,10 @@ export async function POST(request: NextRequest) {
     
     const apiKey = process.env.GEMINI_API_KEY;
     
+    console.log('[AI Analysis] Request received:', { type, hasApiKey: !!apiKey });
+    
     if (!apiKey) {
+      console.error('[AI Analysis] No API key found');
       return NextResponse.json(
         { error: 'Gemini API key not configured' },
         { status: 500 }
@@ -62,8 +65,11 @@ Provide 2-3 sentences on:
 Be technical and specific. Format as plain text.`;
     }
 
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+    console.log('[AI Analysis] Calling Gemini API:', { url: apiUrl.replace(apiKey, 'REDACTED'), promptLength: prompt.length });
+
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      apiUrl,
       {
         method: 'POST',
         headers: {
@@ -107,6 +113,7 @@ Be technical and specific. Format as plain text.`;
     const data = await response.json();
     const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Unable to generate analysis';
 
+    console.log('[AI Analysis] Success:', { responseLength: aiResponse.length });
     return NextResponse.json({ analysis: aiResponse });
   } catch (error) {
     console.error('AI Analysis error:', error);
