@@ -290,22 +290,34 @@ export default function SearchOptimizerPage() {
             {showVisualization && !loading && (
               <Canvas style={{ position: 'absolute', inset: 0 }}>
                 <color attach="background" args={['#5a9dc2']} />
-                <fog attach="fog" args={['#5a9dc2', 1000, 3500]} />
-                {/* HARDCODED CLOSE camera looking directly at container */}
-                <PerspectiveCamera makeDefault position={[250, 100, 250]} fov={60} />
+                {/* Cinematic underwater fog */}
+                <fog attach="fog" args={['#0a1f2e', 800, 2500]} />
+                
+                {/* Professional camera - cinematic angle */}
+                <PerspectiveCamera makeDefault position={[180, 120, 180]} fov={65} />
                 <OrbitControls 
                   enablePan 
                   enableZoom 
                   enableRotate 
-                  target={[0, 0, 0]} 
+                  target={[0, 10, 0]} 
                   enableDamping
                   dampingFactor={0.05}
+                  minDistance={120}
+                  maxDistance={500}
+                  maxPolarAngle={Math.PI / 2.1}
                 />
-                {/* SUPER BRIGHT lighting to see the container */}
-                <ambientLight intensity={3} />
-                <directionalLight position={[500, 800, 400]} intensity={3} />
-                <directionalLight position={[-500, 500, -400]} intensity={2} />
-                <hemisphereLight args={['#ffffff', '#5a9dc2', 2]} />
+                
+                {/* Professional underwater lighting */}
+                <ambientLight intensity={0.8} color="#7fb3d5" />
+                <directionalLight 
+                  position={[400, 600, 300]} 
+                  intensity={2.5} 
+                  color="#ffffff"
+                  castShadow
+                />
+                <directionalLight position={[-300, 400, -200]} intensity={1.2} color="#4a9eff" />
+                <pointLight position={[0, 200, 0]} intensity={1.5} color="#00d9ff" distance={600} decay={2} />
+                <hemisphereLight args={['#5a9dc2', '#0a1f2e', 1.5]} />
 
                 {/* Simple ocean floor */}
                 <SeaFloorTerrain
@@ -738,15 +750,17 @@ function SeaFloorTerrain({ seaFloorY, radiusUnits, showDepthBands, showDepthRisk
   const { scene: seabedScene } = useGLTF('/assets/kelvin_seamounts_atlantico_norte.glb');
   const seabedModel = useMemo(() => {
     const cloned = seabedScene.clone();
-    // Make materials darker and more subtle
+    // Make materials darker and more subtle for professional look
     cloned.traverse((child: any) => {
       if (child.isMesh) {
         child.receiveShadow = true;
+        child.castShadow = false;
         if (child.material) {
           child.material = child.material.clone();
-          child.material.color.multiplyScalar(0.4); // Darker
-          child.material.roughness = 0.95;
-          child.material.metalness = 0.05;
+          child.material.color.multiplyScalar(0.3); // Very dark
+          child.material.roughness = 1.0;
+          child.material.metalness = 0;
+          child.material.flatShading = false;
         }
       }
     });
@@ -755,23 +769,13 @@ function SeaFloorTerrain({ seaFloorY, radiusUnits, showDepthBands, showDepthRisk
 
   return (
     <group>
-      {/* HUGE seabed GLB model for diorama effect */}
+      {/* MASSIVE seabed GLB model - no grid, just pure terrain */}
       <primitive 
         object={seabedModel} 
-        scale={800} 
-        position={[0, seaFloorY - 100, 0]} 
-        rotation={[0, Math.PI / 4, 0]}
+        scale={1200} 
+        position={[0, seaFloorY - 200, 0]} 
+        rotation={[0, Math.PI / 3, 0]}
       />
-      
-      {/* Backup flat plane to ensure coverage */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, seaFloorY - 50, 0]} receiveShadow>
-        <planeGeometry args={[radiusUnits * 4, radiusUnits * 4]} />
-        <meshStandardMaterial 
-          color="#0d1f28" 
-          roughness={0.95} 
-          metalness={0}
-        />
-      </mesh>
     </group>
   );
 }
@@ -1135,21 +1139,25 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
   );
 }
 
-// Mini globe component for location visualization
+// Mini globe component with realistic Earth appearance
 function MiniGlobe({ targetLat, targetLon }: { targetLat: number; targetLon: number }) {
   const globeRef = useRef<THREE.Mesh>(null);
   const markerRef = useRef<THREE.Mesh>(null);
+  const atmosphereRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
     if (globeRef.current) {
-      globeRef.current.rotation.y = state.clock.elapsedTime * 0.2;
+      globeRef.current.rotation.y = state.clock.elapsedTime * 0.15;
+    }
+    if (atmosphereRef.current) {
+      atmosphereRef.current.rotation.y = state.clock.elapsedTime * 0.1;
     }
   });
   
   // Convert lat/lon to 3D position on sphere
   const lat = targetLat * (Math.PI / 180);
   const lon = targetLon * (Math.PI / 180);
-  const radius = 1;
+  const radius = 1.02;
   
   const markerPos: [number, number, number] = [
     radius * Math.cos(lat) * Math.cos(lon),
@@ -1159,45 +1167,67 @@ function MiniGlobe({ targetLat, targetLon }: { targetLat: number; targetLon: num
   
   return (
     <group>
-      {/* Globe sphere */}
+      {/* Main Earth globe with continents */}
       <mesh ref={globeRef}>
-        <sphereGeometry args={[1, 32, 32]} />
+        <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial 
-          color="#1a3d4a" 
-          roughness={0.8} 
-          metalness={0.2}
-          wireframe={false}
+          color="#0a4d68"
+          roughness={0.9}
+          metalness={0.1}
         />
       </mesh>
       
-      {/* Wireframe overlay */}
+      {/* Continents layer */}
       <mesh>
-        <sphereGeometry args={[1.01, 16, 16]} />
-        <meshBasicMaterial 
-          color="#00d9ff" 
-          wireframe={true} 
-          transparent 
-          opacity={0.3}
-        />
-      </mesh>
-      
-      {/* Location marker */}
-      <mesh ref={markerRef} position={markerPos}>
-        <sphereGeometry args={[0.08, 8, 8]} />
+        <sphereGeometry args={[1.005, 64, 64]} />
         <meshStandardMaterial 
-          color="#ff4444" 
-          emissive="#ff4444"
-          emissiveIntensity={2}
+          color="#2d5a3d"
+          roughness={0.95}
+          metalness={0}
+          transparent
+          opacity={0.7}
         />
       </mesh>
       
-      {/* Pulsing ring around marker */}
-      <mesh position={markerPos}>
-        <ringGeometry args={[0.1, 0.15, 16]} />
+      {/* Atmospheric glow */}
+      <mesh ref={atmosphereRef}>
+        <sphereGeometry args={[1.12, 32, 32]} />
         <meshBasicMaterial 
-          color="#ff4444" 
-          transparent 
-          opacity={0.5} 
+          color="#4a9eff"
+          transparent
+          opacity={0.08}
+          side={THREE.BackSide}
+        />
+      </mesh>
+      
+      {/* Thin latitude/longitude grid */}
+      <mesh>
+        <sphereGeometry args={[1.01, 24, 24]} />
+        <meshBasicMaterial 
+          color="#00d9ff"
+          wireframe={true}
+          transparent
+          opacity={0.12}
+        />
+      </mesh>
+      
+      {/* Location marker with glow */}
+      <mesh ref={markerRef} position={markerPos}>
+        <sphereGeometry args={[0.06, 12, 12]} />
+        <meshStandardMaterial 
+          color="#ff3333"
+          emissive="#ff3333"
+          emissiveIntensity={3}
+        />
+      </mesh>
+      
+      {/* Marker pulse effect */}
+      <mesh position={markerPos} rotation={[Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.08, 0.12, 16]} />
+        <meshBasicMaterial 
+          color="#ff3333"
+          transparent
+          opacity={0.6}
           side={THREE.DoubleSide}
         />
       </mesh>
