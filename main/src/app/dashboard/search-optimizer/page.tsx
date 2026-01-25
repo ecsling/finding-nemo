@@ -553,31 +553,31 @@ export default function SearchOptimizerPage() {
                 </div>
                 
                 {/* Live Simulation Feed - ENHANCED FOR PITCH */}
-                <div className="absolute left-3 top-4 z-20 w-64 max-h-[400px] overflow-y-auto bg-gradient-to-br from-black/90 to-gray-900/90 backdrop-blur-md border-2 border-cyan-400/40 rounded-lg shadow-2xl">
-                  <div className="p-3">
-                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-cyan-400/30">
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse shadow-lg shadow-cyan-400/50"></div>
-                      <span className="text-cyan-400 text-[10px] font-mono font-bold uppercase tracking-wider">AI Analysis Feed</span>
+                <div className="absolute left-3 top-4 z-20 w-96 max-h-[500px] overflow-y-auto bg-[#E5E6DA]/95 backdrop-blur-md border-2 border-[#1D1E15]/20 rounded-lg shadow-2xl">
+                  <div className="p-4">
+                    <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#1D1E15]/20">
+                      <div className="w-2.5 h-2.5 bg-[#7ec8e3] rounded-full animate-pulse shadow-lg shadow-[#7ec8e3]/50"></div>
+                      <span className="text-[#0a4d68] text-xs font-mono font-bold uppercase tracking-wider">AI Analysis Feed</span>
                     </div>
                     
-                    <div className="space-y-1.5 text-[9px] font-mono leading-tight">
-                      <div className="text-green-400 font-semibold">
-                        <span className="text-cyan-400">[00:00]</span> 🚨 Incident Detected
+                    <div className="space-y-2 text-[10px] font-mono leading-relaxed">
+                      <div className="text-[#0a4d68] font-bold">
+                        <span className="text-[#7ec8e3]">[00:00]</span> 🚨 Incident Detected
                       </div>
-                      <div className="text-gray-200">
-                        <span className="text-cyan-400">[00:01]</span> Location: Kelvin Seamounts, North Atlantic
+                      <div className="text-[#1D1E15]/80">
+                        <span className="text-[#7ec8e3]">[00:01]</span> Location: Kelvin Seamounts, North Atlantic
                       </div>
-                      <div className="text-gray-200">
-                        <span className="text-cyan-400">[00:02]</span> GPS: {incidentSnapshot?.gpsCoordinates?.latitude.toFixed(2)}°N, {incidentSnapshot?.gpsCoordinates?.longitude.toFixed(2)}°E
+                      <div className="text-[#1D1E15]/80">
+                        <span className="text-[#7ec8e3]">[00:02]</span> GPS: {incidentSnapshot?.gpsCoordinates?.latitude.toFixed(2)}°N, {incidentSnapshot?.gpsCoordinates?.longitude.toFixed(2)}°E
                       </div>
-                      <div className="text-gray-200">
-                        <span className="text-cyan-400">[00:03]</span> Serial: {incidentSnapshot?.containerSerialId}
+                      <div className="text-[#1D1E15]/80">
+                        <span className="text-[#7ec8e3]">[00:03]</span> Serial: {incidentSnapshot?.containerSerialId}
                       </div>
-                      <div className="text-yellow-300">
-                        <span className="text-cyan-400">[00:05]</span> 🤖 AI analyzing conditions...
+                      <div className="text-[#DF6C42] font-semibold">
+                        <span className="text-[#7ec8e3]">[00:05]</span> 🤖 AI analyzing conditions...
                       </div>
-                      <div className="text-gray-200">
-                        <span className="text-cyan-400">[00:06]</span> Target Depth: {Math.abs(incidentSnapshot?.gpsCoordinates?.altitude || 0)}m
+                      <div className="text-[#1D1E15]/80">
+                        <span className="text-[#7ec8e3]">[00:06]</span> Target Depth: {Math.abs(incidentSnapshot?.gpsCoordinates?.altitude || 0)}m
                       </div>
                       <div className="text-green-400">
                         <span className="text-cyan-400">[00:08]</span> ✓ ML Model: Container Drift v2.4
@@ -590,14 +590,14 @@ export default function SearchOptimizerPage() {
                       </div>
                       
                       {/* AI Insights Box - Powered by Gemini */}
-                      <div className="mt-3 p-2 bg-cyan-500/10 border border-cyan-400/30 rounded">
-                        <div className="flex items-center justify-between mb-1">
-                          <div className="text-[8px] text-cyan-300 font-bold uppercase">Gemini AI Analysis</div>
+                      <div className="mt-4 p-3 bg-white/60 border-2 border-[#7ec8e3]/40 rounded-lg shadow-sm">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="text-[10px] text-[#0a4d68] font-bold uppercase tracking-wider">Gemini AI Analysis</div>
                           {aiLoading && (
-                            <div className="w-3 h-3 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="w-4 h-4 border-2 border-[#7ec8e3] border-t-transparent rounded-full animate-spin"></div>
                           )}
                         </div>
-                        <div className="text-[9px] text-white leading-relaxed">
+                        <div className="text-[11px] text-[#1D1E15] leading-relaxed font-medium">
                           {aiAnalysis ? (
                             <div className="whitespace-pre-wrap">{aiAnalysis}</div>
                           ) : (
@@ -612,40 +612,40 @@ export default function SearchOptimizerPage() {
                       
                       {simulationPhase !== 'idle' && (
                         <>
-                          <div className="text-yellow-300 animate-pulse">
-                            <span className="text-cyan-400">[00:15]</span> ⬇ Simulating descent physics
+                          <div className="text-[#DF6C42] animate-pulse font-semibold">
+                            <span className="text-[#7ec8e3]">[00:15]</span> ⬇ Simulating descent physics
                           </div>
-                          <div className="text-green-400">
-                            <span className="text-cyan-400">[02:30]</span> ✓ Seafloor impact detected
+                          <div className="text-[#0a4d68] font-bold">
+                            <span className="text-[#7ec8e3]">[02:30]</span> ✓ Seafloor impact detected
                           </div>
-                          <div className="text-gray-200">
-                            <span className="text-cyan-400">[02:31]</span> Current: {incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.speed || 0.42} m/s @ {incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.direction || 85}°
+                          <div className="text-[#1D1E15]/80">
+                            <span className="text-[#7ec8e3]">[02:31]</span> Current: {incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.speed || 0.42} m/s @ {incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.direction || 85}°
                           </div>
                         </>
                       )}
                       {simulationPhase === 'drifting' && (
                         <>
-                          <div className="text-yellow-300 animate-pulse font-semibold">
-                            <span className="text-cyan-400">[02:35]</span> ⚠ Drift analysis in progress
+                          <div className="text-[#DF6C42] animate-pulse font-semibold">
+                            <span className="text-[#7ec8e3]">[02:35]</span> ⚠ Drift analysis in progress
                           </div>
-                          <div className="text-gray-200">
-                            <span className="text-cyan-400">[02:40]</span> 🌊 Water flow simulation active
+                          <div className="text-[#1D1E15]/80">
+                            <span className="text-[#7ec8e3]">[02:40]</span> 🌊 Water flow simulation active
                           </div>
-                          <div className="text-green-400">
-                            <span className="text-cyan-400">[04:00]</span> 📍 Predicted location: ~{((incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.speed || 0.42) * (incidentSnapshot?.estimatedTimeInWater || 72) * 3.6).toFixed(0)}m drift
+                          <div className="text-[#0a4d68] font-bold">
+                            <span className="text-[#7ec8e3]">[04:00]</span> 📍 Predicted location: ~{((incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.speed || 0.42) * (incidentSnapshot?.estimatedTimeInWater || 72) * 3.6).toFixed(0)}m drift
                           </div>
                         </>
                       )}
                       {simulationPhase === 'settled' && (
                         <>
-                          <div className="text-green-400">
-                            <span className="text-cyan-400">[{incidentSnapshot?.estimatedTimeInWater || 72}:00]</span> ✓ Container settled on seafloor
+                          <div className="text-[#0a4d68] font-bold">
+                            <span className="text-[#7ec8e3]">[{incidentSnapshot?.estimatedTimeInWater || 72}:00]</span> ✓ Container settled on seafloor
                           </div>
-                          <div className="text-gray-300">
-                            <span className="text-cyan-400">[{incidentSnapshot?.estimatedTimeInWater || 72}:05]</span> Total drift: ~{((incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.speed || 0.42) * (incidentSnapshot?.estimatedTimeInWater || 72) * 3.6).toFixed(0)}m
+                          <div className="text-[#1D1E15]/70">
+                            <span className="text-[#7ec8e3]">[{incidentSnapshot?.estimatedTimeInWater || 72}:05]</span> Total drift: ~{((incidentSnapshot?.environmentalConditions?.oceanCurrents?.[0]?.speed || 0.42) * (incidentSnapshot?.estimatedTimeInWater || 72) * 3.6).toFixed(0)}m
                           </div>
-                          <div className="text-gray-300">
-                            <span className="text-cyan-400">[{incidentSnapshot?.estimatedTimeInWater || 72}:15]</span> Final position locked
+                          <div className="text-[#1D1E15]/70">
+                            <span className="text-[#7ec8e3]">[{incidentSnapshot?.estimatedTimeInWater || 72}:15]</span> Final position locked
                           </div>
                           <div className="text-green-400 font-semibold">
                             <span className="text-cyan-400">[{incidentSnapshot?.estimatedTimeInWater || 72}:30]</span> ✓ Ready for search operations
