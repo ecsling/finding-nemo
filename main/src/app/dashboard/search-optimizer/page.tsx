@@ -98,29 +98,31 @@ export default function SearchOptimizerPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-mono">
-      {/* Navigation Header */}
-      <nav className="px-6 h-16 flex justify-between items-center border-b border-[#1e3a5f]" style={{ backgroundColor: 'rgba(5, 15, 26, 0.9)' }}>
-        <div className="flex items-center gap-4">
-          <Link href="/" className="text-[#00d9ff] hover:text-[#00d9ff]/80 text-sm uppercase">
-            ← Home
+      {/* Navigation Header with Integrated Mission Progress */}
+      <nav className="px-0 h-20 flex justify-between items-center border-b border-[#1e3a5f]" style={{ backgroundColor: 'rgba(5, 15, 26, 0.9)' }}>
+        <div className="flex items-center h-full flex-1">
+          <Link href="/" className="w-[134px] h-full flex items-center justify-center shrink-0 border-r border-[#1e3a5f] hover:bg-[#0d2847] transition-colors">
+            <div className="w-10 h-10 flex items-center justify-center">
+              <div className="w-6 h-6 border border-[#1e3a5f] rounded-sm"></div>
+            </div>
           </Link>
-          <div className="w-px h-6 bg-[#1e3a5f]" />
-          <h1 className="text-lg font-bold uppercase tracking-wider">
+
+          <div className="px-6 text-base font-bold uppercase tracking-[0.15em] text-white" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
             Search Optimizer
-          </h1>
+          </div>
+
+          {/* Integrated Mission Progress */}
+          <div className="flex-1 px-8">
+            <MissionProgress currentStep={3} />
+          </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 px-6">
           <div className="text-[10px] uppercase text-white/40">
             System Status: <span className="text-[#00d9ff]">Active</span>
           </div>
         </div>
       </nav>
-
-      {/* Mission Progress */}
-      <div className="relative z-40 bg-black/50 backdrop-blur-sm py-4 border-b border-[#1e3a5f]">
-        <MissionProgress currentStep={3} />
-      </div>
 
       {/* Main Content */}
       <main className="grid grid-cols-1 lg:grid-cols-12 gap-0 min-h-[calc(100vh-4rem)]">

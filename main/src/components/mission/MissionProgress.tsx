@@ -43,11 +43,11 @@ interface MissionProgressProps {
 
 export default function MissionProgress({ currentStep, onStepClick }: MissionProgressProps) {
   return (
-    <div className="w-full max-w-4xl mx-auto px-6 py-4">
+    <div className="w-full max-w-4xl mx-auto">
       {/* Step Indicator */}
       <div className="flex items-center justify-between relative">
         {/* Progress Line */}
-        <div className="absolute top-5 left-0 right-0 h-0.5 bg-[#1e3a5f]">
+        <div className="absolute top-3 left-0 right-0 h-0.5 bg-[#1e3a5f]">
           <motion.div
             className="h-full bg-[#00d9ff]"
             initial={{ width: 0 }}
@@ -68,13 +68,13 @@ export default function MissionProgress({ currentStep, onStepClick }: MissionPro
               key={step.id}
               onClick={() => isClickable && onStepClick(step.id)}
               disabled={!isClickable}
-              className={`relative z-10 flex flex-col items-center gap-2 ${
+              className={`relative z-10 flex flex-col items-center gap-1 ${
                 isClickable ? 'cursor-pointer' : 'cursor-default'
               }`}
             >
               {/* Circle */}
               <motion.div
-                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-mono text-sm font-bold ${
+                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center font-mono text-[10px] font-bold ${
                   isActive
                     ? 'border-[#00d9ff] bg-[#00d9ff] text-black'
                     : isCompleted
@@ -83,23 +83,23 @@ export default function MissionProgress({ currentStep, onStepClick }: MissionPro
                 }`}
                 initial={false}
                 animate={{
-                  scale: isActive ? 1.2 : 1,
+                  scale: isActive ? 1.1 : 1,
                   boxShadow: isActive
-                    ? '0 0 20px rgba(0, 217, 255, 0.8)'
+                    ? '0 0 15px rgba(0, 217, 255, 0.8)'
                     : isCompleted
-                    ? '0 0 10px rgba(0, 217, 255, 0.4)'
+                    ? '0 0 8px rgba(0, 217, 255, 0.4)'
                     : 'none',
                 }}
                 transition={{ duration: 0.3 }}
-                whileHover={isClickable ? { scale: 1.1 } : {}}
+                whileHover={isClickable ? { scale: 1.15 } : {}}
               >
                 {isCompleted ? '✓' : step.id}
               </motion.div>
 
-              {/* Label */}
+              {/* Compact Label */}
               <div className="flex flex-col items-center">
                 <div
-                  className={`text-xs font-mono uppercase tracking-wider ${
+                  className={`text-[9px] font-mono uppercase tracking-wider whitespace-nowrap ${
                     isActive
                       ? 'text-[#00d9ff] font-bold'
                       : isCompleted
@@ -109,25 +109,14 @@ export default function MissionProgress({ currentStep, onStepClick }: MissionPro
                 >
                   {step.label}
                 </div>
-                <div
-                  className={`text-[9px] font-mono ${
-                    isActive
-                      ? 'text-[#00d9ff]/60'
-                      : isCompleted
-                      ? 'text-white/50'
-                      : 'text-white/30'
-                  }`}
-                >
-                  {step.description}
-                </div>
               </div>
 
               {/* Active Pulse */}
               {isActive && (
                 <motion.div
-                  className="absolute w-10 h-10 rounded-full border-2 border-[#00d9ff]"
+                  className="absolute w-6 h-6 rounded-full border-2 border-[#00d9ff] top-0"
                   initial={{ scale: 1, opacity: 0.8 }}
-                  animate={{ scale: 1.8, opacity: 0 }}
+                  animate={{ scale: 1.6, opacity: 0 }}
                   transition={{
                     duration: 1.5,
                     repeat: Infinity,
@@ -138,13 +127,6 @@ export default function MissionProgress({ currentStep, onStepClick }: MissionPro
             </button>
           );
         })}
-      </div>
-
-      {/* Step Counter */}
-      <div className="mt-6 text-center">
-        <div className="text-xs text-white/40 font-mono uppercase tracking-widest">
-          Mission Progress: Step {currentStep} of {MISSION_STEPS.length}
-        </div>
       </div>
     </div>
   );

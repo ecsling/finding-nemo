@@ -110,8 +110,8 @@ export default function DashboardPage() {
         </div>
       )}
       
-      {/* Header */}
-      <nav className="border-b border-[#1e3a5f] px-0 h-16 flex justify-between items-center z-50 relative" style={{ backgroundColor: 'transparent' }}>
+      {/* Header with Integrated Mission Progress */}
+      <nav className="border-b border-[#1e3a5f] px-0 h-20 flex justify-between items-center z-50 relative" style={{ backgroundColor: 'transparent' }}>
         <div className="flex items-center h-full flex-1">
           {/* Logo Box */}
           <Link href="/" className="w-[134px] h-full flex items-center justify-center shrink-0 border-r border-[#1e3a5f] hover:bg-[#0d2847] group transition-colors" style={{ backgroundColor: 'transparent' }}>
@@ -119,12 +119,17 @@ export default function DashboardPage() {
                <div className="w-6 h-6 border border-[#1e3a5f] rounded-sm"></div>
              </div>
           </Link>
-          
+
           <div className="px-6 text-base font-bold uppercase tracking-[0.15em] text-white" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
             Mission Console
           </div>
+
+          {/* Integrated Mission Progress */}
+          <div className="flex-1 px-8">
+            <MissionProgress currentStep={1} />
+          </div>
         </div>
-        
+
         <div className="flex items-center gap-4 px-6">
           <div className="w-2 h-2 rounded-full bg-[#00ff00] animate-pulse" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 10px rgba(0, 255, 0, 0.8)' }}></div>
           <div className="text-sm uppercase tracking-widest text-[#00d9ff] font-bold" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>
@@ -132,11 +137,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </nav>
-
-      {/* Mission Progress */}
-      <div className="relative z-40 bg-black/50 backdrop-blur-sm py-4 border-b border-[#1e3a5f]">
-        <MissionProgress currentStep={1} />
-      </div>
 
       {/* Incident Alert Animation */}
       <AnimatePresence>
