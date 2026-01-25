@@ -162,11 +162,13 @@ export default function ProbabilityHeatmap({
             key={`marker-${zone.id}`}
             position={[centroidCartesian.x, seaFloorY + markerOffset, centroidCartesian.z]}
           >
-            <sphereGeometry args={[20, 16, 16]} />
+            <sphereGeometry args={[8, 12, 12]} />
             <meshStandardMaterial
               color={probabilityToColor(zone.probabilityScore)}
               emissive={probabilityToColor(zone.probabilityScore)}
-              emissiveIntensity={0.8}
+              emissiveIntensity={0.3}
+              transparent
+              opacity={0.6}
             />
           </mesh>
         );
