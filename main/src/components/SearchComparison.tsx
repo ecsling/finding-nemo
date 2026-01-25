@@ -42,9 +42,9 @@ export default function SearchComparison({ comparison, className = '' }: SearchC
           title="Search Area"
           traditional={traditional.metrics.totalArea.toFixed(1)}
           optimized={optimized.metrics.totalArea.toFixed(1)}
-          unit="km²"
+          unit="km^2"
           reduction={improvements.areaReduction}
-          icon="📐"
+          badge="AREA"
         />
 
         {/* Cost */}
@@ -54,7 +54,7 @@ export default function SearchComparison({ comparison, className = '' }: SearchC
           optimized={formatCurrency(optimized.metrics.estimatedCost)}
           unit=""
           reduction={(improvements.costSavings / traditional.metrics.estimatedCost) * 100}
-          icon="💰"
+          badge="COST"
         />
 
         {/* Duration */}
@@ -64,7 +64,7 @@ export default function SearchComparison({ comparison, className = '' }: SearchC
           optimized={optimized.metrics.estimatedDuration.toFixed(1)}
           unit="days"
           reduction={(improvements.durationReduction / traditional.metrics.estimatedDuration) * 100}
-          icon="⏱️"
+          badge="TIME"
         />
       </div>
 
@@ -132,7 +132,7 @@ export default function SearchComparison({ comparison, className = '' }: SearchC
             <div>
               <div className="text-[10px] uppercase text-white/50 mb-1">Carbon Footprint</div>
               <div className="text-lg font-bold text-white">
-                {optimized.metrics.carbonFootprint.toFixed(0)} kg CO₂
+                {optimized.metrics.carbonFootprint.toFixed(0)} kg CO2
               </div>
               <div className="text-[9px] text-green-400 mt-1">
                 -{((traditional.metrics.carbonFootprint - optimized.metrics.carbonFootprint) / traditional.metrics.carbonFootprint * 100).toFixed(1)}% vs traditional
@@ -155,14 +155,14 @@ export default function SearchComparison({ comparison, className = '' }: SearchC
       {/* Summary Stats */}
       <div className="mt-6 p-4 bg-[#DF6C42]/10 border border-[#DF6C42]/30">
         <div className="flex items-center gap-3">
-          <div className="text-2xl">✓</div>
+          <div className="text-2xl">OK</div>
           <div>
             <div className="text-sm font-bold text-white">
               Optimization Results Summary
             </div>
             <div className="text-xs text-white/70 mt-1">
-              {improvements.areaReduction.toFixed(0)}% smaller search area •{' '}
-              {((improvements.durationReduction / traditional.metrics.estimatedDuration) * 100).toFixed(0)}% faster recovery •{' '}
+              {improvements.areaReduction.toFixed(0)}% smaller search area -{' '}
+              {((improvements.durationReduction / traditional.metrics.estimatedDuration) * 100).toFixed(0)}% faster recovery -{' '}
               {((improvements.costSavings / traditional.metrics.estimatedCost) * 100).toFixed(0)}% cost reduction
             </div>
           </div>
@@ -181,19 +181,21 @@ function MetricCard({
   optimized,
   unit,
   reduction,
-  icon,
+  badge,
 }: {
   title: string;
   traditional: string;
   optimized: string;
   unit: string;
   reduction: number;
-  icon: string;
+  badge: string;
 }) {
   return (
     <div className="border border-[#1e3a5f] p-4">
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-lg">{icon}</span>
+        <span className="text-[9px] uppercase tracking-[0.2em] px-2 py-0.5 border border-[#1e3a5f] text-white/60">
+          {badge}
+        </span>
         <div className="text-[10px] uppercase text-white/50">{title}</div>
       </div>
 
@@ -214,7 +216,7 @@ function MetricCard({
 
         {reduction > 0 && (
           <div className="text-[9px] text-green-400 pt-1 border-t border-[#1e3a5f]">
-            ↓ {reduction.toFixed(0)}% reduction
+            DOWN {reduction.toFixed(0)}% reduction
           </div>
         )}
       </div>
@@ -243,9 +245,9 @@ function ZoneBreakdown({
         />
         <div className="text-[10px] uppercase text-white/70">{priority}</div>
       </div>
-      <div className="text-lg font-bold text-white">{area.toFixed(1)} km²</div>
+      <div className="text-lg font-bold text-white">{area.toFixed(1)} km^2</div>
       <div className="text-[9px] text-white/40 mt-1">
-        {(area * 1000000).toExponential(2)} m²
+        {(area * 1000000).toExponential(2)} m^2
       </div>
     </div>
   );

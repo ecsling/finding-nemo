@@ -150,7 +150,7 @@ export default function IncidentInputForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
           <label className="block text-[10px] uppercase text-white/70 mb-1.5">
-            Latitude (°N)
+            Latitude (deg N)
           </label>
           <input
             type="text"
@@ -168,7 +168,7 @@ export default function IncidentInputForm({
 
         <div>
           <label className="block text-[10px] uppercase text-white/70 mb-1.5">
-            Longitude (°E)
+            Longitude (deg E)
           </label>
           <input
             type="text"
@@ -244,7 +244,7 @@ export default function IncidentInputForm({
 
           <div>
             <label className="block text-[10px] uppercase text-white/70 mb-1.5">
-              Current Direction (°)
+              Current Direction (deg)
             </label>
             <input
               type="text"
