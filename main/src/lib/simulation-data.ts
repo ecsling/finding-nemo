@@ -4,7 +4,7 @@ export interface TimelineEvent {
   time: number;
   title: string;
   description: string;
-  type: 'info' | 'warning' | 'success' | 'error' | 'contact' | 'threat' | 'weather' | 'fuel_warning' | 'mission_complete' | 'deploy' | 'system' | 'milestone';
+  type: 'info' | 'warning' | 'success' | 'error' | 'contact' | 'threat' | 'weather' | 'fuel_warning' | 'mission_complete' | 'deploy' | 'system' | 'milestone' | 'route_start' | 'return' | 'route_complete';
   data?: any;
 }
 
