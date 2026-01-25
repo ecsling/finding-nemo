@@ -91,23 +91,16 @@ export default function DashboardPage() {
       )}
       
       {/* Header */}
-      <nav className="border-b border-[#1e3a5f] px-0 h-16 flex justify-between items-center z-50 relative" style={{ backgroundColor: 'transparent' }}>
+      <nav className="border-b border-[#1e3a5f] px-6 h-16 flex justify-between items-center z-50 relative" style={{ backgroundColor: '#E5E6DA' }}>
         <div className="flex items-center h-full flex-1">
-          {/* Logo Box */}
-          <Link href="/" className="w-[134px] h-full flex items-center justify-center shrink-0 border-r border-[#1e3a5f] hover:bg-[#0d2847] group transition-colors" style={{ backgroundColor: 'transparent' }}>
-             <div className="w-10 h-10 flex items-center justify-center">
-               <div className="w-6 h-6 border border-[#1e3a5f] rounded-sm"></div>
-             </div>
-          </Link>
-          
-          <div className="px-6 text-base font-bold uppercase tracking-[0.15em] text-white" style={{ textShadow: '0 0 5px rgba(255, 255, 255, 0.3)' }}>
+          <div className="text-base font-bold uppercase tracking-[0.15em] text-[#1D1E15]">
             Mission Console
           </div>
         </div>
         
-        <div className="flex items-center gap-4 px-6">
+        <div className="flex items-center gap-4">
           <div className="w-2 h-2 rounded-full bg-[#00ff00] animate-pulse" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', boxShadow: '0 0 10px rgba(0, 255, 0, 0.8)' }}></div>
-          <div className="text-sm uppercase tracking-widest text-[#00d9ff] font-bold" style={{ textShadow: '0 0 10px rgba(0, 217, 255, 0.8)' }}>
+          <div className="text-sm uppercase tracking-widest text-[#1D1E15] font-bold">
             System Active
           </div>
         </div>
