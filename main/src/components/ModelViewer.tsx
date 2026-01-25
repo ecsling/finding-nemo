@@ -68,7 +68,7 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   useEffect(() => { showAnnotatedModalRef.current = showAnnotatedModal; }, [showAnnotatedModal]);
   const [annotatedImage, setAnnotatedImage] = useState<string | null>(null);
   const [showInferenceLoader, setShowInferenceLoader] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const showInferenceLoaderRef = useRef(false);
   useEffect(() => { showInferenceLoaderRef.current = showInferenceLoader; }, [showInferenceLoader]);
   const aiIdentifyActiveRef = useRef(false);
@@ -1457,19 +1457,17 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
   
   // Auto-load Cargo Ship on startup
   useEffect(() => {
-    if (!currentDemoModelId && !showOnboarding) {
-      // Auto-load cargo ship after a brief delay
-      const timer = setTimeout(() => {
-        const cargoShipModel = DEMO_MODELS.find(m => m.id === "cargo-ship");
-        if (cargoShipModel) {
-          console.log("Auto-loading Cargo Ship on startup");
-          setCurrentDemoModelId("cargo-ship");
-          loadModelFromUrl(cargoShipModel.path, false);
-        }
-      }, 500);
-      return () => clearTimeout(timer);
+    if (!currentDemoModelId) {
+      // Auto-load cargo ship immediately
+      const cargoShipModel = DEMO_MODELS.find(m => m.id === "cargo-ship");
+      if (cargoShipModel) {
+        console.log("Auto-loading Cargo Ship on startup");
+        setCurrentDemoModelId("cargo-ship");
+        setLoading(true);
+        loadModelFromUrl(cargoShipModel.path, false);
+      }
     }
-  }, [showOnboarding, currentDemoModelId]);
+  }, [currentDemoModelId]);
 
   const handleObjectClick = (object: THREE.Object3D) => {
     if (!sceneRef.current) return;
@@ -2317,8 +2315,8 @@ export default function ModelViewer({ onClose }: ModelViewerProps) {
           </div>
         </div>
 
-        {/* Model Selection Bar - Hidden when onboarding is active to reduce clutter */}
-        {!showOnboarding && (
+        {/* Model Selection Bar - Hidden to auto-load model */}
+        {false && !showOnboarding && (
         <div className="absolute left-6 bottom-6 w-80 z-10 pointer-events-none">
           <div className="pointer-events-auto">
             <div 

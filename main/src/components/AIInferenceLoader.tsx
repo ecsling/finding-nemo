@@ -226,25 +226,25 @@ export default function AIInferenceLoader({
       {/* Frame Layout - Using absolute positioning to create a 'hole' in the center */}
       
       {/* Top Bar */}
-      <div className="absolute top-0 left-0 right-0 h-20 bg-[#1D1E15]/90 backdrop-blur-md border-b border-[#E5E6DA]/10 flex items-center justify-between px-8 pointer-events-auto">
+      <div className="absolute top-0 left-0 right-0 h-20 bg-[#E5E6DA]/95 backdrop-blur-md border-b border-[#1D1E15]/10 flex items-center justify-between px-8 pointer-events-auto">
         <div className="flex items-center gap-4">
           <div className="w-2 h-2 bg-[#DF6C42] animate-pulse" />
-          <div className="font-mono text-sm text-[#E5E6DA] tracking-widest uppercase font-light">
+          <div className="font-mono text-sm text-[#1D1E15] tracking-widest uppercase font-light">
             AI Inference Protocol <span className="text-[#DF6C42]">//</span> V2.4
           </div>
         </div>
-        <div className="font-mono text-2xl font-light text-[#E5E6DA]">
+        <div className="font-mono text-2xl font-light text-[#1D1E15]">
           {Math.floor(progress)}%
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#1D1E15]/90 backdrop-blur-md border-t border-[#E5E6DA]/10 flex flex-col justify-center px-8 pointer-events-auto">
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#E5E6DA]/95 backdrop-blur-md border-t border-[#1D1E15]/10 flex flex-col justify-center px-8 pointer-events-auto">
          <div className="flex items-center gap-4 mb-2">
-            <span className="text-[10px] font-mono text-[#E5E6DA]/50 uppercase tracking-widest">System Status</span>
-            <div className="h-[1px] flex-1 bg-[#E5E6DA]/10"></div>
+            <span className="text-[10px] font-mono text-[#1D1E15]/50 uppercase tracking-widest">System Status</span>
+            <div className="h-[1px] flex-1 bg-[#1D1E15]/10"></div>
          </div>
-         <div className="h-1 w-full bg-[#E5E6DA]/10 overflow-hidden">
+         <div className="h-1 w-full bg-[#1D1E15]/10 overflow-hidden">
            <motion.div 
              className="h-full bg-[#DF6C42]"
              initial={{ width: 0 }}
@@ -255,18 +255,18 @@ export default function AIInferenceLoader({
       </div>
 
       {/* Left Panel */}
-      <div className="absolute top-20 bottom-16 left-0 w-80 bg-[#1D1E15]/90 backdrop-blur-md border-r border-[#E5E6DA]/10 p-6 flex flex-col gap-8 pointer-events-auto">
+      <div className="absolute top-20 bottom-16 left-0 w-80 bg-[#E5E6DA]/95 backdrop-blur-md border-r border-[#1D1E15]/10 p-6 flex flex-col gap-8 pointer-events-auto">
         <div className="space-y-2">
-          <div className="text-[10px] text-[#E5E6DA]/40 uppercase tracking-widest font-mono">Target Object</div>
-          <div className="text-lg font-mono text-[#E5E6DA] font-light break-words">{objectName}</div>
+          <div className="text-[10px] text-[#1D1E15]/40 uppercase tracking-widest font-mono">Target Object</div>
+          <div className="text-lg font-mono text-[#1D1E15] font-light break-words">{objectName}</div>
         </div>
         
         <div className="space-y-2">
-          <div className="text-[10px] text-[#E5E6DA]/40 uppercase tracking-widest font-mono">Current Scan</div>
+          <div className="text-[10px] text-[#1D1E15]/40 uppercase tracking-widest font-mono">Current Scan</div>
           <div className="text-sm font-mono text-[#DF6C42] break-all font-light">
             {currentMeshName}
           </div>
-          <div className="h-[1px] w-full bg-[#E5E6DA]/10 mt-2 overflow-hidden relative">
+          <div className="h-[1px] w-full bg-[#1D1E15]/10 mt-2 overflow-hidden relative">
              <motion.div 
                className="absolute inset-0 bg-[#DF6C42]"
                initial={{ x: "-100%" }}
@@ -279,20 +279,20 @@ export default function AIInferenceLoader({
         <div className="flex-1" />
         
         <div className="grid grid-cols-2 gap-3">
-           <div className="bg-[#E5E6DA]/5 p-3 border border-[#E5E6DA]/5">
-             <div className="text-[10px] text-[#E5E6DA]/40 mb-1">MESHES</div>
-             <div className="text-lg font-mono text-[#E5E6DA] font-light">{allMeshes.length}</div>
+           <div className="bg-[#1D1E15]/5 p-3 border border-[#1D1E15]/10">
+             <div className="text-[10px] text-[#1D1E15]/40 mb-1">MESHES</div>
+             <div className="text-lg font-mono text-[#1D1E15] font-light">{allMeshes.length}</div>
            </div>
-           <div className="bg-[#E5E6DA]/5 p-3 border border-[#E5E6DA]/5">
-             <div className="text-[10px] text-[#E5E6DA]/40 mb-1">STAGE</div>
-             <div className="text-lg font-mono text-[#E5E6DA] font-light">{currentStage + 1}/8</div>
+           <div className="bg-[#1D1E15]/5 p-3 border border-[#1D1E15]/10">
+             <div className="text-[10px] text-[#1D1E15]/40 mb-1">STAGE</div>
+             <div className="text-lg font-mono text-[#1D1E15] font-light">{currentStage + 1}/8</div>
            </div>
         </div>
       </div>
 
       {/* Right Panel */}
-      <div className="absolute top-20 bottom-16 right-0 w-80 bg-[#1D1E15]/90 backdrop-blur-md border-l border-[#E5E6DA]/10 p-6 flex flex-col pointer-events-auto overflow-y-auto">
-        <div className="text-[10px] text-[#E5E6DA]/40 uppercase tracking-widest font-mono mb-6">Processing Pipeline</div>
+      <div className="absolute top-20 bottom-16 right-0 w-80 bg-[#E5E6DA]/95 backdrop-blur-md border-l border-[#1D1E15]/10 p-6 flex flex-col pointer-events-auto overflow-y-auto">
+        <div className="text-[10px] text-[#1D1E15]/40 uppercase tracking-widest font-mono mb-6">Processing Pipeline</div>
         <div className="space-y-4">
           {STAGES.map((stage, index) => {
             const isCompleted = index < currentStage;
@@ -300,10 +300,10 @@ export default function AIInferenceLoader({
             
             return (
               <div key={index} className={`flex items-center gap-4 ${isActive ? 'opacity-100' : 'opacity-30'}`}>
-                <div className={`p-1.5 rounded-sm ${isActive ? 'bg-[#DF6C42]/20 text-[#DF6C42]' : 'bg-[#E5E6DA]/5 text-[#E5E6DA]'}`}>
+                <div className={`p-1.5 rounded-sm ${isActive ? 'bg-[#DF6C42]/20 text-[#DF6C42]' : 'bg-[#1D1E15]/5 text-[#1D1E15]'}`}>
                   <stage.icon size={14} />
                 </div>
-                <div className="text-xs font-mono uppercase text-[#E5E6DA] tracking-wide">{stage.label}</div>
+                <div className="text-xs font-mono uppercase text-[#1D1E15] tracking-wide">{stage.label}</div>
               </div>
             );
           })}

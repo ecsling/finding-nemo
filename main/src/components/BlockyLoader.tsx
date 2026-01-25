@@ -59,10 +59,10 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
       }}
     >
 
-      <div className="relative z-10 w-full max-w-2xl px-8 space-y-12">
+      <div className="relative z-10 w-full max-w-md px-8 space-y-8">
         {/* Depth Descent Animation */}
-        <div className="flex flex-col items-center space-y-6 mt-24">
-          <div className="relative w-64 h-64 flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="relative w-48 h-48 flex items-center justify-center">
             {/* Outer pulse ring */}
             <motion.div
               className="absolute inset-0 border-2 rounded-full"
@@ -102,20 +102,20 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
 
             {/* Depth indicator */}
             <div className="relative z-10 text-center">
-              <div className="text-6xl font-bold mb-2" style={{ 
+              <div className="text-4xl font-bold mb-1" style={{ 
                 color: '#1D1E15',
                 textShadow: 'none',
                 fontFamily: 'var(--font-mono)'
               }}>
                 {currentDepth}m
               </div>
-              <div className="text-lg uppercase tracking-[0.2em] font-semibold" style={{ 
+              <div className="text-sm uppercase tracking-[0.2em] font-semibold" style={{ 
                 color: '#1D1E15',
                 textShadow: 'none'
               }}>
                 DEPTH
               </div>
-              <div className="mt-4 text-sm uppercase tracking-wider" style={{ color: '#1D1E15' }}>
+              <div className="mt-2 text-xs uppercase tracking-wider" style={{ color: '#1D1E15' }}>
                 0m → {KELVIN_SEAMOUNTS_DEPTH}m
               </div>
             </div>
@@ -123,15 +123,15 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
         </div>
 
         {/* Mission Status Text */}
-        <div className="h-16 relative overflow-hidden text-center">
+        <div className="h-12 relative overflow-hidden text-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentMessage}
-              initial={{ y: 30, opacity: 0 }}
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -30, opacity: 0 }}
+              exit={{ y: -20, opacity: 0 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="absolute inset-x-0 text-2xl uppercase tracking-[0.15em] font-bold"
+              className="absolute inset-x-0 text-base uppercase tracking-[0.15em] font-bold"
               style={{ 
                 color: '#1D1E15',
                 textShadow: 'none',
@@ -144,16 +144,16 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
         </div>
 
         {/* Progress Bar Section */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-lg uppercase tracking-[0.15em] font-semibold" style={{ 
+            <span className="text-sm uppercase tracking-[0.15em] font-semibold" style={{ 
               color: '#1D1E15',
               textShadow: 'none'
             }}>
               DIVE SYSTEM INITIALIZING
             </span>
             <span 
-              className="text-5xl font-bold" 
+              className="text-3xl font-bold" 
               style={{ 
                 color: '#1D1E15',
                 textShadow: 'none',
@@ -165,7 +165,7 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
           </div>
           
           {/* Enhanced Progress Bar */}
-          <div className="relative h-4 rounded-full overflow-hidden" style={{
+          <div className="relative h-3 rounded-full overflow-hidden" style={{
             backgroundColor: '#D8D6C4',
             border: '1px solid #B8B6A4',
             boxShadow: 'none'
@@ -184,9 +184,9 @@ export default function BlockyLoader({ onFinished }: BlockyLoaderProps) {
         </div>
         
         {/* Version Tag */}
-        <div className="text-center pt-6">
+        <div className="text-center pt-4">
           <div 
-            className="inline-block px-6 py-2 text-sm uppercase tracking-[0.15em] font-semibold rounded-lg"
+            className="inline-block px-4 py-1.5 text-xs uppercase tracking-[0.15em] font-semibold rounded-lg"
             style={{ 
               backgroundColor: '#E6E3D6',
               border: '1px solid #B8B6A4',
