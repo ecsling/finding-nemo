@@ -98,7 +98,6 @@ export default function SearchOptimizerPage() {
   const [showVisualization, setShowVisualization] = useState(false);
   const [incidentSnapshot, setIncidentSnapshot] = useState<IncidentInput | null>(null);
   const [showGridPlanner, setShowGridPlanner] = useState(true);
-  const [showDriftTrack, setShowDriftTrack] = useState(true);
   const [showAssetRoute, setShowAssetRoute] = useState(true);
   const [showDepthBands, setShowDepthBands] = useState(true);
   const [showDepthRisk, setShowDepthRisk] = useState(true);
@@ -467,7 +466,7 @@ export default function SearchOptimizerPage() {
                         <span className="text-cyan-400">[00:01]</span> GPS: {incidentSnapshot?.gpsCoordinates?.latitude.toFixed(2)}°N, {incidentSnapshot?.gpsCoordinates?.longitude.toFixed(2)}°E
                       </div>
                       <div className="text-gray-300">
-                        <span className="text-cyan-400">[00:02]</span> Serial: {incidentSnapshot?.containerSerial}
+                        <span className="text-cyan-400">[00:02]</span> Serial: {incidentSnapshot?.containerSerialId}
                       </div>
                       <div className="text-gray-300">
                         <span className="text-cyan-400">[00:05]</span> Target Depth: {Math.abs(incidentSnapshot?.gpsCoordinates?.altitude || 0)}m
@@ -538,7 +537,7 @@ export default function SearchOptimizerPage() {
               <div className="flex gap-3 justify-center">
                 {[
                   ['Area', `${(activeZones.length * 25).toFixed(0)}km²`],
-                  ['Chance', `${Math.round((comparisonData.optimized.metrics.successProbability || 0.26) * 100)}%`],
+                  ['Chance', `${Math.round((comparisonData.optimized.metrics.recoveryProbability || 0.26) * 100)}%`],
                   ['Duration', `${comparisonData.optimized.metrics.estimatedDuration.toFixed(0)}d`],
                 ].map(([label, value]) => (
                   <div key={label} className="bg-white/70 border border-[#1D1E15]/10 px-3 py-1.5 rounded">
@@ -583,8 +582,9 @@ function ContainerSimulation({
   const timeRef = useRef(0);
   const driftOffsetRef = useRef({ x: 0, z: 0 });
 
-  // Load shipping container GLB model
-  const { scene: containerModel } = useGLTF('/assets/shipping_container.glb');
+  // Load and clone shipping container GLB model
+  const { scene: containerScene } = useGLTF('/assets/shipping_container.glb');
+  const containerModel = useMemo(() => containerScene.clone(), [containerScene]);
 
   const anchor = useMemo(() =>
     incident ? gpsToCartesian(incident.gpsCoordinates, referencePoint, SCENE_SCALE) : null,
@@ -654,7 +654,6 @@ function ContainerSimulation({
         intensity={12}
         castShadow
         color="#FFFFFF"
-        target-position={[0, 0, 0]}
       />
       
       {/* ENHANCED Water current particles - MORE VISIBLE */}
@@ -802,22 +801,7 @@ function SearchGrid({ cells, cellSize, seaFloorY }: { cells: { id: string; x: nu
   );
 }
 
-function DriftTrack({ incident, referencePoint, driftHours, surfaceY }: { incident: IncidentInput | null; referencePoint: GPSCoordinate; driftHours: number; surfaceY: number }) {
-  const c = incident?.environmentalConditions?.oceanCurrents?.[0];
-  const pts = useMemo(() => (!incident || !c || driftHours <= 0) ? [] : calculateDrift(incident.gpsCoordinates, c.speed, c.direction, driftHours, 12), [incident, c, driftHours]);
-  const geo = useMemo(() => pts.length ? new THREE.BufferGeometry().setFromPoints(pts.map((p) => { const cart = gpsToCartesian(p, referencePoint, SCENE_SCALE); return new THREE.Vector3(cart.x, surfaceY + 6, cart.z); })) : null, [pts, referencePoint, surfaceY]);
-
-  if (!geo || !pts.length) return null;
-
-  return (
-    <group>
-      {/* Clean drift path */}
-      <line geometry={geo}>
-        <lineBasicMaterial color="#00d9ff" transparent opacity={0.6} linewidth={2} />
-      </line>
-    </group>
-  );
-}
+// DriftTrack component removed - no longer needed
 
 function AssetRoute({ comparison, referencePoint, surfaceY, searchMode }: { comparison: SearchComparisonType; referencePoint: GPSCoordinate; surfaceY: number; searchMode: 'traditional' | 'optimized' }) {
   const routeData = searchMode === 'optimized' ? comparison.optimized : comparison.traditional;
@@ -826,21 +810,24 @@ function AssetRoute({ comparison, referencePoint, surfaceY, searchMode }: { comp
     return routeData.searchOrder.map((id) => m.get(id)?.centroid).filter((p): p is GPSCoordinate => Boolean(p));
   }, [routeData]);
 
-  const geo = useMemo(() => pts.length < 2 ? null : new THREE.BufferGeometry().setFromPoints(pts.map((p) => {
-    const c = gpsToCartesian(p, referencePoint, SCENE_SCALE);
-    return new THREE.Vector3(c.x, surfaceY, c.z);
-  })), [pts, referencePoint, surfaceY]);
-
-  if (!geo) return null;
-
   const routeColor = searchMode === 'optimized' ? '#DF6C42' : '#888888';
+
+  const routeLine = useMemo(() => {
+    if (pts.length < 2) return null;
+    const geo = new THREE.BufferGeometry().setFromPoints(pts.map((p) => {
+      const c = gpsToCartesian(p, referencePoint, SCENE_SCALE);
+      return new THREE.Vector3(c.x, surfaceY, c.z);
+    }));
+    const mat = new THREE.LineBasicMaterial({ color: routeColor, transparent: true, opacity: 0.7, linewidth: 2 });
+    return new THREE.Line(geo, mat);
+  }, [pts, referencePoint, surfaceY, routeColor]);
+
+  if (!routeLine) return null;
 
   return (
     <group>
       {/* Simple route line */}
-      <line geometry={geo}>
-        <lineBasicMaterial color={routeColor} transparent opacity={0.7} linewidth={2} />
-      </line>
+      <primitive object={routeLine} />
       {/* Clean waypoint markers */}
       {pts.map((p, i) => {
         const c = gpsToCartesian(p, referencePoint, SCENE_SCALE);
@@ -1032,34 +1019,33 @@ function WaterStreamLines({ position, currentDirection }: { position: [number, n
   const streamCount = 16; // MORE stream lines
   const dirRad = degreesToRadians(currentDirection);
   
+  const streamLines = useMemo(() => {
+    const lines = [];
+    for (let i = 0; i < streamCount; i++) {
+      const angle = (i / streamCount) * Math.PI * 2;
+      const radius = 35 + (i % 3) * 15;
+      const startX = Math.cos(angle) * radius;
+      const startZ = Math.sin(angle) * radius;
+      const endX = startX + Math.sin(dirRad) * 120;
+      const endZ = startZ + Math.cos(dirRad) * 120;
+      
+      const points = [
+        new THREE.Vector3(startX, (i % 4 - 2) * 12, startZ),
+        new THREE.Vector3(endX, (i % 4 - 2) * 12, endZ),
+      ];
+      
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const material = new THREE.LineBasicMaterial({ color: "#00E5FF", transparent: true, opacity: 0.6, linewidth: 3 });
+      lines.push(new THREE.Line(geometry, material));
+    }
+    return lines;
+  }, [dirRad]);
+  
   return (
     <group position={position}>
-      {Array.from({ length: streamCount }).map((_, i) => {
-        const angle = (i / streamCount) * Math.PI * 2;
-        const radius = 35 + (i % 3) * 15;
-        const startX = Math.cos(angle) * radius;
-        const startZ = Math.sin(angle) * radius;
-        const endX = startX + Math.sin(dirRad) * 120; // LONGER lines
-        const endZ = startZ + Math.cos(dirRad) * 120;
-        
-        const points = [
-          new THREE.Vector3(startX, (i % 4 - 2) * 12, startZ),
-          new THREE.Vector3(endX, (i % 4 - 2) * 12, endZ),
-        ];
-        
-        const geometry = new THREE.BufferGeometry().setFromPoints(points);
-        
-        return (
-          <line key={i} geometry={geometry}>
-            <lineBasicMaterial 
-              color="#00E5FF" // Brighter cyan
-              transparent 
-              opacity={0.6} // MORE VISIBLE
-              linewidth={3} // THICKER
-            />
-          </line>
-        );
-      })}
+      {streamLines.map((line, i) => (
+        <primitive key={i} object={line} />
+      ))}
     </group>
   );
 }
@@ -1162,21 +1148,19 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
     particlesRef.current.geometry.attributes.position.needsUpdate = true;
   });
   
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(particles.positions, 3));
+    return geo;
+  }, [particles.positions]);
+
   return (
-    <points ref={particlesRef} position={position}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={particleCount}
-          array={particles.positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
+    <points ref={particlesRef} position={position} geometry={geometry}>
       <pointsMaterial
-        size={3} // BIGGER particles
-        color="#00E5FF" // Brighter cyan
+        size={3}
+        color="#00E5FF"
         transparent
-        opacity={0.8} // MORE VISIBLE
+        opacity={0.8}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
       />

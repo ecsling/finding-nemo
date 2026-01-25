@@ -389,39 +389,41 @@ export default function SimulationPage() {
 
         {/* Underwater Mode Data & Detection */}
         {viewMode === 'underwater' && (
-          <AnimatePresence>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="fixed bottom-6 left-6 backdrop-blur-md p-6 z-40 max-w-md"
-              style={{
-                backgroundColor: '#B8B6A4',
-                border: '1px solid rgba(29, 30, 21, 0.15)',
-              }}
-            >
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-10 h-10 flex items-center justify-center font-bold"
-                    style={{
-                      backgroundColor: 'rgba(29, 30, 21, 0.05)',
-                      border: '1px solid rgba(29, 30, 21, 0.2)',
-                      color: 'rgba(29, 30, 21, 0.8)',
-                    }}
-                  >
-                    3D
-                  </div>
-                  <div>
-                    <div className="text-[10px] text-[#1D1E15]/70 uppercase tracking-wider">
-                      Underwater View
+          <>
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="fixed bottom-6 left-6 backdrop-blur-md p-6 z-40 max-w-md"
+                style={{
+                  backgroundColor: '#B8B6A4',
+                  border: '1px solid rgba(29, 30, 21, 0.15)',
+                }}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 flex items-center justify-center font-bold"
+                      style={{
+                        backgroundColor: 'rgba(29, 30, 21, 0.05)',
+                        border: '1px solid rgba(29, 30, 21, 0.2)',
+                        color: 'rgba(29, 30, 21, 0.8)',
+                      }}
+                    >
+                      3D
                     </div>
-                    <div className="text-sm text-[#1D1E15] font-bold">
-                      {selectedContainer?.serialNumber || 'MAEU-123456-7'}
+                    <div>
+                      <div className="text-[10px] text-[#1D1E15]/70 uppercase tracking-wider">
+                        Underwater View
+                      </div>
+                      <div className="text-sm text-[#1D1E15] font-bold">
+                        {selectedContainer?.serialNumber || 'MAEU-123456-7'}
+                      </div>
                     </div>
                   </div>
 
-                <div className="grid grid-cols-3 gap-3 text-xs">
+                  <div className="grid grid-cols-3 gap-3 text-xs">
                   <div
                     className="p-2"
                     style={{
@@ -454,8 +456,9 @@ export default function SimulationPage() {
                   </div>
                 </div>
 
-                <div className="text-[9px] text-[#1D1E15]/70 font-mono">
-                  Location: Kelvin Seamounts, North Atlantic
+                  <div className="text-[9px] text-[#1D1E15]/70 font-mono">
+                    Location: Kelvin Seamounts, North Atlantic
+                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>

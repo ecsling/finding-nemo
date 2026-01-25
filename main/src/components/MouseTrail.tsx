@@ -121,7 +121,7 @@ export default function MouseTrail() {
     }
 
     function render() {
-      if (!runningRef.current || !ctx) return;
+      if (!runningRef.current || !ctx || !canvas) return;
 
       ctx.globalCompositeOperation = 'source-over';
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -142,6 +142,7 @@ export default function MouseTrail() {
     }
 
     function resizeCanvas() {
+      if (!canvas) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }

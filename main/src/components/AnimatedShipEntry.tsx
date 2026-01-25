@@ -3,7 +3,6 @@
 import { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { motion } from 'framer-motion-3d';
 
 interface AnimatedShipEntryProps {
   targetPosition: THREE.Vector3;
@@ -55,6 +54,35 @@ interface DiveTransitionProps {
   onComplete?: () => void;
 }
 
+// Bubble component
+function Bubble({ index, startPos }: { index: number; startPos: [number, number, number] }) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const startTime = useRef(Date.now());
+
+  useFrame((state) => {
+    if (!meshRef.current) return;
+    
+    const elapsed = (Date.now() - startTime.current) / 1000 + index * 0.1;
+    const cycle = (elapsed % 2) / 2; // 2-second cycle
+    
+    // Animate y position
+    meshRef.current.position.y = startPos[1] + cycle * 5;
+    
+    // Animate opacity (fade in and out)
+    const opacity = cycle < 0.5 ? cycle * 2 : (1 - cycle) * 2;
+    if (meshRef.current.material instanceof THREE.MeshBasicMaterial) {
+      meshRef.current.material.opacity = opacity * 0.5;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef} position={startPos}>
+      <sphereGeometry args={[0.05, 8, 8]} />
+      <meshBasicMaterial color="#00d9ff" transparent opacity={0.5} />
+    </mesh>
+  );
+}
+
 export function DiveTransition({ active, onComplete }: DiveTransitionProps) {
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -89,27 +117,15 @@ export function DiveTransition({ active, onComplete }: DiveTransitionProps) {
 
       {/* Bubbles */}
       {Array.from({ length: 20 }).map((_, i) => (
-        <motion.mesh
+        <Bubble 
           key={i}
-          initial={{ y: 0, opacity: 0 }}
-          animate={{
-            y: 5,
-            opacity: [0, 1, 0],
-          }}
-          transition={{
-            duration: 2,
-            delay: i * 0.1,
-            repeat: Infinity,
-          }}
-          position={[
+          index={i}
+          startPos={[
             (Math.random() - 0.5) * 2,
             0,
             (Math.random() - 0.5) * 2,
           ]}
-        >
-          <sphereGeometry args={[0.05, 8, 8]} />
-          <meshBasicMaterial color="#00d9ff" transparent opacity={0.5} />
-        </motion.mesh>
+        />
       ))}
     </group>
   );
