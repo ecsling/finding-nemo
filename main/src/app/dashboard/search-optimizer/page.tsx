@@ -813,25 +813,8 @@ function AssetRoute({ comparison, referencePoint, surfaceY, searchMode }: { comp
 
   return (
     <group>
-      {/* Simple route line */}
+      {/* Clean route line only - no spheres */}
       <primitive object={routeLine} />
-      {/* Clean waypoint markers */}
-      {pts.map((p, i) => {
-        const c = gpsToCartesian(p, referencePoint, SCENE_SCALE);
-        const isFirst = i === 0;
-        const isLast = i === pts.length - 1;
-        
-        return (
-          <mesh key={i} position={[c.x, surfaceY + 2, c.z]}>
-            <sphereGeometry args={[6, 16, 16]} />
-            <meshStandardMaterial 
-              color={isFirst ? '#4ade80' : isLast ? '#ef4444' : routeColor} 
-              emissive={isFirst ? '#4ade80' : isLast ? '#ef4444' : routeColor} 
-              emissiveIntensity={0.5} 
-            />
-          </mesh>
-        );
-      })}
     </group>
   );
 }
@@ -1003,7 +986,7 @@ function formatCurrency(v: number) {
 
 // Water stream lines showing current flow
 function WaterStreamLines({ position, currentDirection }: { position: [number, number, number]; currentDirection: number }) {
-  const streamCount = 16; // MORE stream lines
+  const streamCount = 32; // MASSIVE stream lines for professional look
   const dirRad = degreesToRadians(currentDirection);
   
   const streamLines = useMemo(() => {
