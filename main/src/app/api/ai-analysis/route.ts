@@ -65,7 +65,7 @@ Provide 2-3 sentences on:
 Be technical and specific. Format as plain text.`;
     }
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
     console.log('[AI Analysis] Calling Gemini API:', { url: apiUrl.replace(apiKey, 'REDACTED'), promptLength: prompt.length });
 
     const response = await fetch(
@@ -102,7 +102,7 @@ Be technical and specific. Format as plain text.`;
         statusText: response.statusText,
         error: error,
         apiKey: apiKey ? 'present' : 'missing',
-        model: 'gemini-1.5-flash',
+        model: 'gemini-1.5-pro',
       });
       return NextResponse.json(
         { error: `Failed to generate AI analysis: ${response.status} ${response.statusText}` },
