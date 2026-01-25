@@ -70,3 +70,13 @@ export const TRADE_ROUTES = [
     averageSpeed: 18,
   },
 ];
+
+export const SIMULATION_DURATION = 300; // 5 minutes in seconds
+
+export const SIMULATION_TIMELINE: TimelineEvent[] = [
+  { time: 0, title: 'Mission Start', description: 'Initiating search operation', message: 'Initiating search operation', type: 'deploy' },
+  { time: 30, title: 'Route Started', description: 'Following planned route', message: 'Following planned route', type: 'route_start' },
+  { time: 90, title: 'Contact Detected', description: 'Possible target identified', message: 'Possible target identified', type: 'contact' },
+  { time: 150, title: 'Weather Update', description: 'Moderate conditions', message: 'Moderate conditions', type: 'weather' },
+  { time: 240, title: 'Mission Complete', description: 'Search operation completed', message: 'Search operation completed', type: 'mission_complete' },
+];
