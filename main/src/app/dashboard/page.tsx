@@ -30,16 +30,9 @@ const IS_PRODUCTION_DEMO = process.env.NEXT_PUBLIC_PRODUCTION_DEMO === "true";
 
 export default function DashboardPage() {
   const [showBanner, setShowBanner] = useState(IS_PRODUCTION_DEMO);
-  const [showIncidentAlert, setShowIncidentAlert] = useState(false);
 
   useEffect(() => {
     setCurrentStep(1);
-
-    const timer = setTimeout(() => {
-      setShowIncidentAlert(true);
-    }, 2000);
-
-    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -129,59 +122,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </nav>
-
-      {/* Incident Alert Animation */}
-      <AnimatePresence>
-        {showIncidentAlert && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ type: 'spring', duration: 0.5 }}
-            className="fixed top-28 left-6 right-6 md:left-auto md:right-6 md:max-w-lg z-50"
-          >
-            <div className="bg-white/95 backdrop-blur-md border border-[#DF6C42]/30 rounded-2xl p-5 relative overflow-hidden shadow-xl">
-              {/* Accent bar */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-[#DF6C42]" />
-
-              <div className="flex items-start gap-4">
-                <motion.div
-                  animate={{ rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}
-                  className="text-3xl"
-                >
-                  ⚠️
-                </motion.div>
-                <div className="flex-1">
-                  <div className="text-[#1D1E15] font-semibold text-base mb-1">
-                    Container Loss Event Detected
-                  </div>
-                  <div className="text-[#1D1E15]/70 text-sm mb-3">
-                    ISO Container <span className="font-mono font-semibold text-[#1D1E15]">MAEU-123456-7</span> has been lost overboard at coordinates <span className="font-mono">37.5°N, -14.5°W</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="px-3 py-1 bg-[#DF6C42]/10 border border-[#DF6C42]/20 text-[#DF6C42] text-xs uppercase font-mono rounded-full">
-                      Drifting
-                    </div>
-                    <div className="px-3 py-1 bg-[#1D1E15]/5 border border-[#1D1E15]/10 text-[#1D1E15]/70 text-xs uppercase font-mono rounded-full">
-                      2,850m depth
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowIncidentAlert(false)}
-                  className="text-[#1D1E15]/40 hover:text-[#1D1E15] transition-colors"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Main Content */}
       <div className="flex-1 relative">
