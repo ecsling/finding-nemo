@@ -317,43 +317,74 @@ export default function SimulationPage() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="fixed right-6 top-24 bg-black/90 backdrop-blur-md border border-[#00d9ff]/30 p-4 z-40"
-            style={{ boxShadow: '0 0 20px rgba(0, 217, 255, 0.2)' }}
+            className="fixed right-6 top-24 backdrop-blur-md p-4 z-40"
+            style={{
+              backgroundColor: '#B8B6A4',
+              border: '1px solid rgba(29, 30, 21, 0.15)',
+            }}
           >
-            <div className="text-[10px] text-white/60 uppercase tracking-widest font-mono mb-4">
+            <div className="text-[10px] text-[#1D1E15]/70 uppercase tracking-widest font-mono mb-4">
               Map Legend
             </div>
             <div className="space-y-3 text-xs">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-[#DF6C42] rounded-full" />
-                <span className="text-white/80">Floating Container</span>
+                <span className="text-[#1D1E15]/90">Floating Container</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-red-500 rounded-full" />
-                <span className="text-white/80">Sunken Container</span>
+                <span className="text-[#1D1E15]/90">Sunken Container</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-1 bg-[#00d9ff]" />
-                <span className="text-white/80">Ship Route</span>
+                <span className="text-[#1D1E15]/90">Ship Route</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-1 bg-[#9B59B6]" />
-                <span className="text-white/80">Drift Trail</span>
+                <span className="text-[#1D1E15]/90">Drift Trail</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-1 bg-[#00ff88]" />
-                <span className="text-white/80">Ocean Current</span>
+                <span className="text-[#1D1E15]/90">Ocean Current</span>
               </div>
             </div>
           </motion.div>
         )}
 
         {/* Controls Help */}
-        <div className="fixed bottom-6 right-6 z-40 bg-black/80 backdrop-blur-sm border border-[#00d9ff]/20 p-3 text-[9px] text-white/60 font-mono">
+        <div
+          className="fixed bottom-6 right-6 z-40 backdrop-blur-sm p-3 text-[9px] font-mono"
+          style={
+            viewMode === 'globe'
+              ? {
+                  backgroundColor: '#B8B6A4',
+                  border: '1px solid rgba(29, 30, 21, 0.15)',
+                  color: 'rgba(29, 30, 21, 0.7)',
+                }
+              : {
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  border: '1px solid rgba(0, 217, 255, 0.2)',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                }
+          }
+        >
           <div>Left Click + Drag: Rotate</div>
           <div>Right Click + Drag: Pan</div>
           <div>Scroll: Zoom</div>
-          <div className="mt-2 text-[#00d9ff]">Click container for details</div>
+          <div
+            className="mt-2"
+            style={
+              viewMode === 'globe'
+                ? {
+                    color: 'rgba(29, 30, 21, 0.85)',
+                  }
+                : {
+                    color: '#00d9ff',
+                  }
+            }
+          >
+            Click container for details
+          </div>
         </div>
 
         {/* Underwater Mode Data */}
