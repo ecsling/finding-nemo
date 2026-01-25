@@ -80,3 +80,16 @@ export const SIMULATION_TIMELINE: TimelineEvent[] = [
   { time: 150, title: 'Weather Update', description: 'Moderate conditions', message: 'Moderate conditions', type: 'weather' },
   { time: 240, title: 'Mission Complete', description: 'Search operation completed', message: 'Search operation completed', type: 'mission_complete' },
 ];
+
+export const POINTS_OF_INTEREST = [
+  { lat: 38.7, lon: -28.5, name: 'Kelvin Seamounts' },
+  { lat: 35.0, lon: -25.0, name: 'Search Area Alpha' },
+  { lat: 40.0, lon: -30.0, name: 'Search Area Bravo' },
+];
+
+export const PATROL_PATH = [
+  { lat: 38.7, lon: -28.5 },
+  { lat: 39.0, lon: -27.0 },
+  { lat: 37.5, lon: -26.5 },
+  { lat: 38.7, lon: -28.5 },
+];
