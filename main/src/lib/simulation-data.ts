@@ -45,20 +45,20 @@ export const WEATHER_CONDITIONS = {
   },
 };
 
-export const TRADE_ROUTES = {
-  transPacific: {
+export const TRADE_ROUTES = [
+  {
     name: 'Trans-Pacific',
     trafficDensity: 'High',
     averageSpeed: 20,
   },
-  transAtlantic: {
+  {
     name: 'Trans-Atlantic',
     trafficDensity: 'High',
     averageSpeed: 22,
   },
-  suezCanal: {
+  {
     name: 'Suez Canal Route',
     trafficDensity: 'Very High',
     averageSpeed: 18,
   },
-};
+];
