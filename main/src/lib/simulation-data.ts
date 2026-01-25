@@ -58,6 +58,7 @@ export const TRADE_ROUTES = [
     name: 'Trans-Pacific',
     trafficDensity: 'High',
     averageSpeed: 20,
+    color: '#00d9ff',
     points: [
       { lat: 35.0, lng: -120.0 },
       { lat: 30.0, lng: -150.0 },
@@ -68,6 +69,7 @@ export const TRADE_ROUTES = [
     name: 'Trans-Atlantic',
     trafficDensity: 'High',
     averageSpeed: 22,
+    color: '#4a9eff',
     points: [
       { lat: 40.0, lng: -70.0 },
       { lat: 45.0, lng: -40.0 },
@@ -78,6 +80,7 @@ export const TRADE_ROUTES = [
     name: 'Suez Canal Route',
     trafficDensity: 'Very High',
     averageSpeed: 18,
+    color: '#7fb3d5',
     points: [
       { lat: 30.0, lng: 32.0 },
       { lat: 20.0, lng: 40.0 },
@@ -97,9 +100,9 @@ export const SIMULATION_TIMELINE: TimelineEvent[] = [
 ];
 
 export const POINTS_OF_INTEREST = [
-  { lat: 38.7, lon: -28.5, name: 'Kelvin Seamounts' },
-  { lat: 35.0, lon: -25.0, name: 'Search Area Alpha' },
-  { lat: 40.0, lon: -30.0, name: 'Search Area Bravo' },
+  { coordinates: { lat: 38.7, lng: -28.5 }, name: 'Kelvin Seamounts', type: 'search' },
+  { coordinates: { lat: 35.0, lng: -25.0 }, name: 'Search Area Alpha', type: 'search' },
+  { coordinates: { lat: 40.0, lng: -30.0 }, name: 'Search Area Bravo', type: 'search' },
 ];
 
 export const PATROL_PATH = [
