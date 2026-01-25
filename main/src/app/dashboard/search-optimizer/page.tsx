@@ -455,13 +455,28 @@ export default function SearchOptimizerPage() {
                         <span className="text-cyan-400">[00:00]</span> Container lost overboard
                       </div>
                       <div className="text-gray-300">
-                        <span className="text-cyan-400">[00:01]</span> GPS: {incidentSnapshot?.gpsCoordinates?.latitude.toFixed(2)}°N, {incidentSnapshot?.gpsCoordinates?.longitude.toFixed(2)}°E
+                        <span className="text-cyan-400">[00:01]</span> Location: Kelvin Seamounts, North Atlantic
                       </div>
                       <div className="text-gray-300">
-                        <span className="text-cyan-400">[00:02]</span> Serial: {incidentSnapshot?.containerSerialId}
+                        <span className="text-cyan-400">[00:02]</span> GPS: {incidentSnapshot?.gpsCoordinates?.latitude.toFixed(2)}°N, {incidentSnapshot?.gpsCoordinates?.longitude.toFixed(2)}°E
+                      </div>
+                      <div className="text-gray-300">
+                        <span className="text-cyan-400">[00:03]</span> Serial: {incidentSnapshot?.containerSerialId}
                       </div>
                       <div className="text-gray-300">
                         <span className="text-cyan-400">[00:05]</span> Target Depth: {Math.abs(incidentSnapshot?.gpsCoordinates?.altitude || 0)}m
+                      </div>
+                      {/* Location Image Preview */}
+                      <div className="mt-3 border-t border-cyan-400/20 pt-3">
+                        <div className="text-[8px] text-cyan-400/70 uppercase tracking-wide mb-2">Seafloor Terrain</div>
+                        <div className="relative w-full h-24 bg-black/40 rounded overflow-hidden border border-cyan-400/10">
+                          <img 
+                            src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=200&fit=crop&q=80" 
+                            alt="Kelvin Seamounts seafloor" 
+                            className="w-full h-full object-cover opacity-70"
+                          />
+                          <div className="absolute bottom-1 right-1 text-[7px] text-white/50 bg-black/60 px-1 rounded">Bathymetric Data</div>
+                        </div>
                       </div>
                       {simulationPhase !== 'idle' && (
                         <>
@@ -643,9 +658,6 @@ function ContainerSimulation({
         position={[0, 0, 0]}
         currentDirection={85}
       />
-      
-      {/* Floating debris particles */}
-      <FloatingDebris position={[0, 20, 0]} />
     </group>
   );
 }
@@ -1025,48 +1037,6 @@ function WaterStreamLines({ position, currentDirection }: { position: [number, n
   );
 }
 
-// Floating debris for realism
-function FloatingDebris({ position }: { position: [number, number, number] }) {
-  const debrisRef = useRef<THREE.Group>(null);
-  const debrisCount = 30;
-  
-  useFrame((state) => {
-    if (!debrisRef.current) return;
-    
-    debrisRef.current.children.forEach((debris, i) => {
-      // Slow floating motion
-      debris.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.5 + i) * 15;
-      debris.rotation.x = state.clock.elapsedTime * 0.2 + i;
-      debris.rotation.y = state.clock.elapsedTime * 0.15 + i * 0.5;
-    });
-  });
-  
-  return (
-    <group ref={debrisRef} position={position}>
-      {Array.from({ length: debrisCount }).map((_, i) => {
-        const angle = (i / debrisCount) * Math.PI * 2;
-        const radius = 40 + Math.random() * 60;
-        const x = Math.cos(angle) * radius;
-        const z = Math.sin(angle) * radius;
-        const size = 1 + Math.random() * 2;
-        
-        return (
-          <mesh key={i} position={[x, 0, z]}>
-            <boxGeometry args={[size, size * 0.5, size * 0.3]} />
-            <meshStandardMaterial 
-              color="#8B4513" 
-              transparent
-              opacity={0.4}
-              metalness={0.2}
-              roughness={0.8}
-            />
-          </mesh>
-        );
-      })}
-    </group>
-  );
-}
-
 // Water current particles around container
 function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { position: [number, number, number]; currentDirection: number; currentSpeed: number }) {
   const particlesRef = useRef<THREE.Points>(null);
@@ -1132,10 +1102,10 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
   return (
     <points ref={particlesRef} position={position} geometry={geometry}>
       <pointsMaterial
-        size={3}
+        size={1.5}
         color="#00E5FF"
         transparent
-        opacity={0.8}
+        opacity={0.6}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
       />
