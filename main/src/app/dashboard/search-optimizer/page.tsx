@@ -288,7 +288,17 @@ export default function SearchOptimizerPage() {
 
             {/* 3D Scene */}
             {showVisualization && !loading && (
-              <Canvas style={{ position: 'absolute', inset: 0 }}>
+              <Canvas 
+                style={{ position: 'absolute', inset: 0 }}
+                gl={{ 
+                  antialias: true, 
+                  alpha: false,
+                  powerPreference: 'high-performance',
+                  toneMapping: THREE.ACESFilmicToneMapping,
+                  toneMappingExposure: 1.2
+                }}
+                shadows
+              >
                 <color attach="background" args={['#5a9dc2']} />
                 {/* Cinematic underwater fog */}
                 <fog attach="fog" args={['#0a1f2e', 800, 2500]} />
@@ -307,17 +317,28 @@ export default function SearchOptimizerPage() {
                   maxPolarAngle={Math.PI / 2.1}
                 />
                 
-                {/* Professional underwater lighting */}
+                {/* Professional underwater lighting with high-quality shadows */}
                 <ambientLight intensity={0.8} color="#7fb3d5" />
                 <directionalLight 
                   position={[400, 600, 300]} 
                   intensity={2.5} 
                   color="#ffffff"
                   castShadow
+                  shadow-mapSize-width={4096}
+                  shadow-mapSize-height={4096}
+                  shadow-camera-far={2000}
+                  shadow-camera-left={-500}
+                  shadow-camera-right={500}
+                  shadow-camera-top={500}
+                  shadow-camera-bottom={-500}
+                  shadow-bias={-0.0001}
                 />
                 <directionalLight position={[-300, 400, -200]} intensity={1.2} color="#4a9eff" />
                 <pointLight position={[0, 200, 0]} intensity={1.5} color="#00d9ff" distance={600} decay={2} />
                 <hemisphereLight args={['#5a9dc2', '#0a1f2e', 1.5]} />
+                
+                {/* Environment for realistic reflections */}
+                <Environment preset="city" resolution={256} />
 
                 {/* Simple ocean floor */}
                 <SeaFloorTerrain
@@ -575,9 +596,34 @@ function ContainerSimulation({
   const timeRef = useRef(0);
   const driftOffsetRef = useRef({ x: 0, z: 0 });
 
-  // Load and clone shipping container GLB model
+  // Load and clone shipping container GLB model with enhanced materials
   const { scene: containerScene } = useGLTF('/assets/shipping_container.glb');
-  const containerModel = useMemo(() => containerScene.clone(), [containerScene]);
+  const containerModel = useMemo(() => {
+    const cloned = containerScene.clone();
+    
+    // Enhance materials for better quality and reflections
+    cloned.traverse((child: any) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+        
+        if (child.material) {
+          child.material = child.material.clone();
+          // Add subtle reflections and better surface quality
+          child.material.metalness = 0.4;
+          child.material.roughness = 0.6;
+          child.material.envMapIntensity = 0.8;
+          
+          // Enhance colors slightly for underwater visibility
+          if (child.material.color) {
+            child.material.color.multiplyScalar(1.1);
+          }
+        }
+      }
+    });
+    
+    return cloned;
+  }, [containerScene]);
 
   const anchor = useMemo(() =>
     incident ? gpsToCartesian(incident.gpsCoordinates, referencePoint, SCENE_SCALE) : null,
@@ -1044,23 +1090,31 @@ function WaterStreamLines({ position, currentDirection }: { position: [number, n
   );
 }
 
-// Water current particles around container with vector field motion
+// Water current particles with collision detection and size variation
 function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { position: [number, number, number]; currentDirection: number; currentSpeed: number }) {
   const particlesRef = useRef<THREE.Points>(null);
-  const particleCount = 1500; // MORE particles for full wrap-around effect
+  const particleCount = 1500;
+  
+  // Container collision bounds (approximate shipping container: 40ft = ~12m x 2.4m x 2.4m, scaled by 40)
+  const containerBounds = {
+    minX: -80, maxX: 80,
+    minY: -25, maxY: 25,
+    minZ: -25, maxZ: 25
+  };
   
   const particles = useMemo(() => {
     const positions = new Float32Array(particleCount * 3);
     const velocities = new Float32Array(particleCount * 3);
-    const randomOffsets = new Float32Array(particleCount * 3); // For random turbulence
+    const randomOffsets = new Float32Array(particleCount * 3);
+    const sizes = new Float32Array(particleCount); // Particle size variation
     
     const dirRad = degreesToRadians(currentDirection);
     
     for (let i = 0; i < particleCount; i++) {
       // Wrap particles COMPLETELY around the entire container - 360° coverage
       const angle = Math.random() * Math.PI * 2;
-      const radius = 20 + Math.random() * 100; // Closer to container, wider spread
-      const height = (Math.random() - 0.5) * 80; // Full height coverage of container
+      const radius = 20 + Math.random() * 100;
+      const height = (Math.random() - 0.5) * 80;
       
       positions[i * 3] = Math.cos(angle) * radius;
       positions[i * 3 + 1] = height;
@@ -1071,13 +1125,16 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
       velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
       velocities[i * 3 + 2] = Math.cos(dirRad) * currentSpeed * 5;
       
-      // Random turbulence offsets for each particle
+      // Random turbulence offsets
       randomOffsets[i * 3] = (Math.random() - 0.5) * 2;
       randomOffsets[i * 3 + 1] = (Math.random() - 0.5) * 1.5;
       randomOffsets[i * 3 + 2] = (Math.random() - 0.5) * 2;
+      
+      // Size variation: 2-8 units
+      sizes[i] = 2 + Math.random() * 6;
     }
     
-    return { positions, velocities, randomOffsets };
+    return { positions, velocities, randomOffsets, sizes };
   }, [currentDirection, currentSpeed]);
   
   useFrame((state, delta) => {
@@ -1090,6 +1147,11 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
     for (let i = 0; i < particleCount; i++) {
       const idx = i * 3;
       
+      // Current particle position
+      const px = positions[idx];
+      const py = positions[idx + 1];
+      const pz = positions[idx + 2];
+      
       // Sine wave motion (like singing/flowing) + random turbulence
       const waveX = Math.sin(time * 2 + i * 0.1) * 2;
       const waveY = Math.cos(time * 1.5 + i * 0.15) * 1.5;
@@ -1100,10 +1162,37 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
       const turbY = Math.cos(time * 0.6 + randomOffsets[idx + 1]) * randomOffsets[idx + 1];
       const turbZ = Math.sin(time * 0.7 + randomOffsets[idx + 2]) * randomOffsets[idx + 2];
       
-      // Update with directional velocity + waves + turbulence
-      positions[idx] += (velocities[idx] + waveX + turbX) * delta * 15;
-      positions[idx + 1] += (velocities[idx + 1] + waveY + turbY) * delta * 15;
-      positions[idx + 2] += (velocities[idx + 2] + waveZ + turbZ) * delta * 15;
+      // Calculate new position with velocity + waves + turbulence
+      let newX = px + (velocities[idx] + waveX + turbX) * delta * 15;
+      let newY = py + (velocities[idx + 1] + waveY + turbY) * delta * 15;
+      let newZ = pz + (velocities[idx + 2] + waveZ + turbZ) * delta * 15;
+      
+      // COLLISION DETECTION: Check if particle is inside container bounds
+      if (newX > containerBounds.minX && newX < containerBounds.maxX &&
+          newY > containerBounds.minY && newY < containerBounds.maxY &&
+          newZ > containerBounds.minZ && newZ < containerBounds.maxZ) {
+        
+        // Particle hit container - flow around it
+        const centerX = (containerBounds.minX + containerBounds.maxX) / 2;
+        const centerZ = (containerBounds.minZ + containerBounds.maxZ) / 2;
+        
+        // Push particle away from container center
+        const awayX = newX - centerX;
+        const awayZ = newZ - centerZ;
+        const dist = Math.sqrt(awayX * awayX + awayZ * awayZ);
+        
+        if (dist > 0) {
+          // Deflect around container
+          newX += (awayX / dist) * 30 * delta;
+          newZ += (awayZ / dist) * 30 * delta;
+          newY += (Math.random() - 0.5) * 20 * delta; // Turbulence on hit
+        }
+      }
+      
+      // Update positions
+      positions[idx] = newX;
+      positions[idx + 1] = newY;
+      positions[idx + 2] = newZ;
       
       // Reset particles that drift too far
       const distSq = positions[idx] ** 2 + positions[idx + 2] ** 2;
@@ -1122,8 +1211,9 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(particles.positions, 3));
+    geo.setAttribute('size', new THREE.BufferAttribute(particles.sizes, 1));
     return geo;
-  }, [particles.positions]);
+  }, [particles.positions, particles.sizes]);
 
   return (
     <points ref={particlesRef} position={position} geometry={geometry}>
@@ -1134,6 +1224,7 @@ function WaterCurrentParticles({ position, currentDirection, currentSpeed }: { p
         opacity={0.7}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
+        vertexColors={false}
       />
     </points>
   );
