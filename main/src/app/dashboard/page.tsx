@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setCurrentStep } from '@/lib/mission-state';
+import MouseTrail from '@/components/MouseTrail';
 
 const Dithering = lazy(() =>
   import("@paper-design/shaders-react").then((mod) => ({ default: mod.Dithering }))
@@ -46,6 +47,8 @@ export default function DashboardPage() {
       className="relative min-h-screen text-[#1D1E15] font-mono flex flex-col overflow-hidden"
       style={{ background: '#E5E6DA' }}
     >
+      <MouseTrail />
+
       {/* Dithering Background */}
       <Suspense fallback={<div className="absolute inset-0 bg-[#E5E6DA]" />}>
         <div className="fixed inset-0 z-0 pointer-events-none opacity-30 mix-blend-multiply">
