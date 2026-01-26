@@ -1,7 +1,7 @@
-# OceanCache
-**Geospatial Decision-Support System for Maritime Container Recovery Operations**
+# Finding N.E.M.O
+**AI Powered Maritime Container Recovery Operations**
 
-OceanCache provides salvage operators and maritime logistics entities with a probability-weighted search optimization framework for lost cargo containers. The system renders a multi-layered heatmap visualization over an interactive 3D bathymetric mesh, leveraging rule-based spatial analysis derived from last-known positional telemetry, vessel trajectory proximity, and historical incident clustering.
+Finding N.E.M.O provides salvage operators and maritime logistics entities with a probability-weighted search optimization framework for lost cargo containers. The system renders a multi-layered heatmap visualization over an interactive 3D bathymetric mesh, leveraging rule-based spatial analysis derived from last-known positional telemetry, vessel trajectory proximity, and historical incident clustering.
 
 This represents a proof-of-concept implementation: data inputs are synthetically generated, but the operational workflow adheres to industry-standard recovery protocols and maintains demonstration viability.
 
@@ -13,7 +13,7 @@ Maritime container loss incidents result in significant operational expenditure 
 ---
 
 ## Solution
-OceanCache implements a spatial optimization algorithm that transforms incident contextual data into a **hierarchically-ranked set of geospatial search zones**.
+Finding N.E.M.O implements a spatial optimization algorithm that transforms incident contextual data into a **hierarchically-ranked set of geospatial search zones**.
 
 The system provides:
 - **Interactive 3D bathymetric terrain mesh** (configurable asset pipeline)
