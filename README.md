@@ -1,5 +1,4 @@
-# Finding N.E.M.O
-**AI Powered Maritime Container Recovery Operations**
+# Finding N.E.M.O -- AI Powered Fleet Management Software for Cargo Ships
 
 Finding N.E.M.O provides salvage operators and maritime logistics entities with a probability-weighted search optimization framework for lost cargo containers. The system renders a multi-layered heatmap visualization over an interactive 3D bathymetric mesh, leveraging rule-based spatial analysis derived from last-known positional telemetry, vessel trajectory proximity, and historical incident clustering.
 
@@ -135,6 +134,3 @@ No backend infrastructure required for MVP deployment.
 ```
 
 ---
-
-## License
-Proof-of-concept prototype implementation. Consider MIT License for open-source distribution if project transitions to public repository.but i wa
